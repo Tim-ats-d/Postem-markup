@@ -26,7 +26,15 @@ end
 module String = struct
   let is_empty str = str = ""
 
+  let of_char_list chars = String.of_seq (List.to_seq chars)
+
+  let to_char_list str = String.to_seq str |> List.of_seq
+
   let join chr = Char.to_string chr |> String.concat
+
+  let strip_first str =
+    let l = String.length str in
+    if l = 0 || l = 1 then "" else String.sub str 1 (l - 1)
 
   let split_map_join ?(on = ' ') f str =
     String.split_on_char on str |> List.map f |> join on

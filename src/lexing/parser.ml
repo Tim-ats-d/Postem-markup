@@ -4,10 +4,6 @@ type 'a parser_result = Sucess of 'a | Failure of string
 
 type 'a parser = Parser of (string -> ('a * string) parser_result)
 
-let strip_first str =
-  let l = String.length str in
-  if l = 0 || l = 1 then "" else String.sub str 1 (l - 1)
-
 let pchar char_to_match =
   let aux str =
     if is_empty str then Failure "No more input"
@@ -28,16 +24,31 @@ let run parser input =
   let (Parser aux) = parser in
   aux input
 
-let and_then parser1 parser2 =
+let bind f p =
   let aux input =
-    match run parser1 input with
-    | Failure _ as f -> f
-    | Sucess (value1, remaining1) -> (
-        match run parser2 remaining1 with
-        | Failure _ as f -> f
-        | Sucess (value2, remaining2) -> Sucess ((value1, value2), remaining2))
+    match run p input with
+    | Failure _ as err -> err
+    | Sucess (value, remaining) -> run (f value) remaining
   in
   Parser aux
+
+let ( >>= ) p f = bind f p
+
+let return x =
+  let aux input = Sucess (x, input) in
+  Parser aux
+
+let map f = bind (fun x -> return (f x))
+
+let apply fp xp =
+  fp >>= fun f ->
+  xp >>= fun x -> return (f x)
+
+let lift2 f x y = apply (apply (return f) x) y
+
+let and_then p1 p2 =
+  p1 >>= fun res1 ->
+  p2 >>= fun res2 -> return (res1, res2)
 
 let or_else parser1 parser2 =
   let aux input =
@@ -46,42 +57,57 @@ let or_else parser1 parser2 =
   in
   Parser aux
 
-let reduce f = List.fold_left f []
-
-let choice = List.fold_left or_else []
+let choice = pchar ' ' |> List.fold_left or_else (* TODO *)
 
 let any_of chars = chars |> List.map pchar |> choice
-
-let map f parser =
-  let aux input =
-    match run parser input with
-    | Sucess (value, remaining) -> Sucess (f value, remaining)
-    | Failure _ as f -> f
-  in
-  Parser aux
-
-let return x =
-  let aux input = Sucess (x, input) in
-  Parser aux
-
-let apply f_parser x_parser =
-  and_then f_parser x_parser |> map (fun (f, x) -> f x)
-
-let ( <*> ) = apply
-
-let lift2 f x y = apply (apply (return f) x) y
-
-let add_p = lift2 ( + )
 
 let rec sequence parsers =
   let cons_p = lift2 List.cons in
   match parsers with [] -> return [] | hd :: tl -> cons_p hd (sequence tl)
 
-let parse_three_digit =
-  let digits = Misc.Char.('1' -- '9') in
-  let parse_digits = any_of digits in
-  let tuple_parser = and_then (and_then parse_digits parse_digits) parse_digits
-  and transform_tuple ((c1, c2), c3) =
-    String.init 3 (fun x -> List.nth [ c1; c2; c3 ] x)
+let rec parse_zero_or_more parser input =
+  match run parser input with
+  | Failure _ -> ([], input)
+  | Sucess (first, input_after_first_parse) ->
+      let subvalues, remaining =
+        parse_zero_or_more parser input_after_first_parse
+      in
+      (first :: subvalues, remaining)
+
+let many parser =
+  let aux input = Sucess (parse_zero_or_more parser input) in
+  Parser aux
+
+let many_one p =
+  p >>= fun hd ->
+  many p >>= fun tl -> return (hd :: tl)
+
+let opt parser =
+  let some = map Option.some parser and none = return None in
+  or_else some none
+
+let throw_right p1 p2 = and_then p1 p2 |> map fst
+
+let throw_left p1 p2 = and_then p1 p2 |> map snd
+
+let between p1 p2 p3 = throw_left p1 (throw_right p2 p3)
+
+let sep_by_one p sep =
+  let sep_then_p = throw_left sep p in
+  and_then p (many sep_then_p) |> map (fun (p, plist) -> p :: plist)
+
+let sep_by p sep = or_else (sep_by_one p sep) (return [])
+
+let pstring str =
+  Misc.String.to_char_list str
+  |> List.map pchar |> sequence
+  |> map Misc.String.of_char_list
+
+let parse_int =
+  let result_to_int (sign, digits) =
+    let i = digits |> Misc.String.of_char_list |> int_of_string in
+    match sign with Some _ -> -i | None -> i
   in
-  map transform_tuple tuple_parser |> map int_of_string
+  let digits = many_one (any_of Misc.Char.('0' -- '9'))
+  and sign = opt (pchar '-') in
+  and_then sign digits |> map result_to_int
