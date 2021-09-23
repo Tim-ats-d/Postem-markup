@@ -9,6 +9,8 @@ end
 module Char : sig
   val to_string : char -> string
 
+  val is_digit : char -> bool
+
   val is_space : char -> bool
 
   val ( -- ) : char -> char -> char list

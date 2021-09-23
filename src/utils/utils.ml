@@ -17,6 +17,8 @@ end
 module Char = struct
   let to_string = String.make 1
 
+  let is_digit = function '0' .. '9' -> true | _ -> false
+
   let is_space chr = to_string chr |> String.trim = ""
 
   let ( -- ) a b =

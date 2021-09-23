@@ -1,6 +1,6 @@
 open Ast_types
 
-let subsitute ctx text = Misc.String.split_map_join (Context.get ctx) text
+let subsitute ctx text = Utils.String.split_map_join (Context.get ctx) text
 
 let rec eval ctx (Prog p) =
   List.filter_map (eval_expr ctx) p |> String.concat "\n"

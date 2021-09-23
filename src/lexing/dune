@@ -1,3 +1,3 @@
 (library
  (name lexing)
- (libraries misc))
+ (libraries utils))

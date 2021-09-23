@@ -3,7 +3,7 @@ open Ast
 let document =
   Ast_types.Prog
     [
-      Marker Misc.Text.capitalize;
+      Marker String.capitalize_ascii;
       Block (Text "Hello world", Alias ("VH", "Victor Hugo"));
       Block (Text "VH est né en ", Block (Text "1885", Text "."));
     ]
