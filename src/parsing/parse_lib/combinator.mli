@@ -41,6 +41,8 @@ val ( <&> ) : 'a parser -> 'b parser -> ('a * 'b) parser
 
 val or_else : 'a parser -> 'a parser -> 'a parser
 
+val ( <|> ) : 'a parser -> 'a parser -> 'a parser
+
 val choice : char parser list -> char parser
 
 val any_of : char list -> char parser

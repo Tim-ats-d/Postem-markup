@@ -1,4 +1,5 @@
 open Printf
+open Utils
 
 type 'a parser_result = Sucess of 'a | Failure of label * error * Position.t
 
@@ -11,13 +12,6 @@ type 'a parser = {
   label : label;
 }
 
-let position_of_input_state is =
-  {
-    Position.current_line = Input_state.current_line is;
-    line = is.position.line;
-    column = is.position.column;
-  }
-
 let set_label p new_label =
   let func input =
     match p.func input with
@@ -26,17 +20,16 @@ let set_label p new_label =
   in
   { func; label = new_label }
 
+let ( <?> ) = set_label
+
 let get_label p = p.label
 
-let print_result = function
-  | Sucess (value, _) -> eprintf "%s" value
-  | Failure (label, error_msg, pos) ->
-      let error_position = sprintf "Line %i, characters %i" pos.line pos.column
-      and failure_caret =
-        sprintf "%s^%s" (String.make pos.column ' ') error_msg
-      in
-      eprintf "%s: Error parsing %s\n%s\n%s" error_position label pos.current_line
-        failure_caret
+let position_of_input_state is =
+  {
+    Position.current_line = Input_state.current_line is;
+    line = is.position.line;
+    column = is.position.column;
+  }
 
 let satisfy predicate label =
   let func input =
@@ -56,7 +49,7 @@ let satisfy predicate label =
 
 let pchar char_to_match =
   let predicate = Char.equal char_to_match
-  and label = Utils.Char.to_string char_to_match in
+  and label = Char.to_string char_to_match in
   satisfy predicate label
 
 let run_on_input { func; _ } input = func input
@@ -86,24 +79,28 @@ let apply fp xp =
 let lift2 f x y = apply (apply (return f) x) y
 
 let and_then p1 p2 =
-  let label = Printf.sprintf "%s and_then %s" (get_label p1) (get_label p2) in
+  let label = sprintf "%s and_then %s" (get_label p1) (get_label p2) in
   set_label
     ( p1 >>= fun res1 ->
       p2 >>= fun res2 -> return (res1, res2) )
     label
 
+let ( <&> ) = and_then
+
 let or_else p1 p2 =
-  let label = Printf.sprintf "%s or_else %s" (get_label p1) (get_label p2) in
+  let label = sprintf "%s or_else %s" (get_label p1) (get_label p2) in
   let func input =
     let res1 = run_on_input p1 input in
     match res1 with Sucess _ -> res1 | Failure _ -> run_on_input p2 input
   in
   { func; label }
 
-let choice = pchar ' ' |> List.fold_left or_else (* TODO *)
+let ( <|> ) = or_else
+
+let choice plist = List.fold_left ( <|> ) (satisfy (fun _ -> false) "") plist
 
 let any_of chars =
-  let label = Utils.String.of_char_list chars |> Printf.sprintf "any of %s" in
+  let label = String.of_chars chars |> sprintf "any of %s" in
   set_label (chars |> List.map pchar |> choice) label
 
 let rec sequence parsers =
@@ -132,35 +129,20 @@ let opt parser =
   let some = map Option.some parser and none = return None in
   or_else some none
 
-let throw_right p1 p2 = and_then p1 p2 |> map fst
+let throw_right p1 p2 = p1 <&> p2 |> map fst
 
-let throw_left p1 p2 = and_then p1 p2 |> map snd
+let throw_left p1 p2 = p1 <&> p2 |> map snd
 
 let between p1 p2 p3 = throw_left p1 (throw_right p2 p3)
 
 let sep_by_one p sep =
   let sep_then_p = throw_left sep p in
-  and_then p (many sep_then_p) |> map (fun (p, plist) -> p :: plist)
+  p <&> many sep_then_p |> map (fun (p, plist) -> p :: plist)
 
 let sep_by p sep = or_else (sep_by_one p sep) (return [])
 
 let pstring str =
-  Utils.String.to_char_list str
-  |> List.map pchar |> sequence
-  |> map Utils.String.of_char_list
-
-let parse_int =
-  let result_to_int (sign, digits) =
-    let i = digits |> Utils.String.of_char_list |> int_of_string in
-    match sign with Some _ -> -i | None -> i
-  in
-  let digits = many_one (any_of Utils.Char.('0' -- '9'))
-  and sign = opt (pchar '-') in
-  and_then sign digits |> map result_to_int
-
-let digit_char = satisfy Utils.Char.is_digit "digit"
-
-let whitespace_char = satisfy Utils.Char.is_space "whitespace"
+  String.to_chars str |> List.map pchar |> sequence |> map Utils.String.of_chars
 
 let read_all_chars input =
   let rec loop acc str =

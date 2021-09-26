@@ -1,10 +1,10 @@
-open Utils.String
+open Utils
 
 type t = { lines : string array; position : Position.t }
 
 let of_str str =
   let position = Position.initial () in
-  if is_empty str then { lines = [||]; position }
+  if String.is_empty str then { lines = [||]; position }
   else
     let lines = String.split_on_char '\n' str |> Array.of_list in
     { lines; position }

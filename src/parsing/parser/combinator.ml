@@ -84,6 +84,8 @@ let and_then p1 p2 =
       p2 >>= fun res2 -> return (res1, res2) )
     label
 
+let ( <&> ) = and_then
+
 let or_else p1 p2 =
   let label = sprintf "%s or_else %s" (get_label p1) (get_label p2) in
   let func input =
@@ -124,15 +126,15 @@ let opt parser =
   let some = map Option.some parser and none = return None in
   or_else some none
 
-let throw_right p1 p2 = and_then p1 p2 |> map fst
+let throw_right p1 p2 = p1 <&> p2 |> map fst
 
-let throw_left p1 p2 = and_then p1 p2 |> map snd
+let throw_left p1 p2 = p1 <&> p2 |> map snd
 
 let between p1 p2 p3 = throw_left p1 (throw_right p2 p3)
 
 let sep_by_one p sep =
   let sep_then_p = throw_left sep p in
-  and_then p (many sep_then_p) |> map (fun (p, plist) -> p :: plist)
+  p <&> many sep_then_p |> map (fun (p, plist) -> p :: plist)
 
 let sep_by p sep = or_else (sep_by_one p sep) (return [])
 
