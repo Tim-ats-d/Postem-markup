@@ -3,7 +3,7 @@ open Utils
 
 let carriage_return_one = many_one (pchar '\r')
 
-and newline_one = pchar '\n'
+(* and newline_one = pchar '\n' *)
 
 and tab_one = many_one (pchar '\t')
 

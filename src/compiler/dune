@@ -1,0 +1,3 @@
+(library
+ (name compiler)
+ (libraries ast parsing utils))

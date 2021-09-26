@@ -1,15 +1,3 @@
-module Int : sig
-  include module type of Int
-
-  val range : int -> int -> int list
-end
-
-module List : sig
-  include module type of List
-
-  val run_length_encoding : (int -> 'a -> 'b) -> 'a list -> 'b list
-end
-
 module Option : sig
   include module type of Option
 
@@ -24,10 +12,6 @@ module Char : sig
   val is_alpha : char -> bool
 
   val is_digit : char -> bool
-
-  val is_space : char -> bool
-
-  val ( -- ) : char -> char -> char list
 end
 
 module String : sig
@@ -39,9 +23,5 @@ module String : sig
 
   val to_chars : string -> char list
 
-  val join : char -> string list -> string
-
   val strip_first : string -> string
-
-  val split_map_join : ?on:char -> (string -> string) -> string -> string
 end

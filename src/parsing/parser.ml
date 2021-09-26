@@ -1,3 +1,4 @@
+open Printf
 open Ast.Ast_types
 open Common
 open Parse_lib.Combinator
@@ -39,9 +40,19 @@ let palias =
   name <&> equal <&> value |> map to_expr <?> "alias"
 
 let pblock =
-  let to_expr b = Block b in
+  let to_expr = List.fold_left (fun a b -> Block (a, b)) (Text "") in
   many_one (pint <|> pwhitespace <|> ptext <|> palias) |> map to_expr <?> "expr"
 
 let pdocument =
   let to_expr d = Document d in
   sep_by pblock (pstring "\n\n") |> map to_expr <?> "document"
+
+let error_position label msg { Parse_lib.Position.current_line; line; column } =
+  let pos = sprintf "Line %i, characters %i" line column
+  and failure_caret = sprintf "%s^ %s" (String.make column ' ') msg in
+  sprintf "%s: Error parsing %s\n%s\n%s" pos label current_line failure_caret
+
+let parse str =
+  match run pdocument str with
+  | Sucess (ast, _) -> Ok ast
+  | Failure (label, msg, pos) -> Error (error_position label msg pos)

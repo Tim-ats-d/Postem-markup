@@ -1,15 +1,19 @@
-(* open Ast_types
+open Ast_types
+open Utils
 
-   let subsitute ctx text = Utils.String.split_map_join (Context.get ctx) text
+let subsitute = Context.find
 
-   let rec eval ctx (Prog p) =
-     List.filter_map (eval_expr ctx) p |> String.concat "\n"
+let rec eval ctx (Document doc) =
+  List.filter_map (eval_expr ctx) doc |> String.concat "\n"
 
-   and eval_expr ctx = function
-     | Alias (name, value) ->
-         Context.add ctx name value;
-         None
-     | Marker (f, args) -> Some (f args)
-     | Text text -> Some (subsitute ctx text)
-     | Block (e, e') ->
-         Misc.Option.merge ( ^ ) (eval_expr ctx e) (eval_expr ctx e') *)
+and eval_expr ctx = function
+  | Text text -> subsitute ctx text |> Option.some
+  | White (i, w) ->
+      Pprint.string_of_whitespace w |> String.make i |> Option.some
+  | Int i -> string_of_int i |> Option.some
+  | Alias (name, value) ->
+      Context.add ctx name value;
+      None
+  | Marker _ -> None
+  | Block (fst, rest) ->
+      Option.merge ( ^ ) (eval_expr ctx fst) (eval_expr ctx rest)
