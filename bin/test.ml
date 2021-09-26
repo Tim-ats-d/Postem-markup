@@ -1,7 +1,7 @@
 open Ast
 
 let document =
-  Ast_types.Prog
+  Ast_types.Document
     [
       Marker String.capitalize_ascii;
       Block (Text "Hello world", Alias ("VH", "Victor Hugo"));
