@@ -15,7 +15,11 @@ module Char = struct
 
   let is_alpha = function 'A' .. 'Z' | 'a' .. 'z' -> true | _ -> false
 
-  let is_digit = function '0' .. '9' -> true | _ -> false
+  let is_num = function '0' .. '9' -> true | _ -> false
+
+  let is_symbol = function
+    | '~' .. '{' | '@' .. ':' | '/' .. '!' -> true
+    | _ -> false
 end
 
 module String = struct
@@ -30,4 +34,6 @@ module String = struct
   let strip_first str =
     let l = String.length str in
     if l = 0 || l = 1 then "" else String.sub str 1 (l - 1)
+
+  let join = String.concat ""
 end

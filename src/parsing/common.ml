@@ -11,12 +11,20 @@ and space_one = many_one (pchar ' ')
 
 let whitespaces = carriage_return_one <|> tab_one <|> space_one
 
-let alpha = satisfy Char.is_alpha "text"
+let many_space = many whitespaces
+
+let alpha = satisfy Char.is_alpha "alpha"
 
 let alpha_one = many_one alpha
 
-let many_space = many whitespaces
+let symbol = satisfy Char.is_symbol "symbol"
+
+let symbol_one = many_one symbol
 
 let opt_sign = opt (pchar '-')
 
-let digit = satisfy Char.is_digit "digit"
+let digit = satisfy Char.is_num "digit"
+
+let digit_one = many_one digit
+
+let text = alpha_one <|> symbol_one <|> digit_one

@@ -1,11 +1,15 @@
-val whitespaces : char list Parse_lib.Combinator.parser
+open Parse_lib.Combinator
 
-val alpha : char Parse_lib.Combinator.parser
+val whitespaces : char list parser
 
-val alpha_one : char list Parse_lib.Combinator.parser
+val alpha : char parser
 
-val many_space : char list list Parse_lib.Combinator.parser
+val alpha_one : char list parser
 
-val opt_sign : char option Parse_lib.Combinator.parser
+val many_space : char list list parser
 
-val digit : char Parse_lib.Combinator.parser
+val opt_sign : char option parser
+
+val digit : char parser
+
+val text : char list parser

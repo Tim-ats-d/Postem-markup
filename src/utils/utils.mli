@@ -11,7 +11,9 @@ module Char : sig
 
   val is_alpha : char -> bool
 
-  val is_digit : char -> bool
+  val is_num : char -> bool
+
+  val is_symbol : char -> bool
 end
 
 module String : sig
@@ -24,4 +26,6 @@ module String : sig
   val to_chars : string -> char list
 
   val strip_first : string -> string
+
+  val join : string list -> string
 end

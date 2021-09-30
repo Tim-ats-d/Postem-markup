@@ -40,7 +40,7 @@ let palias =
   name <&> equal <&> value |> map to_expr <?> "alias"
 
 let pblock =
-  let to_expr = List.fold_left (fun a b -> Block (a, b)) (Text "") in
+  let to_expr = List.fold_left (fun a b -> Block (a, b)) End_of_file in
   many_one (pint <|> pwhitespace <|> ptext <|> palias) |> map to_expr <?> "expr"
 
 let pdocument =
