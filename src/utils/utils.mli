@@ -25,7 +25,19 @@ module String : sig
 
   val to_chars : string -> char list
 
-  val strip_first : string -> string
+  val concat_first : string -> string list -> string
 
   val join : string list -> string
+
+  val strip_first : string -> string
+
+  val split_lines : string -> string list
+end
+
+module File : sig
+  type t = string
+
+  val is_exist : string -> bool
+
+  val read_all : string -> string
 end

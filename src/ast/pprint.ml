@@ -1,6 +1,9 @@
 open Ast_types
 
-let string_of_whitespace = function
+let whitespace i chr =
+  String.make i
+  @@
+  match chr with
   | CarriageReturn -> '\r'
   | Newline -> '\n'
   | Tab -> '\t'
