@@ -36,10 +36,10 @@ module String = struct
   let join = String.concat ""
 
   let split_lines = String.split_on_char '\n'
+
   let strip_first str =
     let l = String.length str in
     if l = 0 || l = 1 then "" else String.sub str 1 (l - 1)
-
 end
 
 module File = struct

@@ -11,6 +11,7 @@ and expr =
   | White of int * whitespace
 
 and block =
+  (* | Conclusion of expr *)
   | Definition of expr * expr
   | Heading of int * expr
   | Quotation of expr

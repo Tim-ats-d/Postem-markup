@@ -22,7 +22,7 @@ module Default : S = struct
     in
     Printf.sprintf "%s\n%s" str underline
 
-  let quotation = String.concat_first " 0 "
+  let quotation = String.concat_first " █ "
 
   let listing = String.concat_first "\n - "
 

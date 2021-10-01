@@ -6,9 +6,9 @@ module type EXT = Ext.Expansion.S
 
 let subsitute = Context.find
 
-let rec eval filename (module Expansion : EXT) (Document doc) =
-  List.filter_map (eval_expr (module Expansion : EXT) Context.empty) doc
-  |> String.concat "\n\n" |> Ext.Document.create filename |> Expansion.postprocess
+let rec eval ?ext:((module Expansion : EXT)=(module Ext.Expansion.Default)) filename (Document doc) =
+  let output_lines = List.filter_map (eval_expr (module Expansion : EXT) Context.empty) doc in
+  String.concat "\n\n" output_lines |> Ext.Document.create filename |> Expansion.postprocess
 
 and eval_expr (module Ext : EXT) ctx =
   let eval_expr_ext = eval_expr (module Ext) in
