@@ -7,8 +7,9 @@ module type EXT = Ext.Expansion.S
 let subsitute = Context.find
 
 let rec eval ?ext:((module Expansion : EXT)=(module Ext.Expansion.Default)) filename (Document doc) =
-  let output_lines = List.filter_map (eval_expr (module Expansion : EXT) Context.empty) doc in
-  String.concat "\n\n" output_lines |> Ext.Document.create filename |> Expansion.postprocess
+  let eval_expr_with_ext = eval_expr (module Expansion : EXT) Context.empty in
+  let output_lines = List.filter_map eval_expr_with_ext doc in
+  Expansion.concat_block output_lines |> Ext.Document.create filename |> Expansion.postprocess
 
 and eval_expr (module Ext : EXT) ctx =
   let eval_expr_ext = eval_expr (module Ext) in
@@ -29,6 +30,7 @@ and eval_block (module Ext : EXT) ctx =
   let eval_expr_ext = eval_expr (module Ext) in
   let split_opt = O.map (String.split_on_char '\n') in
   function
+  | Conclusion c -> O.map Ext.conclusion (eval_expr_ext ctx c)
   | Definition (name, values) -> (
       match eval_expr_ext ctx name with
       | None -> None

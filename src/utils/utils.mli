@@ -11,9 +11,11 @@ module Char : sig
 
   val is_alpha : char -> bool
 
-  val is_num : char -> bool
+  val is_digit : char -> bool
 
   val is_symbol : char -> bool
+
+  val concat : char list -> string
 end
 
 module String : sig

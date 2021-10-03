@@ -15,11 +15,13 @@ module Char = struct
 
   let is_alpha = function 'A' .. 'Z' | 'a' .. 'z' -> true | _ -> false
 
-  let is_num = function '0' .. '9' -> true | _ -> false
+  let is_digit = function '0' .. '9' -> true | _ -> false
 
   let is_symbol = function
     | '~' .. '{' | '@' .. ':' | '/' .. '!' -> true
     | _ -> false
+
+  let concat chars = List.map to_string chars |> String.concat ""
 end
 
 module String = struct

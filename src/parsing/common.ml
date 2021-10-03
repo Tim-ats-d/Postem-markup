@@ -1,30 +1,35 @@
 open Parse_lib.Combinator
 open Utils
 
-let carriage_return_one = many_one (pchar '\r')
+let carriage_return = pchar '\r'
 
-(* and newline_one = pchar '\n' *)
+and newline = pchar '\n'
 
-and tab_one = many_one (pchar '\t')
+and tab = pchar '\t'
 
-and space_one = many_one (pchar ' ')
+and space = pchar ' '
 
-let whitespaces = carriage_return_one <|> tab_one <|> space_one
+let white = carriage_return <|> newline <|> tab <|> space
 
-let many_space = many whitespaces
+let white_one = many_one carriage_return <|> many_one newline <|> many_one tab <|> many_one space
 
-let alpha = satisfy Char.is_alpha "alpha"
+let many_white = many white
 
-let alpha_one = many_one alpha
+let letter = satisfy Char.is_alpha "letter"
 
-let symbol = satisfy Char.is_symbol "symbol"
+let letter_one = many_one letter
 
-let symbol_one = many_one symbol
-
-let opt_sign = opt (pchar '-')
-
-let digit = satisfy Char.is_num "digit"
+let digit = satisfy Char.is_digit "digit"
 
 let digit_one = many_one digit
 
-let text = alpha_one <|> symbol_one <|> digit_one
+let ident =
+  let to_string (first, chars_list) =
+    let rest = List.map Char.concat chars_list |> String.join in
+    Char.to_string first ^ rest
+  in
+  letter <&> many (digit_one <|> letter_one) |> map to_string
+
+let not_quote = satisfy (( <> ) '"') "text"
+
+let not_exclamation_mark = satisfy (( <> ) '!') "filename"
