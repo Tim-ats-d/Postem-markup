@@ -143,10 +143,3 @@ let sep_by p sep = or_else (sep_by_one p sep) (return [])
 
 let pstring str =
   String.to_chars str |> List.map pchar |> sequence |> map Utils.String.of_chars
-
-let read_all_chars input =
-  let rec loop acc str =
-    let remaining, char_opt = Input_state.next_char str in
-    match char_opt with None -> acc | Some c -> loop (c :: acc) remaining
-  in
-  loop [] input |> List.rev

@@ -6,4 +6,4 @@ let empty = create ()
 
 let add = Hashtbl.add
 
-let find hastbl str = Hashtbl.find_opt hastbl str |> Option.value ~default:str
+let substitute hastbl str = Hashtbl.find_opt hastbl str |> Option.value ~default:str

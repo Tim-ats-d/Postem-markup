@@ -68,5 +68,3 @@ val sep_by_one : 'a parser -> 'b parser -> 'a list parser
 val sep_by : 'a parser -> 'b parser -> 'a list parser
 
 val pstring : error -> error parser
-
-val read_all_chars : Input_state.t -> char list

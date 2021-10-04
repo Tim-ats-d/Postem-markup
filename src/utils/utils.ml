@@ -1,13 +1,3 @@
-module Option = struct
-  include Option
-
-  let merge f a b =
-    match (a, b) with
-    | None, None -> None
-    | Some x, None | None, Some x -> Some x
-    | Some x, Some y -> Some (f x y)
-end
-
 module Char = struct
   include Char
 
@@ -26,6 +16,8 @@ end
 
 module String = struct
   include String
+
+  let empty = ""
 
   let is_empty str = str = ""
 

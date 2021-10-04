@@ -11,7 +11,9 @@ and space = pchar ' '
 
 let white = carriage_return <|> newline <|> tab <|> space
 
-let white_one = many_one carriage_return <|> many_one newline <|> many_one tab <|> many_one space
+let white_one =
+  many_one carriage_return <|> many_one newline <|> many_one tab
+  <|> many_one space
 
 let many_white = many white
 
@@ -30,6 +32,21 @@ let ident =
   in
   letter <&> many (digit_one <|> letter_one) |> map to_string
 
+let quote = pchar '"' <?> "quote"
+
 let not_quote = satisfy (( <> ) '"') "text"
 
+let exclam_mark = pchar '!' <?> "exclamation mark"
+
 let not_exclamation_mark = satisfy (( <> ) '!') "filename"
+
+let prefix pop pexpr =
+  let mark = throw_right pop many_white in
+  mark <&> pexpr
+
+let assoc pleft pop pright =
+  let ignore_white ((l, _), r) = (l, r) in
+  throw_right pleft many_white
+  <&> throw_right pop many_white <&> pright |> map ignore_white
+
+let surround pby pmiddle = between pby pmiddle pby

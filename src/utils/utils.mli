@@ -1,9 +1,3 @@
-module Option : sig
-  include module type of Option
-
-  val merge : ('a -> 'a -> 'a) -> 'a option -> 'a option -> 'a option
-end
-
 module Char : sig
   include module type of Char
 
@@ -20,6 +14,8 @@ end
 
 module String : sig
   include module type of String
+
+  val empty : string
 
   val is_empty : string -> bool
 

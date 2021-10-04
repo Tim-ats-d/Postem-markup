@@ -1,40 +1,44 @@
 open Ast_types
 open Utils
-module O = Option
 
 module type EXT = Ext.Expansion.S
 
-let subsitute = Context.find
-
 let rec eval ?ext:((module Expansion : EXT)=(module Ext.Expansion.Default)) filename (Document doc) =
   let eval_expr_with_ext = eval_expr (module Expansion : EXT) Context.empty in
-  let output_lines = List.filter_map eval_expr_with_ext doc in
-  Expansion.concat_block output_lines |> Ext.Document.create filename |> Expansion.postprocess
+  List.map eval_expr_with_ext doc |> Expansion.concat_block |> Ext.Document.create filename |> Expansion.postprocess
 
 and eval_expr (module Ext : EXT) ctx =
   let eval_expr_ext = eval_expr (module Ext) in
   function
   | Alias (name, value) ->
       Context.add ctx name value;
-      None
+      String.empty
   | Block b -> eval_block (module Ext : EXT) ctx b
-  | Int i -> string_of_int i |> O.some
+  | Int i -> string_of_int i
   | Include filename ->
-      if File.is_exist filename then Some (File.read_all filename) else None
-  | Listing l -> List.filter_map (eval_expr_ext ctx) l |> Ext.listing |> O.some
-  | Text text -> subsitute ctx text |> O.some
-  | Seq l -> List.filter_map (eval_expr_ext ctx) l |> String.join |> O.some
-  | White (i, w) -> Pprint.whitespace i w |> O.some
+      if File.is_exist filename then File.read_all filename else String.empty
+  | Listing l -> List.map (eval_expr_ext ctx) l |> Ext.listing
+  | Text text -> Context.find ctx text
+  | Seq l -> List.map (eval_expr_ext ctx) l |> String.join
+  | White (i, w) -> eval_whitespace i w
 
 and eval_block (module Ext : EXT) ctx =
   let eval_expr_ext = eval_expr (module Ext) in
-  let split_opt = O.map (String.split_on_char '\n') in
   function
-  | Conclusion c -> O.map Ext.conclusion (eval_expr_ext ctx c)
-  | Definition (name, values) -> (
-      match eval_expr_ext ctx name with
-      | None -> None
-      | Some n ->
-          O.map (Ext.definition n) (split_opt (eval_expr_ext ctx values)))
-  | Heading (lvl, h) -> eval_expr_ext ctx h |> O.map (Ext.heading lvl)
-  | Quotation q -> O.map Ext.quotation (eval_expr_ext ctx q |> split_opt)
+  | Conclusion c -> Ext.conclusion (eval_expr_ext ctx c)
+  | Definition (name, values) ->
+    let name' = eval_expr_ext ctx name
+    and values' = eval_expr_ext ctx values in
+    values' |> String.split_lines |> Ext.definition name'
+  | Heading (lvl, h) -> eval_expr_ext ctx h |> Ext.heading lvl
+  | Quotation q -> Ext.quotation (eval_expr_ext ctx q |> String.split_lines)
+
+and eval_whitespace i chr =
+  String.make i
+  @@
+  match chr with
+  | CarriageReturn -> '\r'
+  | Newline -> '\n'
+  | Tab -> '\t'
+  | Space -> ' '
+  | Unknown c -> c
