@@ -1,9 +1,12 @@
-type t = (string, string) Hashtbl.t
+module StringMap = Map.Make (Utils.String)
 
-let create () = Hashtbl.create 42
+type t = string StringMap.t
 
-let empty = create ()
+let empty = StringMap.empty
 
-let add = Hashtbl.add
+let add map name value = StringMap.add name value map
 
-let substitute hastbl str = Hashtbl.find_opt hastbl str |> Option.value ~default:str
+let substitute map str = StringMap.find_opt str map |> Option.value ~default:str
+
+let merge =
+  (fun _ s0 s1 -> match s0 with None -> s1 | Some _ -> s0) |> StringMap.merge

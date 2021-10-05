@@ -1,9 +1,9 @@
-type t
+type t = string Map.Make(Utils.String).t
 
 val empty : t
 
-val create : unit -> t
-
-val add : t -> string -> string -> unit
+val add : t -> string -> string -> t
 
 val substitute : t -> string -> string
+
+val merge : t -> t -> t

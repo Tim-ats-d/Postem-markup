@@ -1,6 +1,8 @@
 open Utils
 
 module type S = sig
+  val initial_alias : string Map.Make(String).t
+
   val concat_block : string list -> string
 
   val conclusion : string -> string
@@ -17,6 +19,10 @@ module type S = sig
 end
 
 module Default : S = struct
+  let initial_alias =
+    let module M = Map.Make (String) in
+    M.empty
+
   let concat_block = String.concat "\n\n"
 
   let conclusion str = Printf.sprintf "\\-> %s" str
