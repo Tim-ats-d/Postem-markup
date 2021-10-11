@@ -20,13 +20,20 @@ let pwhite =
   in
   let to_expr chars =
     let whites = String.of_chars chars in
-    White (String.length whites, char_to_whitespace whites.[0])
+    let type' = char_to_whitespace whites.[0] in
+    White (String.length whites, type')
   in
   white_one |> map to_expr <?> "whitespace"
 
 let ptext =
   let to_expr chars = Text (String.of_chars chars) in
-  letter_one |> map to_expr <?> "text"
+  text_one |> map to_expr <?> "text"
+
+let punformat =
+  let to_expr str = Unformat (String.of_chars str) in
+  let left = pstring "{{{" and right = pstring "}}}" in
+  let all = many_one (satisfy (fun _ -> true) "all") in
+  between left all right |> map to_expr <?> "unformat"
 
 let palias =
   let to_expr (name, value) = Alias (name, value) in
@@ -39,10 +46,10 @@ let pinclude =
   let to_expr chars = Include (String.of_chars chars) in
   surround exclam_mark (many not_exclamation_mark) |> map to_expr <?> "include"
 
-let pexpr = palias <|> pint <|> pinclude <|> ptext <|> pwhite <?> "expr"
+let pexpr = palias <|> pint <|> pinclude <|> pwhite <|> ptext <?> "expr"
 
 let pseq =
-  let to_expr expr = Seq expr in
+  let to_expr elist = Seq elist in
   many_one pexpr |> map to_expr <?> "seq"
 
 let pconclusion =
@@ -63,39 +70,10 @@ let pquotation =
 
 let pblock = pconclusion <|> pdefinition <|> pheading <|> pquotation <?> "block"
 
-let split lst elem =
-  let rec loop out acc = function
-    | [] -> List.rev acc :: out
-    | hd :: tl ->
-        if hd = elem then loop (List.rev acc :: out) [] tl
-        else loop out (hd :: acc) tl
-  in
-  loop [] [] lst |> List.rev
-
 let pdocument =
-  let to_doc elist =
-    let rec loop doc acc = function
-      | [] -> List.rev acc @ doc
-      | hd :: tl -> (
-          match hd with
-          | White (i, Newline) when i > 1 ->
-              let new_seq = List.rev acc in
-              loop (Seq new_seq :: doc) [] tl
-          | Seq s -> loop (Seq acc :: doc) [] s
-          (* | Block b ->
-             begin match b with
-             | Conclusion e | Quotation e -> loop (Seq acc :: output) [] e
-             | Definition (name, value) ->
-               let name = loop doc
-
-                 loop (Definition :: acc) loop ()
-             end *)
-          | e -> loop doc (e :: acc) tl)
-    in
-    Document (loop [] [] elist)
-  in
-  many_one (pseq <|> pblock) |> map to_doc <?> "document"
-(* many_one (pseq <|> pblock) |> map (fun d -> Document d) <?> "document" *)
+  let delim = pstring "$$" in
+  let to_doc elist = Document elist in
+  sep_by (pseq <|> pblock) delim |> map to_doc <?> "document"
 
 let error_position label msg { Parse_lib.Position.current_line; line; column } =
   let open Printf in
@@ -103,7 +81,7 @@ let error_position label msg { Parse_lib.Position.current_line; line; column } =
   and failure_caret = sprintf "%s^ %s" (String.make column ' ') msg in
   sprintf "%s: Error parsing %s\n%s\n%s" pos label current_line failure_caret
 
-(* let parse str =
-   match run pdocument str with
-   | Sucess (ast, _) -> Ok ast
-   | Failure (label, msg, pos) -> Error (error_position label msg pos) *)
+let parse str =
+  match run pdocument str with
+  | Sucess (ast, _) -> Ok ast
+  | Failure (label, msg, pos) -> Error (error_position label msg pos)

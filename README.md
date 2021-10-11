@@ -10,12 +10,12 @@ This will come when many features are implemented.
 
 ## Roadmap
 
-- [ ] Parsing
+- [x] Parsing.
 - [ ] Unicode support.
-- [x] Expansions support
+- [ ] Expansions support.
 - [ ] Compilation to other markup languages.
 - [ ] Command line argument parsing for the compiler.
-- [ ] Write documentation.
+- [ ] Documentation.
 
 ## Documentation
 

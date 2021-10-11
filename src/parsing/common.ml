@@ -3,11 +3,11 @@ open Utils
 
 let carriage_return = pchar '\r'
 
-and newline = pchar '\n'
-
 and tab = pchar '\t'
 
 and space = pchar ' '
+
+let newline = pchar '\n'
 
 let white = carriage_return <|> newline <|> tab <|> space
 
@@ -24,6 +24,10 @@ let letter_one = many_one letter
 let digit = satisfy Char.is_digit "digit"
 
 let digit_one = many_one digit
+
+let text = satisfy Char.is_alpha "text"
+
+let text_one = many_one text
 
 let ident =
   let to_string (first, chars_list) =

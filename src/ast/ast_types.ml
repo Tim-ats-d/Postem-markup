@@ -8,6 +8,7 @@ and expr =
   | Listing of expr list
   | Text of string
   | Seq of expr list
+  | Unformat of string
   | White of int * whitespace
 
 and block =

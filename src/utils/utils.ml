@@ -11,6 +11,8 @@ module Char = struct
     | '~' .. '{' | '@' .. ':' | '/' .. '!' -> true
     | _ -> false
 
+  let is_white = function ' ' | '\n' | '\r' | '\t' -> true | _ -> false
+
   let concat chars = List.map to_string chars |> String.concat ""
 end
 

@@ -9,6 +9,8 @@ module Char : sig
 
   val is_symbol : char -> bool
 
+  val is_white : char -> bool
+
   val concat : char list -> string
 end
 
