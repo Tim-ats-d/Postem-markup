@@ -56,4 +56,9 @@ module File = struct
         List.rev acc |> String.concat "\n"
     in
     read_lines []
+
+  let write filename str =
+    let oc = open_out filename in
+    Printf.fprintf oc "%s\n" str;
+    close_out oc
 end
