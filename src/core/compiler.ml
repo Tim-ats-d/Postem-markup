@@ -1,10 +1,13 @@
 open Parsing
 open Utils
 
+
 let from_string (module Ext : Ext.Expansion.S) str =
-  match Parser.parse str with
-  | Ok ast -> Ast.Eval.eval str ast ~ext:(module Ext) |> Result.ok
-  | Error err -> Error err
+  let lexbuf = Lexing.from_string str in
+  match Lex_and_parse.parse_document lexbuf with
+  | Ok ast -> Lex_and_parse.pprint_parsed_ast ast |> Result.ok
+  | Error _ as e -> e
+
 
 let from_file filename (module Ext : Ext.Expansion.S) =
   File.read_all filename |> from_string (module Ext)

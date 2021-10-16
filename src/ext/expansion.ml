@@ -1,7 +1,7 @@
 open Utils
 
 module type S = sig
-  val initial_alias : string Map.Make(String).t
+  val initial_alias : string Map.Make(Utils.String).t
 
   val concat_block : string list -> string
 

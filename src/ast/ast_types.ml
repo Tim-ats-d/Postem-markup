@@ -9,7 +9,7 @@ and expr =
   | Text of string
   | Seq of expr list
   | Unformat of string
-  | White of int * whitespace
+  | White of whitespace
 
 and block =
   | Conclusion of expr

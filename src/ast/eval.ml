@@ -2,9 +2,8 @@ open Ast_types
 open Utils
 
 module type EXT = Ext.Expansion.S
-module DefaultEXT = Ext.Expansion.Default
 
-let rec eval ?ext:((module Expsn : EXT)=(module DefaultEXT)) filename document =
+let rec eval (module Expsn : EXT) filename document =
   Preprocess.preprocess Expsn.initial_alias document
   |> eval_elist (module Expsn : EXT)
   |> Expsn.concat_block
@@ -23,7 +22,7 @@ and eval_expr (module Ext : EXT) = function
   | Text t -> t
   | Seq l -> eval_elist (module Ext) l |> String.join
   | Unformat u -> u
-  | White (i, w) -> eval_whitespace i w
+  | White w -> eval_whitespace w
 
 and eval_block (module Ext : EXT) =
   let eval_expr_ext = eval_expr (module Ext) in
@@ -35,8 +34,8 @@ and eval_block (module Ext : EXT) =
   | Heading (lvl, h) -> eval_expr_ext h |> Ext.heading lvl
   | Quotation q -> eval_expr_ext q |> String.split_lines |> Ext.quotation
 
-and eval_whitespace i chr =
-  String.make i
+and eval_whitespace chr =
+  Char.to_string
   @@
   match chr with
   | CarriageReturn -> '\r'
