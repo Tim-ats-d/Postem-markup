@@ -3,16 +3,6 @@ module Char = struct
 
   let to_string = String.make 1
 
-  let is_alpha = function 'A' .. 'Z' | 'a' .. 'z' -> true | _ -> false
-
-  let is_digit = function '0' .. '9' -> true | _ -> false
-
-  let is_symbol = function
-    | '~' .. '{' | '@' .. ':' | '/' .. '!' -> true
-    | _ -> false
-
-  let is_white = function ' ' | '\n' | '\r' | '\t' -> true | _ -> false
-
   let concat chars = List.map to_string chars |> String.concat ""
 end
 
@@ -32,10 +22,6 @@ module String = struct
   let join = String.concat ""
 
   let split_lines = String.split_on_char '\n'
-
-  let strip_first str =
-    let l = String.length str in
-    if l = 0 || l = 1 then "" else String.sub str 1 (l - 1)
 end
 
 module File = struct

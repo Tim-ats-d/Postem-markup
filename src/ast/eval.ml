@@ -10,7 +10,7 @@ let rec eval (module Expsn : EXT) filename document =
   |> Ext.Document.create filename
   |> Expsn.postprocess
 
-and eval_elist (module Ext : EXT) = List.map (eval_expr (module Ext: EXT))
+and eval_elist (module Ext : EXT) = List.map (eval_expr (module Ext : EXT))
 
 and eval_expr (module Ext : EXT) = function
   | Alias _ -> String.empty

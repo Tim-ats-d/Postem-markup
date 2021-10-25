@@ -34,7 +34,7 @@ module Default : S = struct
       Array.get [| '#'; '*'; '='; '-'; '^'; '"' |] level
       |> String.(length str |> make)
     in
-    Printf.sprintf "%s%s" str underline
+    Printf.sprintf "%s\n%s" str underline
 
   let quotation = String.concat_first "\n █ "
 

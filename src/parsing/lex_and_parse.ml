@@ -5,11 +5,8 @@ let print_error_position lexbuf =
     (pos.pos_cnum - pos.pos_bol + 1)
 
 let parse_document lexbuf =
-  try Ok (Parser.document (Lexer.read []) lexbuf) with
-  | Lexer.Syntax_error msg ->
-      Printf.sprintf "%s: %s." (print_error_position lexbuf) msg |> Result.error
-  | Parser.Error ->
-      Printf.sprintf "%s: syntax error." (print_error_position lexbuf)
-      |> Result.error
-
-let pprint_parsed_ast = Ast.Pprint.pprint_document
+  try Ok (Parser.document Lexer.read lexbuf)
+  with Parser.Error ->
+    print_error_position lexbuf
+    |> Printf.sprintf "%s: syntax error."
+    |> Result.error

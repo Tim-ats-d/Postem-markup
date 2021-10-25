@@ -3,14 +3,6 @@ module Char : sig
 
   val to_string : char -> string
 
-  val is_alpha : char -> bool
-
-  val is_digit : char -> bool
-
-  val is_symbol : char -> bool
-
-  val is_white : char -> bool
-
   val concat : char list -> string
 end
 
@@ -28,8 +20,6 @@ module String : sig
   val concat_first : string -> string list -> string
 
   val join : string list -> string
-
-  val strip_first : string -> string
 
   val split_lines : string -> string list
 end
