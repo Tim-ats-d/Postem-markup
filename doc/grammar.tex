@@ -1,0 +1,128 @@
+\part{Grammar}\label{part:grammar}
+
+\section{Literals}
+
+\subsection{Integer}
+
+\begin{bnf*}
+    \bnfprod{digit}
+        {\bnfts{0} \bnfsk \bnfts{9}}\\
+    \bnfprod{integer-literal}
+        {\bnfpn{digit} \bnfts{+}}\\
+\end{bnf*}
+
+\subsection{Text}
+
+\begin{bnf*}
+    \bnfprod{char}
+            {\bnfts{A} \bnfsk \bnfts{Z} \bnfor
+            \bnfts{a} \bnfsk\bnfts{z} \bnfor
+            \bnfts{0} \bnfsk \bnfts{9} \bnfor}\\
+        \bnfmore{\bnfts{!} \bnfor \bnfts{"} \bnfor \bnfts{\#} \bnfor \bnfts{\$} \bnfor \bnfts{\%} \bnfor \bnfts{\&} \bnfor}\\
+        \bnfmore{\bnfts{\textquotesingle} \bnfor \bnfts{)} \bnfor \bnfts{(} \bnfor \bnfts{*} \bnfor \bnfts{+} \bnfor \bnfts{,} \bnfor}\\
+        \bnfmore{\bnfts{-} \bnfor \bnfts{.} \bnfor \bnfts{/} \bnfor \bnfts{:} \bnfor \bnfts{;} \bnfor \bnfts{<} \bnfor}\\
+        \bnfmore{\bnfts{=} \bnfor \bnfts{>} \bnfor \bnfts{?} \bnfor \bnfts{@} \bnfor \bnfts{`} \bnfor \bnfts{\textasciitilde} \bnfor}\\
+        \bnfmore{\bnfts{]} \bnfor \bnfts{[} \bnfor \bnfts{\textasciicircum} \bnfor \bnfts{\_}  \bnfor \bnfts{\{} \bnfor \bnfts{|} \bnfor \bnfts{\}}}\\
+    \bnfprod{alpha}
+        {\bnfts{A} \bnfsk \bnfts{Z} \bnfor
+        \bnfts{a} \bnfsk\bnfts{z}}\\
+    \bnfprod{text-literal}
+        {\bnfpn{alpha} \bnfpn{char} \bnfts{*}}
+\end{bnf*}
+
+\subsection{Whitespace}
+
+\begin{bnf*}
+    \bnfprod{whitespace-literal}
+        {\bnfts{‘\hspace{1em}’} \bnfor}
+        \bnfts{\textbackslash t} \bnfor \bnfts{\textbackslash r}
+\end{bnf*}
+
+\section{Statment}
+
+\subsection{Alias}
+
+\begin{bnf*}
+    \bnfprod{alias-equality}
+        {\bnfts{==}}\\
+    \bnfprod{alias-value}
+        {\bnfts{"} \bnfpn{any-char} \bnfts{"}}\\
+    \bnfprod{alias-statment}
+        {\bnfpn{text} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]} \bnfpn{alias-equality}}\\
+    \bnfmore{\bnfts{[} \bnfpn{whitespace-literal} \bnfts{]} \bnfpn{alias-value}}
+\end{bnf*}
+
+\subsection{Include}
+
+\begin{bnf*}
+    \bnfprod{include-statment}
+        {\bnfts{!!} \bnfpn{any-char} \bnfts{!!}}
+\end{bnf*}
+
+\subsection{Unformat}
+
+\begin{bnf*}
+    \bnfprod{unformat-statment}
+        {\bnfts{\{\{\{} \bnfpn{any-char} \bnfts{\}\}\}}}
+\end{bnf*}
+
+\subsection{Sequence}
+
+\begin{bnf*}
+    \bnfprod{expression}
+        {\bnfpn{integer} \bnfor \bnfpn{text} \bnfor \bnfpn{whitespace} \bnfor \bnfpn{alias-statment} \bnfor}\\
+    \bnfmore{\bnfpn{include-statment} \bnfor \bnfpn{unformat-statment}}\\
+    \bnfprod{sequence-statment}
+        {\bnfpn{expression} \bnfts{+}}
+\end{bnf*}
+
+\section{Block}
+
+\subsection{Conclusion}
+
+\begin{bnf*}
+    \bnfprod{conclusion-begin}
+        {\bnfts{--} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]}}\\
+    \bnfprod{conclusion-block}
+        {\bnfpn{conclusion-begin} \bnfpn{sequence-statment}}
+\end{bnf*}
+
+\subsection{Definition}
+
+\begin{bnf*}
+    \bnfprod{definition-equality}
+        {\bnfts{\%\%}}\\
+    \bnfprod{definition-block}
+        {\bnfpn{sequence-statment} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]}}\\
+    \bnfmore{\bnfpn{definition-equality} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]}}\\
+    \bnfmore{\bnfpn{sequence-statment}}
+\end{bnf*}
+
+\subsection{Heading}
+
+\begin{bnf*}
+    \bnfprod{heading-mark}
+        {\bnfts{\&}}\\
+    \bnfprod{heading-block}
+        {\bnfpn{heading-mark} \bnfts{+} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]} \bnfpn{sequence-statment}}
+\end{bnf*}
+
+\subsection{Quotation}
+
+\begin{bnf*}
+    \bnfprod{quotation-begin}
+        {\bnfts{>} \bnfts{[} \bnfpn{whitespace-literal} \bnfts{]}}\\
+    \bnfprod{conclusion-block}
+        {\bnfpn{quotation-begin} \bnfpn{sequence-statment}}
+\end{bnf*}
+
+\section{Document}
+
+\begin{bnf*}
+    \bnfprod{paragraph}
+        {\bnfpn{conclusion-block} \bnfor \bnfpn{definition-block} \bnfor}\\
+    \bnfmore{ \bnfpn{heading-block} \bnfor \bnfpn{quotation-block} \bnfor}\\
+    \bnfmore{\bnfpn{sequence-statment}}\\
+    \bnfprod{document}
+        {\bnfpn{paragraph} \bnfts{(} \bnfpn{separator} \bnfpn{paragraph} \bnfts{)*}}
+\end{bnf*}

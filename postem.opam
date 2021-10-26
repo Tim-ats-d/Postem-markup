@@ -1,0 +1,26 @@
+opam-version: "2.0"
+name: "postem"
+synopsis: """Fast and easy notes taking oriented markup language"""
+maintainer: ["Timéo Arnouts <tim.arnouts@protonmail.com>"]
+authors: ["The postem programmers"]
+homepage: "https://github.com/Tim-ats-d/Postem-markup"
+doc: "https://github.com/Tim-ats-d/Postem-markup/tree/master/doc"
+dev-repo: "https://github.com/Tim-ats-d/Postem-markup"
+bug-reports: "https://github.com/Tim-ats-d/Postem-markup/issues"
+license: ["GPL-3.0"]
+tags: ["notes" "markup" "markup-language" "note-taking"]
+depends: ["ocaml" {>= "4.11.0"}]
+build: [[ "dune" "build" "-p" name "-j" jobs]]
+build-doc: [[ make "doc"]]
+install: [[make "install"]]
+description: """
+Postem is a fast and easy notes taking oriented markup language.
+
+It aims to offer a quick language to write to structure a text taken in note.
+"""
+depends: [
+  "dune" {>= "2.9.0"}
+  "odoc" {= "1.5.3"}
+  "ocamlformat" {="0.19"}
+  "menhir"{= "20210419"}
+]

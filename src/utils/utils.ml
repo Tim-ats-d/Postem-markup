@@ -27,12 +27,6 @@ end
 module File = struct
   type t = string
 
-  let is_exist filename =
-    try
-      open_in filename |> ignore;
-      true
-    with Sys_error _ -> false
-
   let read_all filename =
     let ic = open_in filename in
     let rec read_lines acc =

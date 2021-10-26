@@ -27,8 +27,6 @@ end
 module File : sig
   type t = string
 
-  val is_exist : t -> bool
-
   val read_all : t -> string
 
   val write : t -> string -> unit

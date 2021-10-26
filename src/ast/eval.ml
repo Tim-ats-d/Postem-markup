@@ -17,7 +17,7 @@ and eval_expr (module Ext : EXT) = function
   | Block b -> eval_block (module Ext : EXT) b
   | Int i -> string_of_int i
   | Include filename ->
-      if File.is_exist filename then File.read_all filename else String.empty
+      if Sys.file_exists filename then File.read_all filename else String.empty
   | Listing l -> eval_elist (module Ext) l |> Ext.listing
   | Text t -> t
   | Seq l -> eval_elist (module Ext) l |> String.join

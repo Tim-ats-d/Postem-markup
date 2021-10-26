@@ -1,6 +1,6 @@
 # Postem
 
-**Postem** is a fast and **easy notes taking** oriented **markup language**. 
+**Postem** is a fast and **easy notes taking** oriented **markup language**.
 
 It aims to offer a **quick** language to write to structure a text taken in note.
 
