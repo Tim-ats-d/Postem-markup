@@ -1,6 +1,7 @@
-.PHONY: all build clean repl fmt deps
+.PHONY: all build clean doc repl fmt deps
 
-all: build doc
+all:
+	build doc
 
 build:
 	dune build
@@ -8,9 +9,15 @@ build:
 doc:
 	dune build @doc
 	pdflatex doc/postem_book.tex
+	rm postem_book.aux
+	rm postem_book.log
+	rm postem_book.toc
+	mkdir doc/build
+	mv postem_book.pdf doc/build/
 
 clean:
 	dune clean
+	rm -rf doc/build
 
 repl: all
 	dune utop

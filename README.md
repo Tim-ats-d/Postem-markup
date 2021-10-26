@@ -2,24 +2,51 @@
 
 **Postem** is a fast and **easy notes taking** oriented **markup language**.
 
-It aims to offer a **quick** language to write to structure a text taken in note.
+## Abstracts
+
+**Markdown** is pretty interesting, but not suitable for note taking. **LaTeX** is too complicated to write although powerful. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
 
 ## Features
 
-This will come when many features are implemented.
+#### Not yet implemented
 
-## Roadmap
+* Expansions support
+* Compilation to other famous markup languages.
+* Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format.
+* Unicode support.
 
-- [x] Parsing.
-- [ ] Unicode support.
-- [ ] Expansions support.
-- [ ] Compilation to other markup languages.
-- [ ] Command line argument parsing for the compiler.
-- [ ] Documentation.
+## Examples
+
+Todo.
+
+## Building
+
+```
+make build
+```
+
+## Installation
+
+```
+make install
+postem --help
+```
 
 ## Documentation
 
-Coming soon.
+### The Postem book
+
+The Postem book contains the grammar specification and more.
+
+It can be found in `doc/build` after running:
+
+```
+make doc
+```
+
+## Contributing
+
+Pull requests, bug reports, and feature requests are welcome.
 
 ## License
 
