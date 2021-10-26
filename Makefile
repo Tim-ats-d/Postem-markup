@@ -21,4 +21,8 @@ deps:
 	dune external-lib-deps --missing @@default
 
 install: all
-	dune install
+	sudo cp "${PWD}/_build/default/bin/postem.exe" /usr/local/bin/;
+	sudo mv /usr/local/bin/postem.exe /usr/local/bin/postem
+
+uninstall:
+	sudo rm /usr/local/bin/postem
