@@ -10,7 +10,10 @@ bug-reports: "https://github.com/Tim-ats-d/Postem-markup/issues"
 license: ["GPL-3.0"]
 tags: ["notes" "markup" "markup-language" "note-taking"]
 depends: ["ocaml" {>= "4.11.0"}]
-build: [[ "dune" "build" "-p" name "-j" jobs]]
+build: [
+  [ "dune" "build" "-p" name "-j" jobs]
+  [ "dune" "build" "@doc" "-p" name ] {with-doc}
+]
 build-doc: [[ make "doc"]]
 install: [[make "install"]]
 description: """
@@ -20,7 +23,7 @@ It aims to offer a quick language to write to structure a text taken in note.
 """
 depends: [
   "dune" {>= "2.9.0"}
-  "odoc" {= "1.5.3"}
+  "odoc" {with-doc}
   "ocamlformat" {="0.19"}
   "menhir"{= "20210419"}
 ]
