@@ -1,15 +1,19 @@
 P == "Postem"
 
-&P
+& The Postem book
 
-> P is a fast and easy notes taking oriented markup language.
+&& Introduction
 
-It aims to offer a quick language to write to structure a text taken in note.
+A long introduction text.
 
-&&Features
+&& Abstracts
 
-This will come when many features are implemented.
+> A quotation of the author of the language explaining the reasons that led him to write P
 
-&& Roadmap
+&& Marks description
 
-Todo.
+Unformat block %% Allows you to write text that will not be formatted.
+
+Example %% {{{Unformated # text & with many special char }}}
+
+-- This mark is pretty usefull.

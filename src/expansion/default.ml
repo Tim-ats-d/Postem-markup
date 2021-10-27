@@ -17,9 +17,15 @@ module S : Type.S = struct
     let underlining = String.make (String.length text) underlining_char in
     Printf.sprintf "%s\n%s" text underlining
 
-  let quotation = String.concat_first "\n █ "
+  let quotation lines = String.join lines |> Printf.sprintf " █ %s"
 
-  let listing = String.concat_first "\n - "
+  let listing = function
+    | [] -> ""
+    | [ hd ] -> Printf.sprintf "  - %s" hd
+    | hd :: tl ->
+        let first = Printf.sprintf "  - %s" hd
+        and rest = String.concat_first "\n  - " tl in
+        first ^ rest
 
   let postprocess { Ext.Document.content; _ } = content
 end

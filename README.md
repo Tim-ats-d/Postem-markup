@@ -8,16 +8,69 @@
 
 ## Features
 
+* Expansions support
+
 #### Not yet implemented
 
-* Expansions support
 * Compilation to other famous markup languages.
 * Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format.
 * Unicode support.
 
 ## Examples
 
-Todo.
+This text marked in Postem:
+```text
+P == "Postem"
+
+& The P book
+
+&& Introduction
+
+A long introduction text.
+
+&& Abstracts
+
+> A quotation of the author of the language explaining the reasons that led him to write P
+
+&& Marks description
+
+Unformat block %% Allows you to write text that will not be formatted.
+
+Example %% {{{Unformated # text & with many special char.}}}
+
+-- This mark is pretty usefull.
+```
+will be rendered in:
+<details>
+    <summary><b>Render</b></summary>
+
+```text
+The Postem book
+***************
+
+Introduction
+============
+
+A long introduction text.
+
+Abstracts
+=========
+
+ █ A quotation of the author of the language explaining the reasons that led him to write Postem
+
+Marks description
+=================
+
+Unformat block
+  | Allows you to write text that will not be formatted.
+
+Example
+  | Unformated # text & with many special char
+
+\-> This mark is pretty usefull.
+```
+
+</details>
 
 ## Installation
 
