@@ -4,7 +4,8 @@ open Utils
 module type EXT = Ext.Expansion.S
 
 let rec eval (module Expsn : EXT) filename document =
-  Preprocess.preprocess Expsn.initial_alias document
+  let env = Env.create ~ctx:Expsn.initial_alias in
+  Preprocess.preprocess env document
   |> eval_elist (module Expsn : EXT)
   |> Expsn.concat_block
   |> Ext.Document.create filename

@@ -1,11 +1,14 @@
 open Parsing
 open Utils
 
-let from_file filename (module Ext : Ext.Expansion.S) =
-  let lexbuf = File.read_all filename |> Lexing.from_string in
+let from_str ?(filename = "") (module Ext : Ext.Expansion.S) str =
+  let lexbuf = Lexing.from_string str in
   match Lex_and_parse.parse_document lexbuf with
   | Ok ast -> Ast.Eval.eval (module Ext) filename ast |> Result.ok
   | Error _ as err -> err
+
+let from_file filename (module Ext : Ext.Expansion.S) =
+  File.read_all filename |> from_str (module Ext) ~filename
 
 let compile () =
   let args = Args.parse () in

@@ -2,8 +2,6 @@ module Char = struct
   include Char
 
   let to_string = String.make 1
-
-  let concat chars = List.map to_string chars |> String.concat ""
 end
 
 module String = struct
@@ -12,10 +10,6 @@ module String = struct
   let empty = ""
 
   let is_empty str = str = ""
-
-  let of_chars chars = String.of_seq (List.to_seq chars)
-
-  let to_chars str = String.to_seq str |> List.of_seq
 
   let concat_first sep = function [] -> "" | l -> sep ^ String.concat sep l
 

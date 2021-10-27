@@ -40,7 +40,7 @@ rule read = parse
 
 and read_string buf = parse
   | '"'    { STRING (Buffer.contents buf) }
-  | '\n'   { Lexing.new_line lexbuf; read_path buf lexbuf }
+  | '\n'   { Lexing.new_line lexbuf; read_string buf lexbuf }
   | _ as c { Buffer.add_char buf c; read_string buf lexbuf }
 
 and read_unformat buf = parse

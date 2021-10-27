@@ -19,12 +19,6 @@
 
 Todo.
 
-## Building
-
-```
-make build
-```
-
 ## Installation
 
 ```
