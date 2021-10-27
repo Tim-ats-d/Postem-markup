@@ -1,6 +1,6 @@
 val from_str :
   ?filename:string ->
-  (module Ext.Expansion.S) ->
+  (module Expansion.Type.S) ->
   string ->
   (string, string) result
 (** [from_str expansion str] returns [Ok output] if compilation goes smoothly, [Error msg] otherwise.
@@ -9,7 +9,7 @@ val from_str :
 *)
 
 val from_file :
-  Utils.File.t -> (module Ext.Expansion.S) -> (string, string) result
+  Utils.File.t -> (module Expansion.Type.S) -> (string, string) result
 (** [from_file filename expansion] does the same as [from_str] execept it compiles the content of file [filename]. *)
 
 val compile : unit -> unit

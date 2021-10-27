@@ -1,0 +1,3 @@
+(library
+ (name expansion)
+ (libraries ext utils))

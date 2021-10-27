@@ -3,7 +3,7 @@
 type t = {
   input_file : string;
   output_file : string;
-  expansion_path : string;
+  expansion : string;
   output_on_stdout : bool;
 }
 (** Type representing CLI argument passed by user. *)

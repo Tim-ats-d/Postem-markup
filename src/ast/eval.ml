@@ -1,7 +1,7 @@
 open Ast_types
 open Utils
 
-module type EXT = Ext.Expansion.S
+module type EXT = Expansion.Type.S
 
 let rec eval (module Expsn : EXT) filename document =
   let env = Env.create ~ctx:Expsn.initial_alias in
