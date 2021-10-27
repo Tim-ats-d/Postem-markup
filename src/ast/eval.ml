@@ -1,39 +1,41 @@
 open Ast_types
 open Utils
 
-module type EXT = Expansion.Type.S
+module type EXPSN = Expansion.Type.S
 
-let rec eval (module Expsn : EXT) filename document =
+let rec eval (module Expsn : EXPSN) filename document =
   let env = Env.create ~ctx:Expsn.initial_alias in
   Preprocess.preprocess env document
-  |> eval_elist (module Expsn : EXT)
+  |> eval_elist (module Expsn : EXPSN)
+  |> List.filter (fun x -> x <> String.empty)
   |> Expsn.concat_block
   |> Ext.Document.create filename
   |> Expsn.postprocess
 
-and eval_elist (module Ext : EXT) = List.map (eval_expr (module Ext : EXT))
+and eval_elist (module Expsn : EXPSN) =
+  List.map (eval_expr (module Expsn : EXPSN))
 
-and eval_expr (module Ext : EXT) = function
+and eval_expr (module Expsn : EXPSN) = function
   | Alias _ -> String.empty
-  | Block b -> eval_block (module Ext : EXT) b
+  | Block b -> eval_block (module Expsn : EXPSN) b
   | Int i -> string_of_int i
   | Include filename ->
       if Sys.file_exists filename then File.read_all filename else String.empty
-  | Listing l -> eval_elist (module Ext) l |> Ext.listing
+  | Listing l -> eval_elist (module Expsn) l |> Expsn.listing
   | Text t -> t
-  | Seq l -> eval_elist (module Ext) l |> String.join
+  | Seq l -> eval_elist (module Expsn) l |> String.join
   | Unformat u -> u
   | White w -> eval_whitespace w
 
-and eval_block (module Ext : EXT) =
-  let eval_expr_ext = eval_expr (module Ext) in
+and eval_block (module Expsn : EXPSN) =
+  let eval_expr_ext = eval_expr (module Expsn) in
   function
-  | Conclusion c -> eval_expr_ext c |> Ext.conclusion
+  | Conclusion c -> eval_expr_ext c |> Expsn.conclusion
   | Definition (name, values) ->
       let name' = eval_expr_ext name and values' = eval_expr_ext values in
-      values' |> String.split_lines |> Ext.definition name'
-  | Heading (lvl, h) -> eval_expr_ext h |> Ext.heading lvl
-  | Quotation q -> eval_expr_ext q |> String.split_lines |> Ext.quotation
+      values' |> String.split_lines |> Expsn.definition name'
+  | Heading (lvl, h) -> eval_expr_ext h |> Expsn.heading lvl
+  | Quotation q -> eval_expr_ext q |> String.split_lines |> Expsn.quotation
 
 and eval_whitespace chr =
   Char.to_string

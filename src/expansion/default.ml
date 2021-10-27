@@ -7,17 +7,15 @@ module S : Type.S = struct
 
   let concat_block = String.concat "\n\n"
 
-  let conclusion str = Printf.sprintf "\\-> %s" str
+  let conclusion text = Printf.sprintf {|\-> %s|} text
 
   let definition name values = name ^ String.concat_first "\n  | " values
 
-  let heading level str =
-    let underline =
-      let chars = [| '#'; '*'; '='; '-'; '^'; '"' |] in
-      (if level > 6 then Array.get chars 5 else Array.get chars level)
-      |> String.(length str |> make)
-    in
-    Printf.sprintf "%s\n%s" str underline
+  let heading lvl text =
+    let get_char = Array.get [| '#'; '*'; '='; '-'; '^'; '"' |] in
+    let underlining_char = if lvl > 6 then get_char 5 else get_char lvl in
+    let underlining = String.make (String.length text) underlining_char in
+    Printf.sprintf "%s\n%s" text underlining
 
   let quotation = String.concat_first "\n █ "
 

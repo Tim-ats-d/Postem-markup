@@ -22,8 +22,7 @@ repl: build
 	dune utop
 
 fmt:
-	dune build @fmt --auto-promote
-	exit 0
+	dune build @fmt --auto-promote | exit 0
 
 deps:
 	dune external-lib-deps --missing @@default

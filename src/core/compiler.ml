@@ -8,12 +8,17 @@ let load_expansion expsn_name =
       Expansion.Known.expansions
   in
   match found_expsn with
-  | [] -> Printf.sprintf {|No extension found as "%s"|} expsn_name |> failwith
+  | [] ->
+      Printf.eprintf
+        {|Error: no extension found as "%s". Did you register your extension in src/expansion/known.ml ?|}
+        expsn_name;
+      exit 1
   | [ (_, expsn) ] -> expsn
   | _ ->
-      Printf.sprintf {|Ambiguity found. Several extensions are known as "%s"|}
-        expsn_name
-      |> failwith
+      Printf.eprintf
+        {|Error: ambiguity found. Several extensions are known as "%s"|}
+        expsn_name;
+      exit 1
 
 let from_str ?(filename = "") (module Expsn : Expansion.Type.S) str =
   let lexbuf = Lexing.from_string str in
