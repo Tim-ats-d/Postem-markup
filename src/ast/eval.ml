@@ -8,8 +8,8 @@ let rec eval (module Expsn : EXPSN) filename document =
   Preprocess.preprocess env document
   |> eval_elist (module Expsn : EXPSN)
   |> List.filter (fun x -> x <> String.empty)
-  |> Expsn.concat_block
-  |> Ext.Document.create filename
+  |> Expsn.concat
+  |> Ext.Postprocess.create filename
   |> Expsn.postprocess
 
 and eval_elist (module Expsn : EXPSN) =

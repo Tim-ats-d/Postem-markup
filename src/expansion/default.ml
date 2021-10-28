@@ -5,7 +5,7 @@ module S : Type.S = struct
     let module M = Map.Make (String) in
     M.empty
 
-  let concat_block = String.concat "\n\n"
+  let concat = String.concat "\n\n"
 
   let conclusion text = Printf.sprintf {|\-> %s|} text
 
@@ -13,7 +13,7 @@ module S : Type.S = struct
 
   let heading lvl text =
     let get_char = Array.get [| '#'; '*'; '='; '-'; '^'; '"' |] in
-    let underlining_char = if lvl > 6 then get_char 5 else get_char lvl in
+    let underlining_char = if lvl >= 6 then get_char 5 else get_char lvl in
     let underlining = String.make (String.length text) underlining_char in
     Printf.sprintf "%s\n%s" text underlining
 
@@ -21,11 +21,11 @@ module S : Type.S = struct
 
   let listing = function
     | [] -> ""
-    | [ hd ] -> Printf.sprintf "  - %s" hd
-    | hd :: tl ->
-        let first = Printf.sprintf "  - %s" hd
-        and rest = String.concat_first "\n  - " tl in
+    | [ x ] -> Printf.sprintf "  - %s" x
+    | x :: xs ->
+        let first = Printf.sprintf "  - %s" x
+        and rest = String.concat_first "\n  - " xs in
         first ^ rest
 
-  let postprocess { Ext.Document.content; _ } = content
+  let postprocess { Ext.Postprocess.content; _ } = content
 end

@@ -1,2 +1,6 @@
 let expansions : (string * (module Type.S)) list =
-  [ ("default", (module Default.S)); ("markdown", (module Markdown.S)) ]
+  [
+    ("default", (module Default.S));
+    ("markdown", (module Markdown.S));
+    ("html", (module Html.S));
+  ]

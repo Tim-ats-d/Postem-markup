@@ -10,7 +10,7 @@ type t = {
 let create ~input_file ~output_file ~expansion ~output_on_stdout =
   { input_file; output_file; expansion; output_on_stdout }
 
-let usage_msg = "postem [-s] file -o <output>"
+let usage_msg = "postem [-s | -e expansion] file -o <output>"
 
 let output_on_stdout = ref false
 

@@ -4,17 +4,21 @@
 
 ## Abstracts
 
-**Markdown** is pretty interesting, but not suitable for note taking. **LaTeX** is too complicated to write although powerful. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
+**Markdown** is pretty simple and powerful, but not suitable for note taking. **LaTeX** a very heavy syntax that makes it complicated to write  although very complete. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
 
-## Features
+## Key Features
 
-* Expansions support
+Postem is
+
+* **Light:** a light syntax and a small number of marks.
+* **Flexible:** it compiles to other famous markup languages such as **Markdown** and **HTML**.
+* **Extensible:** it is very easy to create an expansion to customize the rendering.
 
 #### Not yet implemented
 
-* Compilation to other famous markup languages.
-* Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format.
-* Unicode support.
+* A Pandoc-repl like.
+* Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format
+* Unicode support outside of unformat expression.
 
 ## Examples
 
@@ -40,9 +44,9 @@ Example %% {{{Unformated # text & with many special char.}}}
 
 -- This mark is pretty usefull.
 ```
-will be rendered in:
+will be rendered in this (with default plain text mode enabled):
 <details>
-    <summary><b>Render</b></summary>
+    <summary><b>Output</b></summary>
 
 ```text
 The Postem book
@@ -76,7 +80,6 @@ Example
 
 ```
 make install
-postem --help
 ```
 
 ## Documentation

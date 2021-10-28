@@ -31,7 +31,7 @@ rule read = parse
   | "!!"            { read_path (Buffer.create 17) lexbuf }
   | '"'             { read_string (Buffer.create 17) lexbuf }
   | "--" ws?        { CONCLUSION }
-  | ws? "%%" ws?        { DEFINITION }
+  | ws? "%%" ws?    { DEFINITION }
   | ('&'+ as h) ws? { HEADING (String.length h) }
   | ">" ws?         { QUOTATION }
   | _               { Lexing.lexeme lexbuf

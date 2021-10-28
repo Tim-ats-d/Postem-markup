@@ -1,7 +1,7 @@
 module type S = sig
   val initial_alias : string Map.Make(Utils.String).t
 
-  val concat_block : string list -> string
+  val concat : string list -> string
 
   val conclusion : string -> string
 
@@ -13,5 +13,5 @@ module type S = sig
 
   val listing : string list -> string
 
-  val postprocess : Ext.Document.t -> string
+  val postprocess : Ext.Postprocess.t -> string
 end

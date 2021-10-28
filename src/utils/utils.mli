@@ -22,6 +22,9 @@ module String : sig
   val join : string list -> string
   (** [join strings] is [String.concat "" strings]. *)
 
+  val real_split : char -> string -> string list
+  (** [real_split chr str] is [String.split_on_char chr str] but filtering empty string. *)
+
   val split_lines : string -> string list
   (** [split_lines str] is [String.split_on_char '\n' str]. *)
 end

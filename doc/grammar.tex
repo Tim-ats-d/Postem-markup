@@ -123,6 +123,10 @@
         {\bnfpn{conclusion-block} \bnfor \bnfpn{definition-block} \bnfor}\\
     \bnfmore{ \bnfpn{heading-block} \bnfor \bnfpn{quotation-block} \bnfor}\\
     \bnfmore{\bnfpn{sequence-statment}}\\
+    \bnfprod{newline}
+        {\bnfts{\textbackslash n} \bnfor \bnfts{\textbackslash r \textbackslash n}}\\
+    \bnfprod{separator}
+        {\bnfpn{newline} \bnfpn{newline} \bnfts{+}}\\
     \bnfprod{document}
         {\bnfpn{paragraph} \bnfts{(} \bnfpn{separator} \bnfpn{paragraph} \bnfts{)*}}
 \end{bnf*}
