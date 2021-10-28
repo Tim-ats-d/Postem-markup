@@ -17,6 +17,8 @@ module S : Type.S = struct
     let underlining = String.make (String.length text) underlining_char in
     Printf.sprintf "%s\n%s" text underlining
 
+  let paragraph = Fun.id
+
   let quotation lines = String.join lines |> Printf.sprintf " █ %s"
 
   let listing = function

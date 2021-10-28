@@ -23,7 +23,7 @@ and eval_expr (module Expsn : EXPSN) = function
       if Sys.file_exists filename then File.read_all filename else String.empty
   | Listing l -> eval_elist (module Expsn) l |> Expsn.listing
   | Text t -> t
-  | Seq l -> eval_elist (module Expsn) l |> String.join
+  | Seq l -> eval_elist (module Expsn) l |> String.join |> Expsn.paragraph
   | Unformat u -> u
   | White w -> eval_whitespace w
 

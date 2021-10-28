@@ -13,7 +13,9 @@ module S : Type.S = struct
   let conclusion content = format ~tag:"p" ~class_:"conclusion" content
 
   let definition name values =
-    let content = String.concat "\n" values |> Printf.sprintf "<b>%s</b>: %s" name in
+    let content =
+      String.concat "\n" values |> Printf.sprintf "<b>%s</b>: %s" name
+    in
     format ~tag:"p" ~class_:"definition" content
 
   let heading lvl content =
@@ -21,6 +23,8 @@ module S : Type.S = struct
     let tag = "h" ^ lvl_str
     and id = String.real_split ' ' content |> String.concat "-" in
     format ~tag ~id content
+
+  let paragraph text = format ~tag:"p" text
 
   let quotation lines =
     let content = String.concat "\n" lines in

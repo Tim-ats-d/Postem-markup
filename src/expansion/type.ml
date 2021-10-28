@@ -9,6 +9,8 @@ module type S = sig
 
   val heading : int -> string -> string
 
+  val paragraph : string -> string
+
   val quotation : string list -> string
 
   val listing : string list -> string

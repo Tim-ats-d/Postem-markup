@@ -15,7 +15,8 @@ module String = struct
 
   let join = String.concat ""
 
-  let real_split chr str = String.split_on_char chr str |> List.filter (( <> ) "")
+  let real_split chr str =
+    String.split_on_char chr str |> List.filter (( <> ) "")
 
   let split_lines = String.split_on_char '\n'
 end
