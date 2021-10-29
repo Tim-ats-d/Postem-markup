@@ -17,8 +17,6 @@ let default =
 
 let usage_msg = "postem [-s | -e expansion] <file> -o <output>"
 
-let version = "0.0.1"
-
 let speclist =
   let open Arg in
   [
@@ -32,7 +30,7 @@ let speclist =
     ( "--version",
       Unit
         (fun () ->
-          print_endline version;
+          print_endline "%%VERSION%%";
           exit 0),
       "Display the version number and exit" );
   ]

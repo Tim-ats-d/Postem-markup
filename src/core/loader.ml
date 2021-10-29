@@ -1,8 +1,6 @@
 let load_expansion expsn_name =
   let found_expsn =
-    List.filter
-      (fun (name, _) -> if name = expsn_name then true else false)
-      Expansion.Known.expansions
+    List.filter (fun (name, _) -> name = expsn_name) Expansion.Known.expansions
   in
   match found_expsn with
   | [] ->

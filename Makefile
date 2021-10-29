@@ -6,7 +6,7 @@ build:
 	dune build
 
 doc:
-	dune build @doc
+	dune build @doc-private
 	pdflatex doc/postem_book.tex
 	rm postem_book.aux
 	rm postem_book.log
@@ -18,7 +18,7 @@ clean:
 	dune clean
 	rm -rf doc/build
 
-repl: build
+repl:
 	dune utop
 
 fmt:
@@ -27,8 +27,9 @@ fmt:
 deps:
 	dune external-lib-deps --missing @@default
 
-install: build
-	sudo install -m 755 "${PWD}/_build/default/bin/postem.exe" /usr/local/bin/postem
+install:
+	dune build @install
+	dune install
 
 uninstall:
-	sudo rm /usr/local/bin/postem
+	dune uninstall
