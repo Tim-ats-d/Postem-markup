@@ -1,6 +1,6 @@
 # Postem
 
-**Postem** is a fast and **easy notes taking** oriented **markup language**.
+A fast and easy **notes taking** oriented **markup** language
 
 ## Abstracts
 
@@ -8,9 +8,7 @@
 
 ## Key Features
 
-Postem is
-
-* **Light:** a light syntax and a small number of marks.
+* **Lightweight:** a light syntax and a small number of marks.
 * **Flexible:** it compiles to other famous markup languages such as **Markdown** and **HTML**.
 * **Extensible:** it is very easy to create an expansion to customize the rendering.
 
@@ -76,10 +74,18 @@ Example
 
 </details>
 
-## Installation
+## Usage
+
+Install it:
 
 ```
-make install
+$ make install
+```
+
+Run Postem:
+
+```
+$ postem bin/doc.post -s
 ```
 
 ## Documentation

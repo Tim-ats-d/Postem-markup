@@ -1,10 +1,10 @@
 (** {1 Type} *)
 
 type t = {
-  input_file : string;
-  output_file : string;
-  expansion : string;
-  output_on_stdout : bool;
+  mutable input_file : string;
+  mutable output_file : string;
+  mutable expansion : string;
+  mutable output_on_stdout : bool;
 }
 (** Type representing CLI argument passed by user. *)
 
