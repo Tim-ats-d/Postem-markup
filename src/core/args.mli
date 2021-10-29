@@ -10,5 +10,7 @@ type t = {
 
 (** {2 API} *)
 
-val parse : unit -> t
-(** Parse CLI arguments and returns them as type [t]. *)
+val parse : on_empty:(t -> unit) -> t
+(** [parse ~on_empty:f] returns CLI arguments passed as type [t]. [f] received
+passed arguments and is executed if no positional arguments are passed.
+*)
