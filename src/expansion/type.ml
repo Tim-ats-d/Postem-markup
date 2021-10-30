@@ -21,7 +21,12 @@ end
 module type S = sig
   val initial_alias : string Map.Make(Utils.String).t
 
-  val meta : (string * [> `Inline | `Lines | `Paragraph ]) list
+  val meta :
+    (string
+    * [> `Inline of string -> string
+      | `Lines of string list -> string
+      | `Paragraph of string -> string ])
+    list
 
   module Tags : Tags
 

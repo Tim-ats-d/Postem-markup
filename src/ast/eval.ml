@@ -3,6 +3,8 @@ open Utils
 
 exception Missing_file of Lexing.position * string
 
+exception Missing_meta of string
+
 module type EXPSN = Expansion.Type.S
 
 let rec eval (module Expsn : EXPSN) filename document =
@@ -25,7 +27,7 @@ and eval_expr (module Expsn : EXPSN) = function
       if Sys.file_exists fname then File.read_all fname
       else raise (Missing_file (pos, fname))
   | Listing l -> eval_elist (module Expsn) l |> Expsn.Tags.listing
-  | Meta (name, content) -> Printf.sprintf "Meta('%s', '%s')" name content
+  | Meta (name, content) -> eval_meta (module Expsn : EXPSN) name content
   | Text t -> t
   | Seq l -> eval_elist (module Expsn) l |> String.join |> Expsn.Tags.paragraph
   | Unformat u -> u
@@ -40,6 +42,15 @@ and eval_block (module Expsn : EXPSN) =
       values' |> String.split_lines |> Expsn.Tags.definition name'
   | Heading (lvl, h) -> eval_expr_ext h |> Expsn.Tags.heading lvl
   | Quotation q -> eval_expr_ext q |> String.split_lines |> Expsn.Tags.quotation
+
+and eval_meta (module Expsn : EXPSN) name content =
+  match List.assoc_opt name Expsn.meta with
+  | None -> Missing_meta name |> raise
+  | Some mode -> (
+      match mode with
+      | `Inline f -> f (String.trim content)
+      | `Lines f -> f (String.split_lines content)
+      | `Paragraph f -> f content)
 
 and eval_whitespace = function
   | CarriageReturn -> "\r"

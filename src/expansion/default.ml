@@ -4,7 +4,19 @@ let initial_alias =
   let module M = Map.Make (String) in
   M.empty
 
-let meta = []
+let rec meta =
+  [
+    ("enumerate", `Lines enumerate);
+    ("read", `Inline File.read_all);
+  ]
+
+and enumerate lines =
+  List.mapi
+    (fun i line ->
+      if String.is_empty line then String.empty
+      else Printf.sprintf "%i. %s" (succ i) line)
+    lines
+  |> String.concat "\n"
 
 module Tags : Type.Tags = struct
   let conclusion text = Printf.sprintf {|\-> %s|} text
