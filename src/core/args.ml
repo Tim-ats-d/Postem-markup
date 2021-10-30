@@ -20,13 +20,19 @@ let usage_msg = "postem [-s | -e expansion] <file> -o <output>"
 let speclist =
   let open Arg in
   [
+    ( "-e",
+      String (fun e -> default.expansion <- e),
+      "Set the expansion used to render input" );
+    ( "-l",
+      Unit
+        (fun () ->
+          Expsn_handler.print ();
+          exit 0),
+      "Display the list of known expansions and exit." );
     ("-o", String (fun f -> default.output_file <- f), "Set output file name");
     ( "-s",
       Unit (fun () -> default.output_on_stdout <- true),
       "Output result on stdout" );
-    ( "-e",
-      String (fun e -> default.expansion <- e),
-      "Set the expansion used to render input" );
     ( "--version",
       Unit
         (fun () ->

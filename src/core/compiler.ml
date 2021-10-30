@@ -18,7 +18,7 @@ let launch_repl (module Expsn : Expansion.Type.S) =
     done
   with End_of_file -> (
     print_newline ();
-    match String.concat "\n" !input |> from_str (module Expsn) with
+    match List.rev !input |> String.concat "\n" |> from_str (module Expsn) with
     | Ok output ->
         print_endline output;
         exit 0
@@ -29,9 +29,9 @@ let launch_repl (module Expsn : Expansion.Type.S) =
 let compile () =
   let args =
     Args.parse ~on_empty:(fun args ->
-        launch_repl (Loader.load_expansion args.expansion))
+        launch_repl (Expsn_handler.load args.expansion))
   in
-  let module Expansion = (val Loader.load_expansion args.expansion) in
+  let module Expansion = (val Expsn_handler.load args.expansion) in
   match from_file (module Expansion) args.input_file with
   | Ok r ->
       if args.output_on_stdout then print_endline r

@@ -24,11 +24,14 @@ This text marked in Postem:
 ```text
 P == "Postem"
 
-& The P book
+& The Postem book
 
 && Introduction
 
-A long introduction text.
+A long introduction paragraph
+and its continuation.
+
+Another one.
 
 && Abstracts
 
@@ -38,7 +41,7 @@ A long introduction text.
 
 Unformat block %% Allows you to write text that will not be formatted.
 
-Example %% {{{Unformated # text & with many special char.}}}
+Example %% {{Unformated # text & with many special char.}}
 
 -- This mark is pretty usefull.
 ```
@@ -53,7 +56,9 @@ The Postem book
 Introduction
 ============
 
-A long introduction text.
+A long introduction paragraph and its continuation.
+
+Another one.
 
 Abstracts
 =========
@@ -67,7 +72,7 @@ Unformat block
   | Allows you to write text that will not be formatted.
 
 Example
-  | Unformated # text & with many special char
+  | Unformated # text & with many special char.
 
 \-> This mark is pretty usefull.
 ```

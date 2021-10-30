@@ -1,6 +1,12 @@
-let expansions : (string * (module Type.S)) list =
+type t = (name * (module Type.S) * doc) list
+
+and name = string
+
+and doc = string
+
+let expansions : t =
   [
-    ("default", (module Default.S));
-    ("markdown", (module Markdown.S));
-    ("html", (module Html.S));
+    ("default", (module Default.S), "output to plain text.");
+    ("markdown", (module Markdown.S), "output to Markdown.");
+    ("html", (module Html.S), "output to HTML.");
   ]
