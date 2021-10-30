@@ -15,7 +15,7 @@ let default =
     output_on_stdout = false;
   }
 
-let usage_msg = "postem [-s | -e expansion] <file> -o <output>"
+let usage_msg = "postem [-s | -o output] [-e expansion] <file>"
 
 let speclist =
   let open Arg in
@@ -32,7 +32,7 @@ let speclist =
     ("-o", String (fun f -> default.output_file <- f), "Set output file name");
     ( "-s",
       Unit (fun () -> default.output_on_stdout <- true),
-      "Output result on stdout" );
+      "Output result on stdout and exit" );
     ( "--version",
       Unit
         (fun () ->

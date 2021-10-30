@@ -1,0 +1,84 @@
+.TH POSTEM 1 "October 2021"
+
+.SH NAME
+postem \- A fast and easy notes taking oriented markup language
+
+.SH SYNOPSIS
+.B postem [-l] [-s | -o
+.I output
+] [ -e
+.I expansion
+]
+.I file
+
+.SH DESCRIPTION
+
+The
+.BR postem (1)
+program is the toplevel system for Postem, that permits interactive use of
+the Postem system through a read-eval-print loop. In this mode, the  system repeatedly
+reads Postem phrases from the input, then compiles and evaluates them, then
+prints the result value.
+
+A  toplevel phrase can span several lines. It is terminated by pressing
+.B <CTRL + D>
+.
+
+The toplevel system is started by the program
+.BR postem (1).
+Phrases are read on standard input, results are printed on standard
+output, errors on standard error.
+
+.SH OPTIONS
+
+The following command-line options are recognized by
+.BR postem (1).
+
+.TP
+.BI \-e \ expansion
+Set the expansion used to render input. It must be registered in
+.B src/expansion.know.ml
+.
+
+.TP
+.BI \-o \ output
+Set output file name. If it does not exist, it is created.
+
+.TP
+.B \-s
+Output result on stdout and exit.
+
+.TP
+.B \-version
+Print version string and exit.
+
+.TP
+.BR \-help \ or \ \-\-help
+Display a short usage summary and exit.
+
+.SH EXIT STATUS
+
+The following exit values are returned by
+.BR postem (1).
+
+.TP
+.B 0
+Successful operation.
+
+.TP
+.B 1
+An error occurred.
+
+
+
+.SH AUTHOR
+Timéo Arnouts <tim.arnouts@protonmail.com>
+
+.SH "SEE ALSO"
+
+The
+.B
+Postem
+repository
+<https://github.com/Tim-ats-d/Postem-markup>.
+
