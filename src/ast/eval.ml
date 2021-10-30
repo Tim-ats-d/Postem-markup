@@ -1,6 +1,8 @@
 open Ast_types
 open Utils
 
+exception Missing_file of Lexing.position * string
+
 module type EXPSN = Expansion.Type.S
 
 let rec eval (module Expsn : EXPSN) filename document =
@@ -19,9 +21,11 @@ and eval_expr (module Expsn : EXPSN) = function
   | Alias _ -> String.empty
   | Block b -> eval_block (module Expsn : EXPSN) b
   | Int i -> string_of_int i
-  | Include filename ->
-      if Sys.file_exists filename then File.read_all filename else String.empty
+  | Include (pos, fname) ->
+      if Sys.file_exists fname then File.read_all fname
+      else raise (Missing_file (pos, fname))
   | Listing l -> eval_elist (module Expsn) l |> Expsn.Tags.listing
+  | Meta (name, content) -> Printf.sprintf "Meta('%s', '%s')" name content
   | Text t -> t
   | Seq l -> eval_elist (module Expsn) l |> String.join |> Expsn.Tags.paragraph
   | Unformat u -> u

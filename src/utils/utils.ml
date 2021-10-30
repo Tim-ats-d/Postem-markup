@@ -39,3 +39,18 @@ module File = struct
     Printf.fprintf oc "%s\n" str;
     close_out oc
 end
+
+module Error_msg = struct
+  open Lexing
+
+  type t = string
+
+  let of_position { pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
+    let fname = if String.is_empty pos_fname then "REPL" else pos_fname in
+    Printf.sprintf "File \"%s\", line %d, character %d:\nError: %s" fname
+      pos_lnum
+      (pos_cnum - pos_bol + 1)
+      msg
+
+  let of_lexbuf { lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
+end

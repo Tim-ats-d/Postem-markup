@@ -1,10 +1,17 @@
-open Parsing
 open Utils
 
-let from_str ?(filename = "") (module Expsn : Expansion.Type.S) str =
+let from_str ~filename (module Expsn : Expansion.Type.S) str =
   let lexbuf = Lexing.from_string str in
-  match Lex_and_parse.parse_document lexbuf with
-  | Ok ast -> Ast.Eval.eval (module Expsn) filename ast |> Result.ok
+  match Parsing.parse_document lexbuf with
+  | Ok ast -> (
+      Ast.Eval.(
+        try eval (module Expsn) filename ast |> Result.ok
+        with Missing_file (pos, fname) ->
+          let msg =
+            Printf.sprintf
+              "in include expression:\n\"%s\": no such file or directory" fname
+          in
+          Error_msg.of_position pos ~msg |> Result.error))
   | Error _ as err -> err
 
 let from_file (module Expsn : Expansion.Type.S) filename =
@@ -18,7 +25,10 @@ let launch_repl (module Expsn : Expansion.Type.S) =
     done
   with End_of_file -> (
     print_newline ();
-    match List.rev !input |> String.concat "\n" |> from_str (module Expsn) with
+    match
+      List.rev !input |> String.concat "\n"
+      |> from_str ~filename:"REPL" (module Expsn)
+    with
     | Ok output ->
         print_endline output;
         exit 0
@@ -36,4 +46,6 @@ let compile () =
   | Ok r ->
       if args.output_on_stdout then print_endline r
       else File.write args.output_file r
-  | Error msg -> prerr_endline msg
+  | Error msg ->
+      prerr_endline msg;
+      exit 1

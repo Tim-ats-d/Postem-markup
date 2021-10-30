@@ -4,8 +4,9 @@ and expr =
   | Alias of string * string
   | Block of block
   | Int of int
-  | Include of string
+  | Include of Lexing.position * string
   | Listing of expr list
+  | Meta of string * string
   | Text of string
   | Seq of expr list
   | Unformat of string

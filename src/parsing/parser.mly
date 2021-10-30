@@ -14,6 +14,7 @@
 %token <string> STRING
 
 %token <string> INCLUDE
+%token <string * string> META
 %token <string> UNFORMAT
 
 %token CONCLUSION DEFINITION QUOTATION
@@ -45,8 +46,9 @@ paragraph: elist=expr+ { Seq elist }
 
 expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
-  | i=INCLUDE                    { Include i }
+  | i=INCLUDE                    { Include ($startpos, i) }
   | i=INT                        { Int i }
+  | META                         { let name, text = $1 in Meta (name, text) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=whitespace                 { White w }

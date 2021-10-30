@@ -1,5 +1,7 @@
 {
   open Parser
+
+  exception Error of Lexing.lexbuf * string
 }
 
 let alpha = ['a'-'z' 'A'-'Z']
@@ -27,6 +29,9 @@ rule read = parse
   | text as t       { TEXT t }
   | int as i        { INT (int_of_string i) }
   | ws? "==" ws?    { ASSIGNMENT }
+  | ".."            { let name = read_meta_name (Buffer.create 17) lexbuf
+                      and text = read_meta (Buffer.create 17) lexbuf in
+                      META (name, text) }
   | "!!"            { read_path (Buffer.create 17) lexbuf }
   | '"'             { read_string (Buffer.create 17) lexbuf }
   | "{{"            { read_unformat (Buffer.create 17) lexbuf }
@@ -34,9 +39,21 @@ rule read = parse
   | ws? "%%" ws?    { DEFINITION }
   | ('&'+ as h) ws? { HEADING (String.length h) }
   | ">" ws?         { QUOTATION }
-  | _               { Lexing.lexeme lexbuf
-                      |> Printf.sprintf "Character not allowed in source text: '%s'"
-                      |> failwith }
+  | _               { let msg =
+                        Lexing.lexeme lexbuf
+                        |> Printf.sprintf "character not allowed in source text: '%s'" in
+                      raise (Error (lexbuf, msg)) }
+
+and read_meta_name buf = parse
+  | ws | newline { Buffer.contents buf }
+  | _ as c       { Buffer.add_char buf c; read_meta_name buf lexbuf }
+
+and read_meta buf = parse
+  | ".."   { Buffer.contents buf }
+  | '\n'   { Lexing.new_line lexbuf;
+             Buffer.add_char buf '\n';
+             read_meta buf lexbuf }
+  | _ as c { Buffer.add_char buf c; read_meta buf lexbuf }
 
 and read_path buf = parse
   | "!!"   { INCLUDE (Buffer.contents buf) }

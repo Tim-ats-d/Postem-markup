@@ -1,5 +1,5 @@
 val from_str :
-  ?filename:string ->
+  filename:string ->
   (module Expansion.Type.S) ->
   string ->
   (string, string) result
