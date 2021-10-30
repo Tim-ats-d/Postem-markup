@@ -39,7 +39,7 @@ definition: n=paragraph; DEFINITION; v=paragraph { Definition (n, v) }
 
 heading: h=HEADING; p=paragraph { Heading (h, p) }
 
-quotation: QUOTATION; p=paragraph { Quotation p}
+quotation: QUOTATION; p=paragraph { Quotation p }
 
 paragraph: elist=expr+ { Seq elist }
 

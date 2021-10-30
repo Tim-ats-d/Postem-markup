@@ -27,7 +27,7 @@ rule read = parse
   | text as t       { TEXT t }
   | int as i        { INT (int_of_string i) }
   | ws? "==" ws?    { ASSIGNMENT }
-  | "{{{"           { read_unformat (Buffer.create 17) lexbuf }
+  | "{{"           { read_unformat (Buffer.create 17) lexbuf }
   | "!!"            { read_path (Buffer.create 17) lexbuf }
   | '"'             { read_string (Buffer.create 17) lexbuf }
   | "--" ws?        { CONCLUSION }
@@ -44,7 +44,7 @@ and read_string buf = parse
   | _ as c { Buffer.add_char buf c; read_string buf lexbuf }
 
 and read_unformat buf = parse
-  | "}}}"  { UNFORMAT (Buffer.contents buf) }
+  | "}}"  { UNFORMAT (Buffer.contents buf) }
   | '\n'   { Lexing.new_line lexbuf; read_unformat buf lexbuf }
   | _ as c { Buffer.add_char buf c; read_unformat buf lexbuf }
 

@@ -37,12 +37,9 @@ and eval_block (module Expsn : EXPSN) =
   | Heading (lvl, h) -> eval_expr_ext h |> Expsn.heading lvl
   | Quotation q -> eval_expr_ext q |> String.split_lines |> Expsn.quotation
 
-and eval_whitespace chr =
-  Char.to_string
-  @@
-  match chr with
-  | CarriageReturn -> '\r'
-  | Newline -> '\n'
-  | Tab -> '\t'
-  | Space -> ' '
-  | Unknown c -> c
+and eval_whitespace = function
+  | CarriageReturn -> "\r"
+  | Newline -> " "
+  | Tab -> "\t"
+  | Space -> " "
+  | Unknown c -> Char.to_string c
