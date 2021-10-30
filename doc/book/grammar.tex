@@ -59,6 +59,19 @@
         {\bnfts{!!} \bnfpn{any-char} \bnfts{!!}}
 \end{bnf*}
 
+\subsection{Meta}
+
+\begin{bnf*}
+    \bnfprod{newline}
+        {\bnfts{\textbackslash n} \bnfor \bnfts{\textbackslash r \textbackslash n} \bnfor \bnfpn{whitespace-literal}}\\
+    \bnfprod{meta-name}
+        {\bnfpn{char} \bnfts{+}}\\
+    \bnfprod{meta-content}
+        {\bnfpn{char} \bnfts{+}}\\
+    \bnfprod{meta-statment}
+        {\bnfts{..} \bnfpn{meta-name} \bnfpn{whitespace-literal} \bnfpn{char} \bnfts{..}}
+\end{bnf*}
+
 \subsection{Unformat}
 
 \begin{bnf*}

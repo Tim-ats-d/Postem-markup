@@ -10,11 +10,10 @@ A fast and easy **notes taking** oriented **markup** language
 
 * **Lightweight:** a light syntax and a small number of marks.
 * **Flexible:** it compiles to other famous markup languages such as **Markdown** and **HTML**.
-* **Extensible:** it is very easy to create an expansion to customize the rendering.
+* **Extensible:** it is very easy to create an expansion to customize the rendering or even extend available tags set using **OCaml**.
 
 #### Not yet implemented
 
-* A Pandoc-repl like.
 * Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format
 * Unicode support outside of unformat expression.
 
@@ -87,10 +86,10 @@ Install it:
 $ make install
 ```
 
-Run Postem:
+Display command line interface:
 
 ```
-$ postem bin/doc.post -s
+$ postem --help
 ```
 
 ## Documentation

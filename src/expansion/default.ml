@@ -5,10 +5,7 @@ let initial_alias =
   M.empty
 
 let rec meta =
-  [
-    ("enumerate", `Lines enumerate);
-    ("read", `Inline File.read_all);
-  ]
+  [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
 
 and enumerate lines =
   List.mapi
