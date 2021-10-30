@@ -6,7 +6,7 @@ and doc = string
 
 let expansions : t =
   [
-    ("default", (module Default.S), "output to plain text.");
-    ("markdown", (module Markdown.S), "output to Markdown.");
-    ("html", (module Html.S), "output to HTML.");
+    ("default", (module Default), "output to plain text.");
+    ("markdown", (module Markdown), "output to Markdown.");
+    ("html", (module Html), "output to HTML.");
   ]

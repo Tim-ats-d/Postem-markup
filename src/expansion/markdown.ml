@@ -1,7 +1,8 @@
 open Utils
+include Default
 
-module S : Type.S = struct
-  include Default.S
+module Tags : Type.Tags = struct
+  include Default.Tags
 
   let definition name values =
     String.concat_first "\n  " values |> Printf.sprintf "**%s**:%s" name

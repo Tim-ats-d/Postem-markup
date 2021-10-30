@@ -5,10 +5,12 @@ let format ?(class_ = "") ?(id = "") ~tag content =
   and id' = match id with "" -> "" | _ -> " id=" ^ id in
   Printf.sprintf "<%s%s%s>%s</%s>" tag class' id' content tag
 
-module S : Type.S = struct
-  include Default.S
+let concat = String.concat "\n"
 
-  let concat = String.concat "\n"
+include Default
+
+module Tags : Type.Tags = struct
+  include Default.Tags
 
   let conclusion content = format ~tag:"p" ~class_:"conclusion" content
 

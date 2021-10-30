@@ -1,12 +1,12 @@
 open Utils
 
-module S : Type.S = struct
-  let initial_alias =
-    let module M = Map.Make (String) in
-    M.empty
+let initial_alias =
+  let module M = Map.Make (String) in
+  M.empty
 
-  let concat = String.concat "\n\n"
+let meta = []
 
+module Tags : Type.Tags = struct
   let conclusion text = Printf.sprintf {|\-> %s|} text
 
   let definition name values = name ^ String.concat_first "\n  | " values
@@ -28,6 +28,10 @@ module S : Type.S = struct
         let first = Printf.sprintf "  - %s" x
         and rest = String.concat_first "\n  - " xs in
         first ^ rest
+end
+
+module Misc : Type.Misc = struct
+  let concat = String.concat "\n\n"
 
   let postprocess { Ext.Postprocess.content; _ } = content
 end

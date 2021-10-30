@@ -8,9 +8,9 @@ let rec eval (module Expsn : EXPSN) filename document =
   Preprocess.preprocess env document
   |> eval_elist (module Expsn : EXPSN)
   |> List.filter (fun x -> x <> String.empty)
-  |> Expsn.concat
+  |> Expsn.Misc.concat
   |> Ext.Postprocess.create filename
-  |> Expsn.postprocess
+  |> Expsn.Misc.postprocess
 
 and eval_elist (module Expsn : EXPSN) =
   List.map (eval_expr (module Expsn : EXPSN))
@@ -21,21 +21,21 @@ and eval_expr (module Expsn : EXPSN) = function
   | Int i -> string_of_int i
   | Include filename ->
       if Sys.file_exists filename then File.read_all filename else String.empty
-  | Listing l -> eval_elist (module Expsn) l |> Expsn.listing
+  | Listing l -> eval_elist (module Expsn) l |> Expsn.Tags.listing
   | Text t -> t
-  | Seq l -> eval_elist (module Expsn) l |> String.join |> Expsn.paragraph
+  | Seq l -> eval_elist (module Expsn) l |> String.join |> Expsn.Tags.paragraph
   | Unformat u -> u
   | White w -> eval_whitespace w
 
 and eval_block (module Expsn : EXPSN) =
   let eval_expr_ext = eval_expr (module Expsn) in
   function
-  | Conclusion c -> eval_expr_ext c |> Expsn.conclusion
+  | Conclusion c -> eval_expr_ext c |> Expsn.Tags.conclusion
   | Definition (name, values) ->
       let name' = eval_expr_ext name and values' = eval_expr_ext values in
-      values' |> String.split_lines |> Expsn.definition name'
-  | Heading (lvl, h) -> eval_expr_ext h |> Expsn.heading lvl
-  | Quotation q -> eval_expr_ext q |> String.split_lines |> Expsn.quotation
+      values' |> String.split_lines |> Expsn.Tags.definition name'
+  | Heading (lvl, h) -> eval_expr_ext h |> Expsn.Tags.heading lvl
+  | Quotation q -> eval_expr_ext q |> String.split_lines |> Expsn.Tags.quotation
 
 and eval_whitespace = function
   | CarriageReturn -> "\r"
