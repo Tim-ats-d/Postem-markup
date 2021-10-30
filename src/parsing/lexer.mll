@@ -27,9 +27,9 @@ rule read = parse
   | text as t       { TEXT t }
   | int as i        { INT (int_of_string i) }
   | ws? "==" ws?    { ASSIGNMENT }
-  | "{{"           { read_unformat (Buffer.create 17) lexbuf }
   | "!!"            { read_path (Buffer.create 17) lexbuf }
   | '"'             { read_string (Buffer.create 17) lexbuf }
+  | "{{"            { read_unformat (Buffer.create 17) lexbuf }
   | "--" ws?        { CONCLUSION }
   | ws? "%%" ws?    { DEFINITION }
   | ('&'+ as h) ws? { HEADING (String.length h) }
@@ -38,17 +38,23 @@ rule read = parse
                       |> Printf.sprintf "Character not allowed in source text: '%s'"
                       |> failwith }
 
+and read_path buf = parse
+  | "!!"   { INCLUDE (Buffer.contents buf) }
+  | '\n'   { Lexing.new_line lexbuf;
+             Buffer.add_char buf '\n';
+             read_path buf lexbuf }
+  | _ as c { Buffer.add_char buf c; read_path buf lexbuf }
+
 and read_string buf = parse
   | '"'    { STRING (Buffer.contents buf) }
-  | '\n'   { Lexing.new_line lexbuf; read_string buf lexbuf }
+  | '\n'   { Lexing.new_line lexbuf;
+             Buffer.add_char buf '\n';
+             read_string buf lexbuf }
   | _ as c { Buffer.add_char buf c; read_string buf lexbuf }
 
 and read_unformat buf = parse
   | "}}"  { UNFORMAT (Buffer.contents buf) }
-  | '\n'   { Lexing.new_line lexbuf; read_unformat buf lexbuf }
+  | '\n'   { Lexing.new_line lexbuf;
+             Buffer.add_char buf '\n';
+             read_unformat buf lexbuf }
   | _ as c { Buffer.add_char buf c; read_unformat buf lexbuf }
-
-and read_path buf = parse
-  | "!!"   { INCLUDE (Buffer.contents buf) }
-  | '\n'   { Lexing.new_line lexbuf; read_path buf lexbuf }
-  | _ as c { Buffer.add_char buf c; read_path buf lexbuf }
