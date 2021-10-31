@@ -13,10 +13,10 @@ and enumerate lines =
       if String.is_empty line then String.empty
       else Printf.sprintf "%i. %s" (succ i) line)
     lines
-  |> String.concat "\n"
+  |> String.concat_lines
 
 module Tags : Type.Tags = struct
-  let conclusion text = Printf.sprintf {|\-> %s|} text
+  let conclusion text = {|\-> |} ^ text
 
   let definition name values = name ^ String.concat_first "\n  | " values
 
@@ -32,7 +32,7 @@ module Tags : Type.Tags = struct
 
   let listing = function
     | [] -> ""
-    | [ x ] -> Printf.sprintf "  - %s" x
+    | [ x ] -> "  - %s" ^ x
     | x :: xs ->
         let first = Printf.sprintf "  - %s" x
         and rest = String.concat_first "\n  - " xs in

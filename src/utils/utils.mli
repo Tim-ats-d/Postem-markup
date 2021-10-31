@@ -25,6 +25,9 @@ module String : sig
   val real_split : char -> string -> string list
   (** [real_split chr str] is [String.split_on_char chr str] but filtering empty string. *)
 
+  val concat_lines : string list -> string
+  (** [concat_lines lines] is [String.concat "\n"]. *)
+
   val split_lines : string -> string list
   (** [split_lines str] is [String.split_on_char '\n' str]. *)
 end

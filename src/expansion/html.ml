@@ -1,4 +1,5 @@
 open Utils
+include Default
 
 let format ?(class_ = "") ?(id = "") ~tag content =
   let class' = match class_ with "" -> "" | _ -> " class=" ^ class_
@@ -7,7 +8,7 @@ let format ?(class_ = "") ?(id = "") ~tag content =
 
 let concat = String.concat "\n"
 
-include Default
+let meta = []
 
 module Tags : Type.Tags = struct
   include Default.Tags
@@ -16,7 +17,7 @@ module Tags : Type.Tags = struct
 
   let definition name values =
     let content =
-      String.concat "\n" values |> Printf.sprintf "<b>%s</b>: %s" name
+      String.concat_lines values |> Printf.sprintf "<b>%s</b>: %s" name
     in
     format ~tag:"p" ~class_:"definition" content
 
@@ -35,7 +36,7 @@ module Tags : Type.Tags = struct
   let listing lines =
     let content =
       List.map (fun line : string -> format ~tag:"li" line) lines
-      |> String.concat "\n"
+      |> String.concat_lines
     in
     format ~tag:"ul" content
 end

@@ -5,15 +5,14 @@
 }
 
 let alpha = ['a'-'z' 'A'-'Z']
-let digit = ['0'-'9']
-let ws = ['\r' '\t' ' ']
-
-let ascii_char = alpha | digit | ['!' '"' '#' '$' '%' '&' ''' ')' '(' '*' '+' ',' '-' '.' '/' ':' ';' '<' '=' '>' '?' '@' '`' '~' ']' '[' '^' '_' '{' '|' '}']
+let ws = '\r' | '\t' | ' '
 
 let newline = '\n' | "\r\n"
 let sep = (newline) (newline)+
 
-let int = digit+
+let int = ['0'-'9']+
+let ascii_char = [' '-'~']
+
 let text = (alpha) (ascii_char)*
 
 rule read = parse
@@ -24,8 +23,8 @@ rule read = parse
   | '\n'            { Lexing.new_line lexbuf; NEWLINE }
   | sep as s        { for _ = 0 to String.length s - 1 do
                         Lexing.new_line lexbuf
-                        done;
-                        SEPARATOR }
+                      done;
+                      SEPARATOR }
   | text as t       { TEXT t }
   | int as i        { INT (int_of_string i) }
   | ws? "==" ws?    { ASSIGNMENT }

@@ -24,8 +24,6 @@
 
 %type <document> document
 
-%type <expr> expr
-
 %%
 
 document: blist=separated_list(SEPARATOR, block_list); EOF { Document blist }
@@ -48,7 +46,8 @@ expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
   | i=INCLUDE                    { Include ($startpos, i) }
   | i=INT                        { Int i }
-  | META                         { let name, text = $1 in Meta (name, text) }
+  | m=META                       { let name, text = m in
+                                   Meta (name, text) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=whitespace                 { White w }

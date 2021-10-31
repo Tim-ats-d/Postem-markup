@@ -9,7 +9,7 @@ module String = struct
 
   let empty = ""
 
-  let is_empty str = str = ""
+  let is_empty = ( = ) ""
 
   let concat_first sep = function [] -> "" | l -> sep ^ String.concat sep l
 
@@ -17,6 +17,8 @@ module String = struct
 
   let real_split chr str =
     String.split_on_char chr str |> List.filter (( <> ) "")
+
+  let concat_lines = String.concat "\n"
 
   let split_lines = String.split_on_char '\n'
 end
@@ -30,7 +32,7 @@ module File = struct
       try input_line ic :: acc |> read_lines
       with _ ->
         close_in_noerr ic;
-        List.rev acc |> String.concat "\n"
+        List.rev acc |> String.concat_lines
     in
     read_lines []
 
