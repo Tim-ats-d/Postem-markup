@@ -78,31 +78,23 @@ Example
 
 </details>
 
-## Usage
+## Getting started with Postem
 
-Install it:
+See the [dedicated readme](doc/getting_started.md).
 
+## Installing
+
+Check for missing dependencies:
+```
+$ make deps
+```
+
+Then install Postem:
 ```
 $ make install
 ```
 
-Display command line interface:
-
-```
-$ postem --help
-```
-
-## Documentation
-
-### The Postem book
-
-The Postem book contains the grammar specification and more.
-
-It can be found in `doc/build` after running:
-
-```
-make doc
-```
+This will install Postem (make it runnable) and man pages in the dedicated folders.
 
 ## Contributing
 
