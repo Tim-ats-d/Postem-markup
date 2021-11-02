@@ -1,17 +1,17 @@
 {
   open Parser
 
-  exception Error of Lexing.lexbuf * string
+  exception Syntax_error of Lexing.lexbuf * string
 }
 
 let alpha = ['a'-'z' 'A'-'Z']
-let ws = '\r' | '\t' | ' '
+let ws = ['\r' '\t' ' ']
 
 let newline = '\n' | "\r\n"
 let sep = (newline) (newline)+
 
 let int = ['0'-'9']+
-let ascii_char = [' '-'~']
+let ascii_char = ['!'-'~']
 
 let text = (alpha) (ascii_char)*
 
@@ -41,7 +41,7 @@ rule read = parse
   | _               { let msg =
                         Lexing.lexeme lexbuf
                         |> Printf.sprintf "character not allowed in source text: '%s'" in
-                      raise (Error (lexbuf, msg)) }
+                      raise (Syntax_error (lexbuf, msg)) }
 
 and read_meta_name buf = parse
   | ws | newline { Buffer.contents buf }

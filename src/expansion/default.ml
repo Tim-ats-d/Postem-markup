@@ -31,7 +31,7 @@ module Tags : Type.Tags = struct
   let quotation lines = String.join lines |> Printf.sprintf " █ %s"
 
   let listing = function
-    | [] -> ""
+    | [] -> String.empty
     | [ x ] -> "  - %s" ^ x
     | x :: xs ->
         let first = Printf.sprintf "  - %s" x

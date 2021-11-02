@@ -9,4 +9,5 @@ let expansions : t =
     ("default", (module Default), "output to plain text.");
     ("markdown", (module Markdown), "output to Markdown.");
     ("html", (module Html), "output to HTML.");
+    ("asciidoc", (module Asciidoc), "output to Asciidoc.");
   ]
