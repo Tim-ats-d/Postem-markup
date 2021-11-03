@@ -22,6 +22,6 @@ a second reason
 
 Unformat block %% Allows you to write text that will not be formatted.
 
-Example %% {{Unformated # text & with many special char.}}
+Example %% {{Unformated # text & with many special chars.}}
 
 -- This mark is pretty useful.
