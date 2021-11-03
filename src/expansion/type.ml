@@ -15,7 +15,7 @@ end
 module type Misc = sig
   val concat : string list -> string
 
-  val postprocess : Ext.Postprocess.t -> string
+  val postprocess : Ext.Statistic.t -> string
 end
 
 module type S = sig

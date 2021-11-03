@@ -1,3 +1,6 @@
-type t = { ctx : Context.t; headers : (int * string) list }
+type t = { expsn : (module Expansion.Type.S); metadata : metadata }
 
-let create ~ctx = { ctx; headers = ([] : (int * string) list) }
+and metadata = { mutable headers : (int * string) list }
+
+let create (module Expsn : Expansion.Type.S) =
+  { expsn = (module Expsn); metadata = { headers = [] } }

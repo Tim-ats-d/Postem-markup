@@ -13,10 +13,15 @@ Another one.
 
 > A quotation of the author of the language explaining the reasons that led him to write P
 
+..enumerate
+a first reason
+a second reason
+..
+
 && Marks description
 
 Unformat block %% Allows you to write text that will not be formatted.
 
 Example %% {{Unformated # text & with many special char.}}
 
--- This mark is pretty usefull.
+-- This mark is pretty useful.

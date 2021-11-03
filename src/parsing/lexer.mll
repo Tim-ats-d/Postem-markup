@@ -44,8 +44,8 @@ rule read = parse
                       raise (Syntax_error (lexbuf, msg)) }
 
 and read_meta_name buf = parse
-  | ws | newline { Buffer.contents buf }
-  | _ as c       { Buffer.add_char buf c; read_meta_name buf lexbuf }
+  | ws as w { if w = '\n' then Lexing.new_line lexbuf; Buffer.contents buf }
+  | _ as c  { Buffer.add_char buf c; read_meta_name buf lexbuf }
 
 and read_meta buf = parse
   | ".."   { Buffer.contents buf }

@@ -5,4 +5,4 @@ type t = private {
   max_line_length : int;
 }
 
-val create : Utils.File.t -> string -> t
+val from_file : Utils.File.t -> string -> t

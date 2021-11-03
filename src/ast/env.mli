@@ -1,13 +1,12 @@
 (** {1 Type} *)
 
-type t = {
-  ctx : Context.t;  (** Execution context. *)
-  headers : (int * string) list;
-      (** Headers of a document in the form [(level, content)]. *)
-}
+type t = { expsn : (module Expansion.Type.S); metadata : metadata }
 (** The type representing an execution environment. *)
+
+and metadata = { mutable headers : (int * string) list }
+(** The type representing data gleaned on AST. *)
 
 (** {2 API} *)
 
-val create : ctx:Context.t -> t
-(** [create ctx] returns a fresh execution environment where the context is set to [ctx]. *)
+val create : (module Expansion.Type.S) -> t
+(** [create expsn] returns a fresh execution environment where the expansion is set to [expsn]. *)

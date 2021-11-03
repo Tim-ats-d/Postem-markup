@@ -1,4 +1,4 @@
-val preprocess : Env.t -> Ast_types.document -> Ast_types.expr list
-(** [preprocess env doc] returns an expression list representing [doc] preprocessed with [env] as initial execution environment.
+val preprocess : Context.t -> Ast_types.document -> Ast_types.expr list
+(** [preprocess ctx doc] returns an expression list representing [doc] preprocessed with [ctx] as initial context.
 
-The preprocessing consists of replace each alias by its value and gleaning data from the document. *)
+The preprocessing consists of replace each alias by its value. *)

@@ -7,7 +7,7 @@ type t = {
   max_line_length : int;
 }
 
-let create filename content =
+let from_file filename content =
   let file_lines = String.split_lines content in
   let max_line_length =
     List.map String.length file_lines |> List.fold_left max 0

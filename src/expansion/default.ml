@@ -42,5 +42,5 @@ end
 module Misc : Type.Misc = struct
   let concat = String.concat "\n\n"
 
-  let postprocess { Ext.Postprocess.content; _ } = content
+  let postprocess { Ext.Statistic.content; _ } = content
 end
