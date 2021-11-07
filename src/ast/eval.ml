@@ -1,8 +1,6 @@
 open Ast_types
 open Utils
 
-exception Missing_file of Lexing.position * string
-
 exception Missing_meta of string
 
 let rec eval (module Expsn : Expansion.Type.S) filename document =
@@ -22,7 +20,6 @@ and eval_expr env =
   | Alias _ -> String.empty
   | Block b -> eval_block env b
   | Int i -> string_of_int i
-  | Include (pos, fname) -> eval_include pos fname
   | Listing l -> eval_elist env l |> Expsn.Tags.listing
   | Meta (name, content) -> eval_meta env name content
   | Text t -> t
@@ -42,10 +39,6 @@ and eval_block env =
       env.metadata.headers <- (lvl, h') :: env.metadata.headers;
       h' |> Expsn.Tags.heading lvl
   | Quotation q -> eval_expr env q |> String.split_lines |> Expsn.Tags.quotation
-
-and eval_include position filename =
-  if Sys.file_exists filename then File.read_all filename
-  else raise (Missing_file (position, filename))
 
 and eval_meta { expsn = (module Expsn); _ } name content =
   match List.assoc_opt name Expsn.meta with

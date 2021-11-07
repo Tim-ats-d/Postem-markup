@@ -4,8 +4,7 @@ let initial_alias =
   let module M = Map.Make (String) in
   M.empty
 
-let rec meta =
-  [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
+let rec meta = [ ("enumerate", `Lines enumerate); ("read", `Inline read) ]
 
 and enumerate lines =
   List.mapi
@@ -14,6 +13,10 @@ and enumerate lines =
       else Printf.sprintf "%i. %s" (succ i) line)
     lines
   |> String.concat_lines
+
+and read filename =
+  if Sys.file_exists filename then File.read_all filename
+  else raise (Sys_error "in read meta mark: no such file or directory")
 
 module Tags : Type.Tags = struct
   let conclusion text = {|\-> |} ^ text

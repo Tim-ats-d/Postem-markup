@@ -5,13 +5,8 @@ let from_str ~filename (module Expsn : Expansion.Type.S) str =
   match Parsing.parse_document lexbuf with
   | Ok ast -> (
       Ast.Eval.(
-        try eval (module Expsn) filename ast |> Result.ok
-        with Missing_file (pos, fname) ->
-          let msg =
-            Printf.sprintf
-              "in include expression:\n\"%s\": no such file or directory" fname
-          in
-          Error_msg.of_position pos ~msg |> Result.error))
+        try Ok (eval (module Expsn) filename ast)
+        with Missing_meta _ -> Error "missing meta mark"))
   | Error _ as err -> err
 
 let from_file (module Expsn : Expansion.Type.S) filename =

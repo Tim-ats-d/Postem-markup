@@ -31,7 +31,6 @@ rule read = parse
   | ".."            { let name = read_meta_name (Buffer.create 17) lexbuf
                       and text = read_meta (Buffer.create 17) lexbuf in
                       META (name, text) }
-  | "!!"            { read_path (Buffer.create 17) lexbuf }
   | '"'             { read_string (Buffer.create 17) lexbuf }
   | "{{"            { read_unformat (Buffer.create 17) lexbuf }
   | "--" ws?        { CONCLUSION }
@@ -53,13 +52,6 @@ and read_meta buf = parse
              Buffer.add_char buf '\n';
              read_meta buf lexbuf }
   | _ as c { Buffer.add_char buf c; read_meta buf lexbuf }
-
-and read_path buf = parse
-  | "!!"   { INCLUDE (Buffer.contents buf) }
-  | '\n'   { Lexing.new_line lexbuf;
-             Buffer.add_char buf '\n';
-             read_path buf lexbuf }
-  | _ as c { Buffer.add_char buf c; read_path buf lexbuf }
 
 and read_string buf = parse
   | '"'    { STRING (Buffer.contents buf) }

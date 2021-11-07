@@ -13,7 +13,6 @@
 %token ASSIGNMENT
 %token <string> STRING
 
-%token <string> INCLUDE
 %token <string * string> META
 %token <string> UNFORMAT
 
@@ -44,7 +43,6 @@ paragraph: elist=expr+ { Seq elist }
 
 expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
-  | i=INCLUDE                    { Include ($startpos, i) }
   | i=INT                        { Int i }
   | m=META                       { let name, text = m in
                                    Meta (name, text) }
