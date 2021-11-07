@@ -4,7 +4,7 @@ A fast and easy **notes taking** oriented **markup** language
 
 ## Abstracts
 
-**Markdown** is pretty simple and powerful, but not suitable for note taking. **LaTeX** a very heavy syntax that makes it complicated to write  although very complete. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
+**Markdown** is pretty simple and powerful, but not suitable for note taking. **LaTeX** has a very heavy syntax that makes it complicated to write although very complete. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
 
 ## Key Features
 
