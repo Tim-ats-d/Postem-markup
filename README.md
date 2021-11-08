@@ -23,7 +23,7 @@ This text marked in Postem:
 ```text
 P == "Postem"
 
-& The Postem book
+& The P book
 
 && Introduction
 
