@@ -1,11 +1,12 @@
 open Ast_types
 open Utils
 
-exception Missing_meta of string
+exception Missing_metamark of Lexing.position * string
 
 let rec eval (module Expsn : Expansion.Type.S) filename document =
   let exec_env = Env.create (module Expsn) in
-  Preprocess.preprocess Expsn.initial_alias document |> eval_elist exec_env
+  Preprocess.preprocess Expsn.initial_alias document
+  |> eval_elist exec_env
   (* |> Postprocess.postprocess (fun _ -> "toc") exec_env.metadata *)
   |> List.filter (( <> ) String.empty)
   |> Expsn.Misc.concat
@@ -21,7 +22,7 @@ and eval_expr env =
   | Block b -> eval_block env b
   | Int i -> string_of_int i
   | Listing l -> eval_elist env l |> Expsn.Tags.listing
-  | Meta (name, content) -> eval_meta env name content
+  | MetamarkArgs (pos, name, content) -> eval_meta env pos name content
   | Text t -> t
   | Seq l -> eval_elist env l |> String.join |> Expsn.Tags.paragraph
   | Unformat u -> u
@@ -40,9 +41,9 @@ and eval_block env =
       h' |> Expsn.Tags.heading lvl
   | Quotation q -> eval_expr env q |> String.split_lines |> Expsn.Tags.quotation
 
-and eval_meta { expsn = (module Expsn); _ } name content =
+and eval_meta { expsn = (module Expsn); _ } pos name content =
   match List.assoc_opt name Expsn.meta with
-  | None -> Missing_meta name |> raise
+  | None -> raise (Missing_metamark (pos, name))
   | Some mode -> (
       match mode with
       | `Inline f -> f (String.trim content)

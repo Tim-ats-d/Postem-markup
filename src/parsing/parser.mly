@@ -45,7 +45,7 @@ expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
   | i=INT                        { Int i }
   | m=META                       { let name, text = m in
-                                   Meta (name, text) }
+                                   MetamarkArgs ($startpos, name, text) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=whitespace                 { White w }

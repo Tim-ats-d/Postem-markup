@@ -4,7 +4,7 @@ A fast and easy **notes taking** oriented **markup** language
 
 ## Abstracts
 
-**Markdown** is pretty simple and powerful, but not suitable for note taking. **LaTeX** a very heavy syntax that makes it complicated to write  although very complete. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
+**Markdown** is pretty simple and powerful, but not suitable for note taking. **LaTeX** has a very heavy syntax that makes it complicated to write although very complete. **Postem** offers an in-between to quickly structure a text and compile it to other more conventional formats.
 
 ## Key Features
 
@@ -23,7 +23,7 @@ This text marked in Postem:
 ```text
 P == "Postem"
 
-& The Postem book
+& The P book
 
 && Introduction
 
@@ -42,7 +42,7 @@ Unformat block %% Allows you to write text that will not be formatted.
 
 Example %% {{Unformated # text & with many special char.}}
 
--- This mark is pretty usefull.
+-- This mark is pretty useful.
 ```
 will be rendered in this (with default plain text mode enabled):
 <details>
@@ -73,7 +73,7 @@ Unformat block
 Example
   | Unformated # text & with many special char.
 
-\-> This mark is pretty usefull.
+\-> This mark is pretty useful.
 ```
 
 </details>
