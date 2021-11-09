@@ -5,7 +5,7 @@ and expr =
   | Block of block
   | Int of int
   | Listing of expr list
-  | Meta of string * string
+  | MetamarkArgs of Lexing.position * string * string
   | Text of string
   | Seq of expr list
   | Unformat of string

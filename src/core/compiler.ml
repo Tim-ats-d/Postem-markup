@@ -1,25 +1,34 @@
 open Utils
 
-let from_str ~filename (module Expsn : Expansion.Type.S) str =
-  let lexbuf = Lexing.from_string str in
+let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
   match Parsing.parse_document lexbuf with
   | Ok ast -> (
       Ast.Eval.(
-        try Ok (eval (module Expsn) filename ast)
-        with Missing_meta _ -> Error "missing meta mark"))
+        try Ok (eval (module Expsn) lexbuf.lex_curr_p.pos_fname ast)
+        with Missing_metamark (pos, name) ->
+          let msg = Printf.sprintf "missing metamark %s" name
+          and hint = "try to define your metamark in the used expansion and reinstall Postem" in
+          Error (Error_msg.of_position pos ~msg ~hint)))
   | Error _ as err -> err
 
-let from_file (module Expsn : Expansion.Type.S) filename =
-  File.read_all filename |> from_str (module Expsn) ~filename
+let from_str str (module Expsn : Expansion.Type.S) =
+  let lexbuf = Lexing.from_string str in
+  Lexing.set_filename lexbuf "REPL";
+  from_lexbuf lexbuf (module Expsn)
+
+let from_file filename (module Expsn : Expansion.Type.S) =
+  let lexbuf = Lexing.from_channel (open_in filename) in
+  Lexing.set_filename lexbuf filename;
+  from_lexbuf lexbuf (module Expsn)
 
 let compile () =
   let args =
     Args.parse ~on_empty:(fun args ->
-        Repl.launch
-          (from_str ~filename:"REPL" (Expsn_handler.load args.expansion)))
+        Repl.launch (fun input ->
+            from_str input (Expsn_handler.load args.expansion)))
   in
   let module Expansion = (val Expsn_handler.load args.expansion) in
-  match from_file (module Expansion) args.input_file with
+  match from_file args.input_file (module Expansion) with
   | Ok r ->
       if args.output_on_stdout then print_endline r
       else File.write args.output_file r

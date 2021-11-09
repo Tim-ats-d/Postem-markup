@@ -50,7 +50,7 @@ end
 module Error_msg : sig
   type t = string
 
-  val of_position : Lexing.position -> msg:string -> t
+  val of_position : ?hint:string -> Lexing.position -> msg:string -> t
   (** [string_of_position pos] prettifies [pos] and returns it as string.*)
 
   val of_lexbuf : Lexing.lexbuf -> msg:string -> t

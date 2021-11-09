@@ -1,7 +1,7 @@
 {
   open Parser
 
-  exception Syntax_error of Lexing.lexbuf * string
+  exception Syntax_error of Lexing.lexbuf
 }
 
 let alpha = ['a'-'z' 'A'-'Z']
@@ -28,8 +28,8 @@ rule read = parse
   | text as t       { TEXT t }
   | int as i        { INT (int_of_string i) }
   | ws? "==" ws?    { ASSIGNMENT }
-  | ".."            { let name = read_meta_name (Buffer.create 17) lexbuf
-                      and text = read_meta (Buffer.create 17) lexbuf in
+  | ".."            { let name = read_metamark_name (Buffer.create 17) lexbuf
+                      and text = read_metamark (Buffer.create 17) lexbuf in
                       META (name, text) }
   | '"'             { read_string (Buffer.create 17) lexbuf }
   | "{{"            { read_unformat (Buffer.create 17) lexbuf }
@@ -37,21 +37,18 @@ rule read = parse
   | ws? "%%" ws?    { DEFINITION }
   | ('&'+ as h) ws? { HEADING (String.length h) }
   | ">" ws?         { QUOTATION }
-  | _               { let msg =
-                        Lexing.lexeme lexbuf
-                        |> Printf.sprintf "character not allowed in source text: '%s'" in
-                      raise (Syntax_error (lexbuf, msg)) }
+  | _               { raise (Syntax_error lexbuf) }
 
-and read_meta_name buf = parse
+and read_metamark_name buf = parse
   | ws as w { if w = '\n' then Lexing.new_line lexbuf; Buffer.contents buf }
-  | _ as c  { Buffer.add_char buf c; read_meta_name buf lexbuf }
+  | _ as c  { Buffer.add_char buf c; read_metamark_name buf lexbuf }
 
-and read_meta buf = parse
+and read_metamark buf = parse
   | ".."   { Buffer.contents buf }
   | '\n'   { Lexing.new_line lexbuf;
              Buffer.add_char buf '\n';
-             read_meta buf lexbuf }
-  | _ as c { Buffer.add_char buf c; read_meta buf lexbuf }
+             read_metamark buf lexbuf }
+  | _ as c { Buffer.add_char buf c; read_metamark buf lexbuf }
 
 and read_string buf = parse
   | '"'    { STRING (Buffer.contents buf) }
