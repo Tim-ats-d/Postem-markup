@@ -3,15 +3,13 @@ open Utils
 
 exception Missing_metamark of Lexing.position * string
 
-let rec eval (module Expsn : Expansion.Type.S) filename document =
+let rec eval (module Expsn : Expansion.Type.S) document =
   let exec_env = Env.create (module Expsn) in
   Preprocess.preprocess Expsn.initial_alias document
   |> eval_elist exec_env
   (* |> Postprocess.postprocess (fun _ -> "toc") exec_env.metadata *)
   |> List.filter (( <> ) String.empty)
-  |> Expsn.Misc.concat
-  |> Ext.Statistic.from_file filename
-  |> Expsn.Misc.postprocess
+  |> Expsn.Misc.concat |> Expsn.Misc.postprocess
 
 and eval_elist env = List.map (eval_expr env)
 

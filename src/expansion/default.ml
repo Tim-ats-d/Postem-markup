@@ -45,5 +45,5 @@ end
 module Misc : Type.Misc = struct
   let concat = String.concat "\n\n"
 
-  let postprocess { Ext.Statistic.content; _ } = content
+  let postprocess = Fun.id
 end

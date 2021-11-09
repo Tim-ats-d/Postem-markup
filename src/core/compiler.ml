@@ -4,10 +4,13 @@ let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
   match Parsing.parse_document lexbuf with
   | Ok ast -> (
       Ast.Eval.(
-        try Ok (eval (module Expsn) lexbuf.lex_curr_p.pos_fname ast)
+        try Ok (eval (module Expsn) ast)
         with Missing_metamark (pos, name) ->
           let msg = Printf.sprintf "missing metamark %s" name
-          and hint = "try to define your metamark in the used expansion and reinstall Postem" in
+          and hint =
+            "try to define your metamark in the used expansion and reinstall \
+             Postem"
+          in
           Error (Error_msg.of_position pos ~msg ~hint)))
   | Error _ as err -> err
 

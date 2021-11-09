@@ -55,7 +55,8 @@ module Error_msg = struct
 
   type t = string
 
-  let of_position ?(hint="") { pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
+  let of_position ?(hint = "") { pos_fname; pos_lnum; pos_cnum; pos_bol; _ }
+      ~msg =
     let char_pos = pos_cnum - pos_bol in
     if pos_fname = "REPL" then
       Printf.sprintf "Error: %s.\n%s %i:%i" msg pos_fname pos_lnum char_pos
@@ -71,7 +72,10 @@ module Error_msg = struct
           (String.make (if char_pos = 0 then 0 else char_pos - 1) ' ')
           padding
       and carret = sprintf "%s %s %i:%i" padding pos_fname pos_lnum char_pos
-      and hint = if String.is_empty hint then "" else Printf.sprintf "\027[0;33mHint: %s.\027[0m" hint in
+      and hint =
+        if String.is_empty hint then ""
+        else Printf.sprintf "\027[0;33mHint: %s.\027[0m" hint
+      in
       sprintf "\027[0;31mError: %s.\027[0m\n%s\n%s\n%s" msg overview carret hint
 
   let of_lexbuf { lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
