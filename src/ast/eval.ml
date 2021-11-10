@@ -23,7 +23,7 @@ and eval_expr env =
   | MetamarkArgs (pos, name, content) -> eval_meta_args env pos name content
   | MetamarkSingle (pos, name) -> eval_meta_single env pos name
   | Text t -> t
-  | Seq l -> eval_elist env l |> String.join |> Expsn.Tags.paragraph
+  | Seq l -> eval_elist env l |> Text.Lines.join |> Expsn.Tags.paragraph
   | Unformat u -> u
   | White w -> eval_whitespace w
 

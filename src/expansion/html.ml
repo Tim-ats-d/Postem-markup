@@ -15,7 +15,7 @@ module Tags : Type.Tags = struct
 
   let definition name values =
     let content =
-      String.concat_lines values |> Printf.sprintf "<b>%s</b>: %s" name
+      Text.Lines.join_lines values |> Printf.sprintf "<b>%s</b>: %s" name
     in
     format ~tag:"p" ~class_:"definition" content
 
@@ -28,13 +28,13 @@ module Tags : Type.Tags = struct
   let paragraph text = format ~tag:"p" text
 
   let quotation lines =
-    let content = String.concat "\n" lines in
+    let content = Text.Lines.join_lines lines in
     format ~tag:"blockquote" content
 
   let listing lines =
     let content =
       List.map (fun line : string -> format ~tag:"li" line) lines
-      |> String.concat_lines
+      |> Text.Lines.join_lines
     in
     format ~tag:"ul" content
 end

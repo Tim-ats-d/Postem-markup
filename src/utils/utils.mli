@@ -16,17 +16,8 @@ module String : sig
   val is_empty : string -> bool
   (** [is_empty str] tests if [str] is empty. *)
 
-  val concat_first : string -> string list -> string
-  (** [concat_first sep strings] is [sep ^ String.concat sep strings]. *)
-
-  val join : string list -> string
-  (** [join strings] is [String.concat "" strings]. *)
-
   val real_split : char -> string -> string list
   (** [real_split chr str] is [String.split_on_char chr str] but filtering empty string. *)
-
-  val concat_lines : string list -> string
-  (** [concat_lines lines] is [String.concat "\n"]. *)
 
   val split_lines : string -> string list
   (** [split_lines str] is [String.split_on_char '\n' str]. *)
@@ -56,3 +47,5 @@ module Error_msg : sig
   val of_lexbuf : Lexing.lexbuf -> msg:string -> t
   (** [string_of_lexbuf lexbuf] prettifies [lexbuf] and returns it as string. *)
 end
+
+module Text = Text
