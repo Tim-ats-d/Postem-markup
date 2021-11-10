@@ -4,19 +4,9 @@ let initial_alias =
   let module M = Map.Make (String) in
   M.empty
 
-let rec meta = [ ("enumerate", `Lines enumerate); ("read", `Inline read) ]
+let concat = String.concat "\n\n"
 
-and enumerate lines =
-  List.mapi
-    (fun i line ->
-      if String.is_empty line then String.empty
-      else Printf.sprintf "%i. %s" (succ i) line)
-    lines
-  |> String.concat_lines
-
-and read filename =
-  if Sys.file_exists filename then File.read_all filename
-  else raise (Sys_error "in read meta mark: no such file or directory")
+let postprocess = Fun.id
 
 module Tags : Type.Tags = struct
   let conclusion text = {|\-> |} ^ text
@@ -42,8 +32,20 @@ module Tags : Type.Tags = struct
         first ^ rest
 end
 
-module Misc : Type.Misc = struct
-  let concat = String.concat "\n\n"
+let enumerate lines =
+  List.mapi
+    (fun i line ->
+      if String.is_empty line then String.empty
+      else Printf.sprintf "%i. %s" (succ i) line)
+    lines
+  |> String.concat_lines
 
-  let postprocess = Fun.id
+let read filename =
+  if Sys.file_exists filename then File.read_all filename
+  else raise (Sys_error "in read meta mark: no such file or directory")
+
+module Meta : Type.Meta = struct
+  let args = [ ("enumerate", `Lines enumerate); ("read", `Inline read) ]
+
+  let single = [ ("foo", fun () -> "bar") ]
 end

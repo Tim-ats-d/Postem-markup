@@ -67,7 +67,7 @@ module Error_msg = struct
         sprintf
           " \027[0;34m%s╷\n\
            %i │\027[0m %s\n\
-           %s \027[0;34m│\027[0m%s\027[0;31m^\027[0m\n\
+           %s \027[0;34m│\027[0m %s\027[0;31m^\027[0m\n\
            %s \027[0;34m╵\027[0m" padding pos_lnum cline padding
           (String.make (if char_pos = 0 then 0 else char_pos - 1) ' ')
           padding

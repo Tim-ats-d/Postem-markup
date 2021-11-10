@@ -1,16 +1,6 @@
 open Utils
 include Default
 
-let rec meta =
-  [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
-
-and enumerate lines =
-  List.map
-    (fun line ->
-      if String.is_empty line then String.empty else Printf.sprintf ". %s" line)
-    lines
-  |> String.concat_lines
-
 module Tags : Type.Tags = struct
   include Default.Tags
 
@@ -26,4 +16,18 @@ module Tags : Type.Tags = struct
 
   let listing lines =
     List.map (Printf.sprintf "* %s") lines |> String.concat_lines
+end
+
+let enumerate lines =
+  List.map
+    (fun line ->
+      if String.is_empty line then String.empty else Printf.sprintf ". %s" line)
+    lines
+  |> String.concat_lines
+
+module Meta : Type.Meta = struct
+  let args =
+    [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
+
+  let single = []
 end

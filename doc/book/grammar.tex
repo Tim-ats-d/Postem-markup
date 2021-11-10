@@ -21,8 +21,8 @@
         \bnfmore{\bnfts{!} \bnfor \bnfts{"} \bnfor \bnfts{\#} \bnfor \bnfts{\$} \bnfor \bnfts{\%} \bnfor \bnfts{\&} \bnfor}\\
         \bnfmore{\bnfts{\textquotesingle} \bnfor \bnfts{)} \bnfor \bnfts{(} \bnfor \bnfts{*} \bnfor \bnfts{+} \bnfor \bnfts{,} \bnfor}\\
         \bnfmore{\bnfts{-} \bnfor \bnfts{.} \bnfor \bnfts{/} \bnfor \bnfts{:} \bnfor \bnfts{;} \bnfor \bnfts{<} \bnfor}\\
-        \bnfmore{\bnfts{=} \bnfor \bnfts{>} \bnfor \bnfts{?} \bnfor \bnfts{@} \bnfor \bnfts{`} \bnfor \bnfts{\textasciitilde} \bnfor}\\
-        \bnfmore{\bnfts{]} \bnfor \bnfts{[} \bnfor \bnfts{\textasciicircum} \bnfor \bnfts{\_}  \bnfor \bnfts{\{} \bnfor \bnfts{|} \bnfor \bnfts{\}}}\\
+        \bnfmore{\bnfts{=} \bnfor \bnfts{>} \bnfor \bnfts{?} \bnfor \bnfts{`} \bnfor \bnfts{\textasciitilde} \bnfor \bnfts{]} \bnfor}\\
+        \bnfmore{\bnfts{[} \bnfor \bnfts{\textasciicircum} \bnfor \bnfts{\_}  \bnfor \bnfts{\{} \bnfor \bnfts{|} \bnfor \bnfts{\}}}\\
     \bnfprod{alpha}
         {\bnfts{A} \bnfsk \bnfts{Z} \bnfor
         \bnfts{a} \bnfsk\bnfts{z}}\\
@@ -52,7 +52,7 @@
     \bnfmore{\bnfts{[} \bnfpn{whitespace-literal} \bnfts{]} \bnfpn{alias-value}}
 \end{bnf*}
 
-\subsection{Metamark}
+\subsection{Metamark with arguments}
 
 \begin{bnf*}
     \bnfprod{newline}
@@ -61,8 +61,19 @@
         {\bnfpn{char} \bnfts{+}}\\
     \bnfprod{meta-content}
         {\bnfpn{char} \bnfts{+}}\\
-    \bnfprod{metamark-statment}
+    \bnfprod{metamark-args-statment}
         {\bnfts{..} \bnfpn{meta-name} \bnfpn{whitespace-literal} \bnfpn{char} \bnfts{..}}
+\end{bnf*}
+
+\subsection{Metamark without arguments}
+
+\begin{bnf*}
+    \bnfprod{newline}
+        {\bnfts{\textbackslash n} \bnfor \bnfts{\textbackslash r \textbackslash n} \bnfor \bnfpn{whitespace-literal}}\\
+    \bnfprod{meta-name}
+        {\bnfpn{char} \bnfts{+}}\\
+    \bnfprod{metamark-single-statment}
+        {\bnfts{@} \bnfpn{meta-name}}
 \end{bnf*}
 
 \subsection{Unformat}
@@ -77,7 +88,8 @@
 \begin{bnf*}
     \bnfprod{expression}
         {\bnfpn{integer} \bnfor \bnfpn{text} \bnfor \bnfpn{whitespace} \bnfor \bnfpn{alias-statment} \bnfor}\\
-    \bnfmore{\bnfpn{metamark-statment} \bnfor \bnfpn{unformat-statment}}\\
+    \bnfmore{\bnfpn{metamark-single-statment} \bnfor \bnfpn{metamark-args-statment} \bnfor}\\
+    \bnfmore{ \bnfpn{unformat-statment}}\\
     \bnfprod{sequence-statment}
         {\bnfpn{expression} \bnfts{+}}
 \end{bnf*}

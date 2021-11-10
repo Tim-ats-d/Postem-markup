@@ -6,7 +6,7 @@ let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
       Ast.Eval.(
         try Ok (eval (module Expsn) ast)
         with Missing_metamark (pos, name) ->
-          let msg = Printf.sprintf "missing metamark %s" name
+          let msg = Printf.sprintf "missing metamark '%s'" name
           and hint =
             "try to define your metamark in the used expansion and reinstall \
              Postem"

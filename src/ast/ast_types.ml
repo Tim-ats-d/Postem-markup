@@ -6,6 +6,7 @@ and expr =
   | Int of int
   | Listing of expr list
   | MetamarkArgs of Lexing.position * string * string
+  | MetamarkSingle of Lexing.position * string
   | Text of string
   | Seq of expr list
   | Unformat of string

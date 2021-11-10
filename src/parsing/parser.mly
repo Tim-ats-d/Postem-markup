@@ -13,7 +13,8 @@
 %token ASSIGNMENT
 %token <string> STRING
 
-%token <string * string> META
+%token <string * string> METAARGS
+%token <string> METASINGLE
 %token <string> UNFORMAT
 
 %token CONCLUSION DEFINITION QUOTATION
@@ -44,8 +45,9 @@ paragraph: elist=expr+ { Seq elist }
 expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
   | i=INT                        { Int i }
-  | m=META                       { let name, text = m in
+  | m=METAARGS                   { let name, text = m in
                                    MetamarkArgs ($startpos, name, text) }
+  | m=METASINGLE                 { MetamarkSingle ($startpos, m) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=whitespace                 { White w }

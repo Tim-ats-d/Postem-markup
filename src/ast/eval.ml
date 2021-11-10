@@ -9,7 +9,7 @@ let rec eval (module Expsn : Expansion.Type.S) document =
   |> eval_elist exec_env
   (* |> Postprocess.postprocess (fun _ -> "toc") exec_env.metadata *)
   |> List.filter (( <> ) String.empty)
-  |> Expsn.Misc.concat |> Expsn.Misc.postprocess
+  |> Expsn.concat |> Expsn.postprocess
 
 and eval_elist env = List.map (eval_expr env)
 
@@ -20,7 +20,8 @@ and eval_expr env =
   | Block b -> eval_block env b
   | Int i -> string_of_int i
   | Listing l -> eval_elist env l |> Expsn.Tags.listing
-  | MetamarkArgs (pos, name, content) -> eval_meta env pos name content
+  | MetamarkArgs (pos, name, content) -> eval_meta_args env pos name content
+  | MetamarkSingle (pos, name) -> eval_meta_single env pos name
   | Text t -> t
   | Seq l -> eval_elist env l |> String.join |> Expsn.Tags.paragraph
   | Unformat u -> u
@@ -39,14 +40,19 @@ and eval_block env =
       h' |> Expsn.Tags.heading lvl
   | Quotation q -> eval_expr env q |> String.split_lines |> Expsn.Tags.quotation
 
-and eval_meta { expsn = (module Expsn); _ } pos name content =
-  match List.assoc_opt name Expsn.meta with
+and eval_meta_args { expsn = (module Expsn); _ } pos name content =
+  match List.assoc_opt name Expsn.Meta.args with
   | None -> raise (Missing_metamark (pos, name))
   | Some mode -> (
       match mode with
       | `Inline f -> f (String.trim content)
       | `Lines f -> f (String.split_lines content)
       | `Paragraph f -> f content)
+
+and eval_meta_single { expsn = (module Expsn); _ } pos name =
+  match List.assoc_opt name Expsn.Meta.single with
+  | None -> raise (Missing_metamark (pos, name))
+  | Some f -> f ()
 
 and eval_whitespace = function
   | CarriageReturn -> "\r"

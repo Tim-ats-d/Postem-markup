@@ -16,9 +16,11 @@ class PostemLexer(RegexLexer):
             # Alias
             (r'(.+)( |\t|\r)*(==)( |\t|\r)*(".*")',
              bygroups(Name.Variable, Text, Keyword, Text, String.Double)),
-            # Meta
+            # Metamark with args
             (r'(\.\.)(.+)( |\t|\n)([^\.\.]*)(\.\.)', bygroups(Keyword,
              Name.Attributes, Text, Name.Attributes, Keyword)),
+            # Metamark without args
+            (r'@(.+)', Name.Attributes),
             # Unformat
             (r'(\{\{)(.*)(\}\})', bygroups(Keyword, Text, Keyword)),
             # Conclusion

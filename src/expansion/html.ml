@@ -8,8 +8,6 @@ let format ?(class_ = "") ?(id = "") ~tag content =
 
 let concat = String.concat "\n"
 
-let meta = []
-
 module Tags : Type.Tags = struct
   include Default.Tags
 
@@ -39,4 +37,10 @@ module Tags : Type.Tags = struct
       |> String.concat_lines
     in
     format ~tag:"ul" content
+end
+
+module Meta : Type.Meta = struct
+  include Default.Meta
+
+  let args = []
 end
