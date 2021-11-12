@@ -3,18 +3,18 @@ open Utils
 
 exception Missing_metamark of Lexing.position * string
 
+type 'a env = { metadata : 'a; expsn : (module Expansion.Type.S) }
+
 let rec eval (module Expsn : Expansion.Type.S) document =
-  let exec_env = Env.create (module Expsn) in
-  Preprocess.preprocess Expsn.initial_alias document
-  |> eval_elist exec_env
-  (* |> Postprocess.postprocess (fun _ -> "toc") exec_env.metadata *)
+  let metadata, elist = Preprocess.preprocess Expsn.initial_alias document in
+  eval_elist { metadata; expsn = (module Expsn) } elist
   |> List.filter (( <> ) String.empty)
   |> Expsn.concat |> Expsn.postprocess
 
 and eval_elist env = List.map (eval_expr env)
 
 and eval_expr env =
-  let { Env.expsn = (module Expsn); _ } = env in
+  let { expsn = (module Expsn); _ } = env in
   function
   | Alias _ -> String.empty
   | Block b -> eval_block env b
@@ -28,16 +28,13 @@ and eval_expr env =
   | White w -> eval_whitespace w
 
 and eval_block env =
-  let { Env.expsn = (module Expsn); _ } = env in
+  let { expsn = (module Expsn); _ } = env in
   function
   | Conclusion c -> eval_expr env c |> Expsn.Tags.conclusion
   | Definition (name, values) ->
       let name' = eval_expr env name and values' = eval_expr env values in
       values' |> String.split_lines |> Expsn.Tags.definition name'
-  | Heading (lvl, h) ->
-      let h' = eval_expr env h in
-      env.metadata.headers <- (lvl, h') :: env.metadata.headers;
-      h' |> Expsn.Tags.heading lvl
+  | Heading (lvl, h) -> eval_expr env h |> Expsn.Tags.heading lvl
   | Quotation q -> eval_expr env q |> String.split_lines |> Expsn.Tags.quotation
 
 and eval_meta_args { expsn = (module Expsn); _ } pos name content =
