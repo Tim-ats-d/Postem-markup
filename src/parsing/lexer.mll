@@ -12,8 +12,9 @@ let sep = (newline) (newline)+
 
 let int = ['0'-'9']+
 let ascii_char = ['!'-'?' 'A'-'~']
+let latin1 = ['\161'-'\255']
 
-let text = (alpha) (ascii_char)*
+let text = (alpha | latin1) (ascii_char | latin1)*
 
 rule read = parse
   | eof                    { EOF }
@@ -41,8 +42,9 @@ rule read = parse
   | _                      { raise (Syntax_error lexbuf) }
 
 and read_metamark_name buf = parse
-  | ws as w { if w = '\n' then Lexing.new_line lexbuf; Buffer.contents buf }
-  | _ as c  { Buffer.add_char buf c; read_metamark_name buf lexbuf }
+  | ws           { Buffer.contents buf }
+  | newline      { Lexing.new_line lexbuf; Buffer.contents buf}
+  | _ as c       { Buffer.add_char buf c; read_metamark_name buf lexbuf }
 
 and read_metamark buf = parse
   | ".."   { Buffer.contents buf }
