@@ -8,10 +8,10 @@ import pygments
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import load_lexer_from_file
 
-sample_postem_code = """
-& Section
+postem_input = """
+& Title
 
-> Quote
+> A quotation
 """
 
 formatter = HtmlFormatter()
@@ -21,7 +21,7 @@ with open("styles.css", "w") as f:
 
 with open("output.html", "w") as f:
     lexer = load_lexer_from_file("lexer.py", "PostemLexer")
-    output = pygments.highlight(sample_postem_code, lexer, formatter)
+    output = pygments.highlight(postem_input, lexer, formatter)
 
     f.write('<head><link rel="stylesheet" type="text/css" href="styles.css"></head>')
     f.write(output)
