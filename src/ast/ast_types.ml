@@ -1,3 +1,5 @@
+type loc = { startpos : Lexing.position; endpos : Lexing.position }
+
 type document = Document of expr list
 
 and expr =
@@ -5,8 +7,8 @@ and expr =
   | Block of block
   | Int of int
   | Listing of expr list
-  | MetamarkArgs of Lexing.position * string * string
-  | MetamarkSingle of Lexing.position * string
+  | MetamarkArgs of loc * string * string
+  | MetamarkSingle of loc * string
   | Text of string
   | Seq of expr list
   | Unformat of string

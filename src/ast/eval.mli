@@ -1,4 +1,4 @@
-exception Missing_metamark of Lexing.position * string
+exception Missing_metamark of Ast_types.loc * string
 (** Exception raised by [eval] function when a meta tag is mentionned in postem code and it doesn't exist. *)
 
 val eval : (module Expansion.Type.S) -> Ast_types.document -> string

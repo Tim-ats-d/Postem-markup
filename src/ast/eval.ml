@@ -1,7 +1,7 @@
 open Ast_types
 open Utils
 
-exception Missing_metamark of Lexing.position * string
+exception Missing_metamark of Ast_types.loc * string
 
 type 'a env = { metadata : 'a; expsn : (module Expansion.Type.S) }
 

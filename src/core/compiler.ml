@@ -5,13 +5,13 @@ let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
   | Ok ast -> (
       Ast.Eval.(
         try Ok (eval (module Expsn) ast)
-        with Missing_metamark (pos, name) ->
+        with Missing_metamark ({ startpos; endpos }, name) ->
           let msg = Printf.sprintf "missing metamark '%s'" name
           and hint =
             "try to define your metamark in the used expansion and reinstall \
              Postem"
-          in
-          Error (Error_msg.of_position pos ~msg ~hint)))
+          and cursor_length = endpos.pos_cnum - endpos.pos_bol in
+          Error (Error.of_position startpos ~msg ~hint ~cursor_length)))
   | Error _ as err -> err
 
 let from_str str (module Expsn : Expansion.Type.S) =

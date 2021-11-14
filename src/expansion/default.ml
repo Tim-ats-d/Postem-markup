@@ -11,7 +11,7 @@ let postprocess = Fun.id
 module Tags : Type.Tags = struct
   let conclusion text = Text.prefix {|\-> |} text
 
-  let definition name values = name ^ (Text.Lines.concat_fst "\n  | " values)
+  let definition name values = name ^ Text.Lines.concat_fst "\n  | " values
 
   let heading lvl text =
     let get_char = Array.get [| '#'; '*'; '='; '-'; '^'; '"' |] in

@@ -7,8 +7,9 @@ let load expsn_name =
   match found_expsn with
   | [] ->
       Printf.eprintf
-        {|Error: no extension found as "%s". Did you register your extension in src/expansion/known.ml ?|}
+        {|Error: no extension found as %s. Did you register your extension in src/expansion/known.ml ?|}
         expsn_name;
+
       exit 1
   | [ (_, expsn, _) ] -> expsn
   | _ ->

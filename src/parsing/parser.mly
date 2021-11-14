@@ -1,5 +1,7 @@
 %{
   open Ast.Ast_types
+
+  let make_loc startpos endpos = { startpos; endpos }
 %}
 
 %token <string> TEXT
@@ -46,8 +48,8 @@ expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
   | i=INT                        { Int i }
   | m=METAARGS                   { let name, text = m in
-                                   MetamarkArgs ($startpos, name, text) }
-  | m=METASINGLE                 { MetamarkSingle ($startpos, m) }
+                                   MetamarkArgs (make_loc $startpos $endpos, name, text) }
+  | m=METASINGLE                 { MetamarkSingle (make_loc $startpos $endpos, m) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=whitespace                 { White w }
