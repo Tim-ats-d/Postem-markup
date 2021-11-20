@@ -5,7 +5,7 @@ type preprocess_env = { ctx : Context.t; metadata : metadata }
 
 and metadata = { headers : (int * expr) list }
 
-let preprocess ctx (Document doc) =
+let preprocess ctx doc =
   let rec process_elist env elist =
     let rec process_expr env =
       let { ctx; metadata } = env in

@@ -4,14 +4,14 @@
 
 ### Basics
 
+To simply print the result on stdout:
+```bash
+$ postem input
+```
+
 To compile a text marked in **Postem** from a file and write result `<output>`:
 ```bash
 $ postem input -o output
-```
-
-To simply print the result on stdout, pass the flag `-s`:
-```bash
-$ postem input -s
 ```
 
 ### Expansions

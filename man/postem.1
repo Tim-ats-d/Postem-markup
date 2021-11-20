@@ -4,7 +4,7 @@
 postem \- A fast and easy notes taking oriented markup language
 
 .SH SYNOPSIS
-.B postem [-l] [-s | -o
+.B postem [-l] [-o
 .I output
 ] [ -e
 .I expansion
@@ -29,6 +29,10 @@ The toplevel system is started by the program
 Phrases are read on standard input, results are printed on standard
 output, errors on standard error.
 
+By default,
+.BR postem (1)
+prints result on stdout and exit.
+
 .SH OPTIONS
 
 The following command-line options are recognized by
@@ -47,10 +51,6 @@ Display the list of expansion registered.
 .TP
 .BI \-o \ output
 Set output file name. If it does not exist, it is created.
-
-.TP
-.B \-s
-Output result on stdout and exit.
 
 .TP
 .B \-version

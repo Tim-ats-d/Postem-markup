@@ -3,18 +3,21 @@ open Utils
 
 exception Missing_metamark of Ast_types.loc * string
 
-type 'a env = { metadata : 'a; expsn : (module Expansion.Type.S) }
+module Env = struct
+  type 'a t = { expsn : (module Expansion.Type.S); metadata : 'a }
+end
 
-let rec eval (module Expsn : Expansion.Type.S) document =
-  let metadata, elist = Preprocess.preprocess Expsn.initial_alias document in
-  eval_elist { metadata; expsn = (module Expsn) } elist
+let rec eval (module Expsn : Expansion.Type.S) (Document doc) =
+  let metadata, elist = Preprocess.preprocess Expsn.initial_alias doc in
+  let env = { Env.metadata; expsn = (module Expsn) } in
+  eval_elist env elist
   |> List.filter (( <> ) String.empty)
   |> Expsn.concat |> Expsn.postprocess
 
 and eval_elist env = List.map (eval_expr env)
 
 and eval_expr env =
-  let { expsn = (module Expsn); _ } = env in
+  let { Env.expsn = (module Expsn); _ } = env in
   function
   | Alias _ -> String.empty
   | Block b -> eval_block env b
@@ -28,7 +31,7 @@ and eval_expr env =
   | White w -> eval_whitespace w
 
 and eval_block env =
-  let { expsn = (module Expsn); _ } = env in
+  let { Env.expsn = (module Expsn); _ } = env in
   function
   | Conclusion c -> eval_expr env c |> Expsn.Tags.conclusion
   | Definition (name, values) ->
