@@ -1,5 +1,6 @@
 (library
  (name parsing)
+ (public_name postem.parsing)
  (libraries ast utils))
 
 (ocamllex lexer)
