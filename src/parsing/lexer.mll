@@ -42,9 +42,9 @@ rule read = parse
   | _                      { raise (Syntax_error lexbuf) }
 
 and read_metamark_name buf = parse
-  | ws           { Buffer.contents buf }
-  | newline      { Lexing.new_line lexbuf; Buffer.contents buf}
-  | _ as c       { Buffer.add_char buf c; read_metamark_name buf lexbuf }
+  | ws      { Buffer.contents buf }
+  | newline { Lexing.new_line lexbuf; Buffer.contents buf}
+  | _ as c  { Buffer.add_char buf c; read_metamark_name buf lexbuf }
 
 and read_metamark buf = parse
   | ".."   { Buffer.contents buf }
@@ -61,7 +61,7 @@ and read_string buf = parse
   | _ as c { Buffer.add_char buf c; read_string buf lexbuf }
 
 and read_unformat buf = parse
-  | "}}"  { UNFORMAT (Buffer.contents buf) }
+  | "}}"   { UNFORMAT (Buffer.contents buf) }
   | '\n'   { Lexing.new_line lexbuf;
              Buffer.add_char buf '\n';
              read_unformat buf lexbuf }

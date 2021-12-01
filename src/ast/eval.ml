@@ -10,9 +10,7 @@ end
 let rec eval (module Expsn : Expansion.Type.S) (Document doc) =
   let metadata, elist = Preprocess.preprocess Expsn.initial_alias doc in
   let env = { Env.metadata; expsn = (module Expsn) } in
-  eval_elist env elist
-  |> List.filter (( <> ) String.empty)
-  |> Expsn.concat |> Expsn.postprocess
+  eval_elist env elist |> Expsn.postprocess
 
 and eval_elist env = List.map (eval_expr env)
 

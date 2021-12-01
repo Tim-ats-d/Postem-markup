@@ -4,9 +4,8 @@ let initial_alias =
   let module M = Map.Make (String) in
   M.empty
 
-let concat = Text.Lines.concat "\n\n"
-
-let postprocess = Fun.id
+let postprocess lines =
+  List.filter (( <> ) String.empty) lines |> Text.Lines.concat "\n\n"
 
 module Tags : Type.Tags = struct
   let conclusion text = Text.prefix {|\-> |} text

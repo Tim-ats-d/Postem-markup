@@ -24,11 +24,9 @@ module type Meta = sig
 end
 
 module type S = sig
+  val postprocess : string list -> string
+
   val initial_alias : string Map.Make(Utils.String).t
-
-  val concat : string list -> string
-
-  val postprocess : string -> string
 
   module Tags : Tags
 
