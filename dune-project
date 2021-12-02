@@ -29,9 +29,10 @@
  (description
   "Postem is a fast and easy notes taking oriented markup language.\n\nIt aims to offer a quick language to write to structure a text taken in note.")
  (depends
+  dune
   (ocaml
    (>= 4.11))
-   dune
+  (odoc :with-doc)
   (menhir
    (>= 20210419))
   (ocamllex (>= 4.11.1))))
