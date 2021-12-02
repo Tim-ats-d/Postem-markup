@@ -5,7 +5,6 @@
 %}
 
 %token <string> TEXT
-%token <int> INT
 
 %token CARRIAGERETURN NEWLINE TAB SPACE
 
@@ -28,7 +27,7 @@
 
 %%
 
-document: blist=separated_list(SEPARATOR, block_list); EOF { Document blist }
+document: blist=separated_list(SEPARATOR, block_list); EOF { blist }
 
 block_list:
   | bl=conclusion | bl=definition | bl=heading | bl=quotation { Block bl }
@@ -46,7 +45,6 @@ paragraph: elist=expr+ { Seq elist }
 
 expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
-  | i=INT                        { Int i }
   | m=METAARGS                   { let name, text = m in
                                    MetamarkArgs (make_loc $startpos $endpos, name, text) }
   | m=METASINGLE                 { MetamarkSingle (make_loc $startpos $endpos, m) }

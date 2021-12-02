@@ -10,7 +10,6 @@ let ws = ['\r' '\t' ' ']
 let newline = '\n' | "\r\n"
 let sep = (newline) (newline)+
 
-let int = ['0'-'9']+
 let ascii_char = ['!'-'?' 'A'-'~']
 let latin1 = ['\161'-'\255']
 
@@ -27,7 +26,6 @@ rule read = parse
                              done;
                              SEPARATOR }
   | text as t              { TEXT t }
-  | int as i               { INT (int_of_string i) }
   | ws? "==" ws?           { ASSIGNMENT }
   | '@' (ascii_char+ as m) { METASINGLE m }
   | ".."                   { let name = read_metamark_name (Buffer.create 17) lexbuf

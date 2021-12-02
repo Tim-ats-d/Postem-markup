@@ -2,15 +2,6 @@
 
 \section{Literals}
 
-\subsection{Integer}
-
-\begin{bnf*}
-    \bnfprod{digit}
-        {\bnfts{0} \bnfsk \bnfts{9}}\\
-    \bnfprod{integer-literal}
-        {\bnfpn{digit} \bnfts{+}}\\
-\end{bnf*}
-
 \subsection{Text}
 
 \begin{bnf*}
@@ -87,7 +78,7 @@
 
 \begin{bnf*}
     \bnfprod{expression}
-        {\bnfpn{integer} \bnfor \bnfpn{text} \bnfor \bnfpn{whitespace} \bnfor \bnfpn{alias-statment} \bnfor}\\
+        {\bnfpn{text} \bnfor \bnfpn{whitespace} \bnfor \bnfpn{alias-statment} \bnfor}\\
     \bnfmore{\bnfpn{metamark-single-statment} \bnfor \bnfpn{metamark-args-statment} \bnfor}\\
     \bnfmore{ \bnfpn{unformat-statment}}\\
     \bnfprod{sequence-statment}

@@ -7,7 +7,7 @@ module Env = struct
   type 'a t = { expsn : (module Expansion.Type.S); metadata : 'a }
 end
 
-let rec eval (module Expsn : Expansion.Type.S) (Document doc) =
+let rec eval (module Expsn : Expansion.Type.S) doc =
   let metadata, elist = Preprocess.preprocess Expsn.initial_alias doc in
   let env = { Env.metadata; expsn = (module Expsn) } in
   eval_elist env elist |> Expsn.postprocess
@@ -19,7 +19,6 @@ and eval_expr env =
   function
   | Alias _ -> String.empty
   | Block b -> eval_block env b
-  | Int i -> string_of_int i
   | Listing l -> eval_elist env l |> Expsn.Tags.listing
   | MetamarkArgs (pos, name, content) -> eval_meta_args env pos name content
   | MetamarkSingle (pos, name) -> eval_meta_single env pos name
