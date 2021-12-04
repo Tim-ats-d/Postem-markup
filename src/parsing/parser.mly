@@ -5,8 +5,7 @@
 %}
 
 %token <string> TEXT
-
-%token CARRIAGERETURN NEWLINE TAB SPACE
+%token <string> WHITESPACE
 
 %token SEPARATOR
 %token EOF
@@ -50,10 +49,4 @@ expr:
   | m=METASINGLE                 { MetamarkSingle (make_loc $startpos $endpos, m) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
-  | w=whitespace                 { White w }
-
-whitespace:
-  | CARRIAGERETURN { CarriageReturn }
-  | NEWLINE        { Newline }
-  | TAB            { Tab }
-  | SPACE          { Space }
+  | w=WHITESPACE                 { Whitespace w }

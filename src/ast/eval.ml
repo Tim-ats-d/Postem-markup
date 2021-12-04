@@ -3,57 +3,50 @@ open Utils
 
 exception Missing_metamark of Ast_types.loc * string
 
-module Env = struct
-  type 'a t = { expsn : (module Expansion.Type.S); metadata : 'a }
+module type S = sig
+  val eval : Ast_types.expr list -> string
 end
 
-let rec eval (module Expsn : Expansion.Type.S) doc =
-  let metadata, elist = Preprocess.preprocess Expsn.initial_alias doc in
-  let env = { Env.metadata; expsn = (module Expsn) } in
-  eval_elist env elist |> Expsn.postprocess
+module MakeWithExpsn (Expsn : Expansion.Type.S) = struct
+  module W = Eval_impl.Make (struct
+    type t = string
 
-and eval_elist env = List.map (eval_expr env)
+    let rec eval meta doc = List.map (eval_expr meta) doc
 
-and eval_expr env =
-  let { Env.expsn = (module Expsn); _ } = env in
-  function
-  | Alias _ -> String.empty
-  | Block b -> eval_block env b
-  | Listing l -> eval_elist env l |> Expsn.Tags.listing
-  | MetamarkArgs (pos, name, content) -> eval_meta_args env pos name content
-  | MetamarkSingle (pos, name) -> eval_meta_single env pos name
-  | Text t -> t
-  | Seq l -> eval_elist env l |> Text.Lines.join |> Expsn.Tags.paragraph
-  | Unformat u -> u
-  | White w -> eval_whitespace w
+    and eval_expr meta = function
+      | Alias _ -> String.empty
+      | Block b -> eval_block meta b
+      | Listing l -> eval meta l |> Expsn.Tags.listing
+      | MetamarkArgs (pos, name, content) -> eval_meta_args pos name content
+      | MetamarkSingle (pos, name) -> eval_meta_single pos name
+      | Text t -> t
+      | Seq l -> eval meta l |> Text.Lines.join |> Expsn.Tags.paragraph
+      | Unformat u -> u
+      | Whitespace w -> w
 
-and eval_block env =
-  let { Env.expsn = (module Expsn); _ } = env in
-  function
-  | Conclusion c -> eval_expr env c |> Expsn.Tags.conclusion
-  | Definition (name, values) ->
-      let name' = eval_expr env name and values' = eval_expr env values in
-      values' |> String.split_lines |> Expsn.Tags.definition name'
-  | Heading (lvl, h) -> eval_expr env h |> Expsn.Tags.heading lvl
-  | Quotation q -> eval_expr env q |> String.split_lines |> Expsn.Tags.quotation
+    and eval_block meta = function
+      | Conclusion c -> eval_expr meta c |> Expsn.Tags.conclusion
+      | Definition (name, values) ->
+          let name' = eval_expr meta name and values' = eval_expr meta values in
+          values' |> String.split_lines |> Expsn.Tags.definition name'
+      | Heading (lvl, h) -> eval_expr meta h |> Expsn.Tags.heading lvl
+      | Quotation q ->
+          eval_expr meta q |> String.split_lines |> Expsn.Tags.quotation
 
-and eval_meta_args { expsn = (module Expsn); _ } pos name content =
-  match List.assoc_opt name Expsn.Meta.args with
-  | None -> raise (Missing_metamark (pos, name))
-  | Some mode -> (
-      match mode with
-      | `Inline f -> f (String.trim content)
-      | `Lines f -> f (String.split_lines content)
-      | `Paragraph f -> f content)
+    and eval_meta_args pos name content =
+      match List.assoc_opt name Expsn.Meta.args with
+      | None -> raise (Missing_metamark (pos, name))
+      | Some mode -> (
+          match mode with
+          | `Inline f -> f (String.trim content)
+          | `Lines f -> f (String.split_lines content)
+          | `Paragraph f -> f content)
 
-and eval_meta_single { expsn = (module Expsn); _ } pos name =
-  match List.assoc_opt name Expsn.Meta.single with
-  | None -> raise (Missing_metamark (pos, name))
-  | Some f -> f ()
+    and eval_meta_single pos name =
+      match List.assoc_opt name Expsn.Meta.single with
+      | None -> raise (Missing_metamark (pos, name))
+      | Some f -> f ()
+  end)
 
-and eval_whitespace = function
-  | CarriageReturn -> "\r"
-  | Newline -> " "
-  | Tab -> "\t"
-  | Space -> " "
-  | Unknown c -> Char.to_string c
+  let eval doc = W.eval doc ~alias:Expsn.initial_alias |> Expsn.postprocess
+end

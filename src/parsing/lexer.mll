@@ -17,14 +17,12 @@ let text = (alpha | latin1) (ascii_char | latin1)*
 
 rule read = parse
   | eof                    { EOF }
-  | ' '                    { SPACE }
-  | '\t'                   { TAB }
-  | '\r'                   { CARRIAGERETURN }
-  | '\n'                   { Lexing.new_line lexbuf; NEWLINE }
+  | '\n'                   { Lexing.new_line lexbuf; read lexbuf  }
   | sep as s               { for _ = 0 to String.length s - 1 do
                                Lexing.new_line lexbuf
                              done;
                              SEPARATOR }
+  | ws* as s               { WHITESPACE s }
   | text as t              { TEXT t }
   | ws? "==" ws?           { ASSIGNMENT }
   | '@' (ascii_char+ as m) { METASINGLE m }

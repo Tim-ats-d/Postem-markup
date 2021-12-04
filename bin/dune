@@ -2,6 +2,10 @@
  (name postem)
  (libraries postem))
 
+; (executable
+;  (name text)
+;  (libraries postem))
+
 (install
  (section bin)
  (files
