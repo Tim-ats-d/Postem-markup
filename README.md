@@ -14,8 +14,8 @@ A fast and easy **notes taking** oriented **markup** language
 
 #### Not yet implemented
 
-* Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format
-* Unicode support outside of unformat expression (currently support only the [Latin 1](https://en.wikipedia.org/wiki/ISO/IEC_8859-1)).
+* Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format.
+* A more flexible lexer.
 
 ## Examples
 

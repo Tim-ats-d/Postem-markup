@@ -40,5 +40,3 @@ let of_position ?(cursor_length = 1) ?(hint = "")
     sprintf "%s\n%s\n%s%s"
       (Printf.sprintf "Error: %s." msg |> red)
       overview carret hint
-
-let of_lexbuf { lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg

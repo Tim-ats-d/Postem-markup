@@ -18,3 +18,5 @@ and block =
   | Definition of expr * expr
   | Heading of int * expr
   | Quotation of expr
+
+let create_loc startpos endpos = { startpos; endpos }

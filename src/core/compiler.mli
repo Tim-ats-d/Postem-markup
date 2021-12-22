@@ -1,5 +1,5 @@
 val from_lexbuf :
-  Lexing.lexbuf -> (module Expansion.Type.S) -> (string, string) result
+  Sedlexing.lexbuf -> (module Expansion.Type.S) -> (string, string) result
 (** [from_lexbuf lexbuf expansion] returns [Ok output] if compilation goes smoothly, [Error msg] otherwise.
     [expansion] is the module used to generate the rendering. *)
 
