@@ -1,11 +1,14 @@
 %{
   open Ast.Ast_types
+
+  let make_loc startpos endpos = { startpos; endpos }
 %}
 
 %token <string> TEXT
 %token <string> WHITESPACE
 
-%token SEPARATOR EOF
+%token SEPARATOR
+%token EOF
 
 %token ASSIGNMENT
 %token <string> STRING
@@ -42,8 +45,8 @@ paragraph: elist=expr+ { Seq elist }
 expr:
   | n=TEXT; ASSIGNMENT; v=STRING { Alias (n, v) }
   | m=METAARGS                   { let name, text = m in
-                                   MetamarkArgs (create_loc $startpos $endpos, name, text) }
-  | m=METASINGLE                 { MetamarkSingle (create_loc $startpos $endpos, m) }
+                                   MetamarkArgs (make_loc $startpos $endpos, name, text) }
+  | m=METASINGLE                 { MetamarkSingle (make_loc $startpos $endpos, m) }
   | t=TEXT                       { Text t }
   | u=UNFORMAT                   { Unformat u }
   | w=WHITESPACE                 { Whitespace w }

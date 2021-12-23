@@ -1,6 +1,4 @@
 open Utils
-module Sedlex = Sedlexing.Utf8
-
 
 let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
   match Parsing.parse_document lexbuf with
@@ -17,13 +15,13 @@ let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
   | Error _ as err -> err
 
 let from_str str (module Expsn : Expansion.Type.S) =
-  let lexbuf = Sedlex.from_string str in
-  Sedlexing.set_filename lexbuf "REPL";
+  let lexbuf = Lexing.from_string str in
+  Lexing.set_filename lexbuf "REPL";
   from_lexbuf lexbuf (module Expsn)
 
 let from_file filename (module Expsn : Expansion.Type.S) =
-  let lexbuf = Sedlex.from_channel (open_in filename) in
-  Sedlexing.set_filename lexbuf filename;
+  let lexbuf = Lexing.from_channel (open_in filename) in
+  Lexing.set_filename lexbuf filename;
   from_lexbuf lexbuf (module Expsn)
 
 let compile () =

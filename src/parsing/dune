@@ -1,10 +1,9 @@
 (library
  (name parsing)
  (public_name postem.parsing)
- (libraries ast menhirLib sedlex utils)
- (preprocess
-  (pps sedlex.ppx))
- (flags :standard -w +39))
+ (libraries ast utils))
+
+(ocamllex lexer)
 
 (menhir
  (modules parser))
