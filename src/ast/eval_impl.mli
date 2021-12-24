@@ -1,4 +1,4 @@
-module type S = sig
+module type WRITER = sig
   type t
   (** The written type. *)
 
@@ -11,4 +11,4 @@ module type CUSTOM_WRITER = sig
   val eval : ?alias:Context.t -> Ast_types.expr list -> t list
 end
 
-module Make (Writer : S) : CUSTOM_WRITER with type t := Writer.t
+module Make (Writer : WRITER) : CUSTOM_WRITER with type t := Writer.t

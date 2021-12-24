@@ -1,8 +1,6 @@
 open Utils
 
-let initial_alias =
-  let module M = Map.Make (String) in
-  M.empty
+let initial_alias = Ast.Share.AliasMap.empty
 
 let postprocess lines =
   List.filter (( <> ) String.empty) lines |> Text.Lines.concat "\n\n"
@@ -34,7 +32,9 @@ module Tags : Ast.Expansion.Tags = struct
       | T5 -> '^'
       | T6 -> '"'
     in
-    let head = Printf.sprintf "%s - %s" num text in
+    let head =
+      if String.is_empty num then text else Printf.sprintf "%s - %s" num text
+    in
     let underlining = String.make (String.length head) uchar in
     Text.between head "\n" underlining
 
