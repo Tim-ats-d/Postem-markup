@@ -1,18 +1,21 @@
 open Utils
 include Default
 
-module Tags : Type.Tags = struct
+let numbering _ = new Enumerate.Builtins.null
+
+module Tags : Ast.Expansion.Tags = struct
   include Default.Tags
 
   let definition name values =
     Printf.sprintf "%s::\n%s" name (Text.Lines.concat_lines values)
 
-  let heading lvl text =
-    let lvl = if lvl >= 6 then 6 else lvl in
-    Printf.sprintf "%s %s" (String.make lvl '=') text
+  let heading _ lvl text =
+    let ilvl = Ast.Share.TitleLevel.to_int lvl in
+    let prefix = String.make ilvl '=' in
+    Printf.sprintf "%s %s" prefix text
 
   let quotation lines =
-    Printf.sprintf "---\n%s\n---" (Text.Lines.concat_lines lines)
+    Printf.sprintf "---\n%s\n---" @@ Text.Lines.concat_lines lines
 
   let listing lines =
     List.map (Printf.sprintf "* %s") lines |> Text.Lines.concat_lines
@@ -25,7 +28,7 @@ let enumerate lines =
     lines
   |> Text.Lines.concat_lines
 
-module Meta : Type.Meta = struct
+module Meta : Ast.Expansion.Meta = struct
   let args =
     [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
 

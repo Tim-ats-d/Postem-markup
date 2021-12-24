@@ -16,5 +16,5 @@ and expr =
 and block =
   | Conclusion of expr
   | Definition of expr * expr
-  | Heading of int * expr
+  | Heading of Share.TitleLevel.t * expr
   | Quotation of expr

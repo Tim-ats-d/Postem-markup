@@ -3,7 +3,7 @@ open Utils
 
 type preprocess_env = { ctx : Context.t; metadata : metadata }
 
-and metadata = { headers : (int * expr) list }
+and metadata = { headers : (Share.TitleLevel.t * expr) list }
 
 let preprocess ctx doc =
   let rec process_elist env elist =

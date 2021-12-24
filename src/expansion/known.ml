@@ -1,4 +1,4 @@
-type t = (name * (module Type.S) * doc) list
+type t = (name * doc * (module Ast.Expansion.S)) list
 
 and name = string
 
@@ -6,8 +6,8 @@ and doc = string
 
 let expansions : t =
   [
-    ("default", (module Default), "output to plain text.");
-    ("markdown", (module Markdown), "output to Markdown.");
-    ("html", (module Html), "output to HTML.");
-    ("asciidoc", (module Asciidoc), "output to Asciidoc.");
+    ("default", "output to plain text.", (module Default));
+    ("markdown", "output to Markdown.", (module Markdown));
+    ("html", "output to HTML.", (module Html));
+    ("asciidoc", "output to Asciidoc.", (module Asciidoc));
   ]

@@ -10,5 +10,4 @@ module type S = sig
   @raise Missing_metamark *)
 end
 
-
-module MakeWithExpsn : functor (Expsn : Expansion.Type.S) -> S
+module MakeWithExpsn : functor (Expsn : Expansion.S) -> S

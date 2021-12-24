@@ -1,6 +1,6 @@
 open Utils
 
-let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
+let from_lexbuf lexbuf (module Expsn : Ast.Expansion.S) =
   match Parsing.parse_document lexbuf with
   | Ok ast -> (
       let module Eval = Ast.Eval.MakeWithExpsn (Expsn) in
@@ -14,12 +14,12 @@ let from_lexbuf lexbuf (module Expsn : Expansion.Type.S) =
         Error (Error.of_position startpos ~msg ~hint ~cursor_length))
   | Error _ as err -> err
 
-let from_str str (module Expsn : Expansion.Type.S) =
+let from_str str (module Expsn : Ast.Expansion.S) =
   let lexbuf = Lexing.from_string str in
   Lexing.set_filename lexbuf "REPL";
   from_lexbuf lexbuf (module Expsn)
 
-let from_file filename (module Expsn : Expansion.Type.S) =
+let from_file filename (module Expsn : Ast.Expansion.S) =
   let lexbuf = Lexing.from_channel (open_in filename) in
   Lexing.set_filename lexbuf filename;
   from_lexbuf lexbuf (module Expsn)

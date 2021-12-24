@@ -1,4 +1,4 @@
-type metadata = { headers : (int * Ast_types.expr) list }
+type metadata = { headers : (Share.TitleLevel.t * Ast_types.expr) list }
 
 val preprocess :
   Context.t -> Ast_types.expr list -> metadata * Ast_types.expr list

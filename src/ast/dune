@@ -1,4 +1,4 @@
 (library
  (name ast)
  (public_name postem.ast)
- (libraries expansion utils))
+ (libraries utils))

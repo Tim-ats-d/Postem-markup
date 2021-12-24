@@ -1,3 +1,4 @@
 (library
  (name utils)
- (public_name postem.utils))
+ (public_name postem.utils)
+ (libraries enumerate))

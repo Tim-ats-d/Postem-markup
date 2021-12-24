@@ -9,9 +9,8 @@ let load expsn_name =
       Printf.eprintf
         {|Error: no extension found as %s. Did you register your extension in src/expansion/known.ml ?|}
         expsn_name;
-
       exit 1
-  | [ (_, expsn, _) ] -> expsn
+  | [ (_, _, expsn) ] -> expsn
   | _ ->
       Printf.eprintf
         {|Error: ambiguity found. Several extensions are known as "%s"|}
@@ -20,5 +19,5 @@ let load expsn_name =
 
 let print () =
   List.iter
-    (fun (name, _, doc) -> Printf.printf "%s: %s\n" name doc)
+    (fun (name, doc, _) -> Printf.printf "%s: %s\n" name doc)
     known_expsn

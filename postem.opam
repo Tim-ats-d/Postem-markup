@@ -13,10 +13,10 @@ homepage: "https://github.com/Tim-ats-d/Postem-markup"
 doc: "https://github.com/Tim-ats-d/Postem-markup/tree/master/doc"
 bug-reports: "https://github.com/Tim-ats-d/Postem-markup/issues"
 depends: [
-  "ocaml" {>= "4.11"}
   "dune" {>= "2.9"}
-  "menhir" {>= "20210419"}
+  "ocaml" {>= "4.11"}
   "odoc" {with-doc}
+  "menhir" {>= "20210419"}
 ]
 build: [
   ["dune" "subst"] {dev}

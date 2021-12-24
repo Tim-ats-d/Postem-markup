@@ -33,7 +33,8 @@ rule read = parse
   | "{{"                   { read_unformat (Buffer.create 17) lexbuf }
   | "--" ws?               { CONCLUSION }
   | ws? "%%" ws?           { DEFINITION }
-  | ('&'+ as h) ws?        { HEADING (String.length h) }
+  | ('&' | "&&" | "&&&" | "&&&&" | "&&&&&" | "&&&&&&" ) as h ws?
+                           { HEADING (String.length h) }
   | ">" ws?                { QUOTATION }
   | _                      { raise (Syntax_error lexbuf) }
 

@@ -7,7 +7,7 @@ module type S = sig
   val eval : Ast_types.expr list -> string
 end
 
-module MakeWithExpsn (Expsn : Expansion.Type.S) = struct
+module MakeWithExpsn (Expsn : Expansion.S) = struct
   module W = Eval_impl.Make (struct
     type t = string
 
@@ -29,7 +29,10 @@ module MakeWithExpsn (Expsn : Expansion.Type.S) = struct
       | Definition (name, values) ->
           let name' = eval_expr meta name and values' = eval_expr meta values in
           values' |> String.split_lines |> Expsn.Tags.definition name'
-      | Heading (lvl, h) -> eval_expr meta h |> Expsn.Tags.heading lvl
+      | Heading (lvl, h) ->
+          let num = Expsn.numerotation lvl in
+          num#next;
+          eval_expr meta h |> Expsn.Tags.heading num#get lvl
       | Quotation q ->
           eval_expr meta q |> String.split_lines |> Expsn.Tags.quotation
 

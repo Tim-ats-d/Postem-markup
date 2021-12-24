@@ -8,7 +8,7 @@ let format ?(class_ = "") ?(id = "") ~tag content =
 
 let concat = String.concat "\n"
 
-module Tags : Type.Tags = struct
+module Tags : Ast.Expansion.Tags = struct
   include Default.Tags
 
   let conclusion content = format ~tag:"p" ~class_:"conclusion" content
@@ -19,8 +19,8 @@ module Tags : Type.Tags = struct
     in
     format ~tag:"p" ~class_:"definition" content
 
-  let heading lvl content =
-    let lvl_str = (if lvl >= 6 then 6 else lvl) |> string_of_int in
+  let heading _ lvl content =
+    let lvl_str = Int.to_string @@ Ast.Share.TitleLevel.to_int lvl in
     let tag = "h" ^ lvl_str
     and id = String.real_split ' ' content |> String.concat "-" in
     format ~tag ~id content
@@ -39,7 +39,7 @@ module Tags : Type.Tags = struct
     format ~tag:"ul" content
 end
 
-module Meta : Type.Meta = struct
+module Meta : Ast.Expansion.Meta = struct
   include Default.Meta
 
   let args = []

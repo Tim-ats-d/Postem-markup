@@ -3,7 +3,7 @@ module type Tags = sig
 
   val definition : string -> string list -> string
 
-  val heading : int -> string -> string
+  val heading : string -> Share.TitleLevel.t -> string -> string
 
   val paragraph : string -> string
 
@@ -27,6 +27,8 @@ module type S = sig
   val postprocess : string list -> string
 
   val initial_alias : string Map.Make(Utils.String).t
+
+  val numerotation : Share.TitleLevel.t -> Share.Numerotation.t
 
   module Tags : Tags
 
