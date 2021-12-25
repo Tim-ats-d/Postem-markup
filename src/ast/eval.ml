@@ -40,14 +40,15 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
       match List.assoc_opt name Expsn.Meta.args with
       | None -> raise (Missing_metamark (pos, name))
       | Some mode -> (
+          let open Share.MetaMode in
           match mode with
-          | `Inline f -> f (String.trim content)
-          | `Lines f -> f (String.split_lines content)
-          | `Paragraph f -> f content)
+          | Inline f -> f @@ String.trim content
+          | Lines f -> f @@ String.split_lines content
+          | Paragraph f -> f content)
 
     and eval_meta_single pos name =
       match List.assoc_opt name Expsn.Meta.single with
-      | None -> raise (Missing_metamark (pos, name))
+      | None -> raise @@ Missing_metamark (pos, name)
       | Some f -> f ()
   end)
 

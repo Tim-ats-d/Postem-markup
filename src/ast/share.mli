@@ -4,6 +4,13 @@ end
 
 module AliasMap : ALIAS_MAP
 
+module MetaMode : sig
+  type t =
+    | Inline of (string -> string)
+    | Lines of (string list -> string)
+    | Paragraph of (string -> string)
+end
+
 module Numerotation : sig
   type t = < get : string ; next : unit >
 end

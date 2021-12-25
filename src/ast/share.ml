@@ -4,6 +4,13 @@ end
 
 module AliasMap = Map.Make (Utils.String)
 
+module MetaMode = struct
+  type t =
+    | Inline of (string -> string)
+    | Lines of (string list -> string)
+    | Paragraph of (string -> string)
+end
+
 module Numerotation = struct
   type t = < next : unit ; get : string >
 end

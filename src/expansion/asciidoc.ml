@@ -29,8 +29,7 @@ let enumerate lines =
   |> Text.Lines.concat_lines
 
 module Meta : Ast.Expansion.Meta = struct
-  let args =
-    [ ("enumerate", `Lines enumerate); ("read", `Inline File.read_all) ]
+  let args = []
 
   let single = []
 end

@@ -64,7 +64,8 @@ let read filename =
   else raise (Sys_error "in read meta mark: no such file or directory")
 
 module Meta : Ast.Expansion.Meta = struct
-  let args = [ ("enumerate", `Lines enumerate); ("read", `Inline read) ]
+  let args =
+    Ast.Share.MetaMode.[ ("enumerate", Lines enumerate); ("read", Inline read) ]
 
   let single = [ ("foo", fun () -> "bar") ]
 end

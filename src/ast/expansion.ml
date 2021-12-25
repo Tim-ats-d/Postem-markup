@@ -13,12 +13,7 @@ module type Tags = sig
 end
 
 module type Meta = sig
-  val args :
-    (string
-    * [> `Inline of string -> string
-      | `Lines of string list -> string
-      | `Paragraph of string -> string ])
-    list
+  val args : (string * Share.MetaMode.t) list
 
   val single : (string * (unit -> string)) list
 end
