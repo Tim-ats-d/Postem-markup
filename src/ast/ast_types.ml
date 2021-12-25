@@ -1,20 +1,20 @@
 type loc = { startpos : Lexing.position; endpos : Lexing.position }
 
-type document = expr list
+type atom =
+  [ `MetamarkArgs of loc * string * string
+  | `MetamarkSingle of loc * string
+  | `Text of string
+  | `Whitespace of string
+  | `Unformat of string ]
 
-and expr =
-  | Alias of string * string
-  | Block of block
-  | Listing of expr list
-  | MetamarkArgs of loc * string * string
-  | MetamarkSingle of loc * string
-  | Text of string
-  | Seq of expr list
-  | Unformat of string
-  | Whitespace of string
+type expr = [ `AliasDef of string * string | atom ]
 
-and block =
-  | Conclusion of expr
-  | Definition of expr * expr
-  | Heading of Share.TitleLevel.t * expr
-  | Quotation of expr
+type 'a document = 'a element list
+
+and 'a element = Block of 'a block | Paragraph of 'a list
+
+and 'a block =
+  | Conclusion of 'a list
+  | Definition of 'a list * 'a list
+  | Heading of Share.TitleLevel.t * 'a list
+  | Quotation of 'a list

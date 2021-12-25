@@ -4,41 +4,43 @@ open Utils
 exception Missing_metamark of Ast_types.loc * string
 
 module type S = sig
-  val eval : Ast_types.expr list -> string
+  val eval : Ast_types.expr document -> string
 end
 
 module MakeWithExpsn (Expsn : Expansion.S) = struct
-  module W = Eval_impl.Make (struct
+  module StringWriter = Eval_impl.Make (struct
     type t = string
 
-    let rec eval meta doc = List.map (eval_expr meta) doc
+    let rec eval meta (doc : atom document) : t list =
+      List.map (eval_elem meta) doc
 
-    and eval_expr meta = function
-      | Alias _ -> String.empty
+    and eval_elem meta = function
       | Block b -> eval_block meta b
-      | Listing l -> eval meta l |> Expsn.Tags.listing
-      | MetamarkArgs (pos, name, content) -> eval_meta_args pos name content
-      | MetamarkSingle (pos, name) -> eval_meta_single pos name
-      | Text t -> t
-      | Seq l -> eval meta l |> Text.Lines.join |> Expsn.Tags.paragraph
-      | Unformat u -> u
-      | Whitespace w -> w
+      | Paragraph p -> Expsn.Tags.paragraph @@ eval_alist p
 
-    and eval_block meta = function
-      | Conclusion c -> eval_expr meta c |> Expsn.Tags.conclusion
+    and eval_alist alist = Text.Lines.join @@ List.map eval_atom alist
+
+    and eval_atom = function
+      | `MetamarkArgs (pos, name, content) -> eval_meta_args pos name content
+      | `MetamarkSingle (pos, name) -> eval_meta_single pos name
+      | `Text t -> t
+      | `Unformat u -> u
+      | `Whitespace w -> w
+
+    and eval_block _meta = function
+      | Conclusion c -> Expsn.Tags.conclusion @@ eval_alist c
       | Definition (name, values) ->
-          let name' = eval_expr meta name and values' = eval_expr meta values in
+          let name' = eval_alist name and values' = eval_alist values in
           values' |> String.split_lines |> Expsn.Tags.definition name'
       | Heading (lvl, h) ->
           let num = Expsn.numerotation lvl in
           num#next;
-          eval_expr meta h |> Expsn.Tags.heading num#get lvl
-      | Quotation q ->
-          eval_expr meta q |> String.split_lines |> Expsn.Tags.quotation
+          Expsn.Tags.heading num#get lvl @@ eval_alist h
+      | Quotation q -> Expsn.Tags.quotation @@ List.map eval_atom q
 
     and eval_meta_args pos name content =
       match List.assoc_opt name Expsn.Meta.args with
-      | None -> raise (Missing_metamark (pos, name))
+      | None -> raise @@ Missing_metamark (pos, name)
       | Some mode -> (
           let open Share.MetaMode in
           match mode with
@@ -52,5 +54,6 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
       | Some f -> f ()
   end)
 
-  let eval doc = W.eval doc ~alias:Expsn.initial_alias |> Expsn.postprocess
+  let eval doc =
+    Expsn.postprocess @@ StringWriter.eval doc ~alias:Expsn.initial_alias
 end

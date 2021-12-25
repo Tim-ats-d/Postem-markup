@@ -4,7 +4,7 @@ exception Missing_metamark of Ast_types.loc * string
 module type S = sig
   (** A functor which takes an expansion in parameter and returns a complete evaluator. *)
 
-  val eval : Ast_types.expr list -> string
+  val eval : Ast_types.expr Ast_types.document -> string
   (** [eval doc] returns the string corresponding to the evaluation of [doc].
 
   @raise Missing_metamark *)

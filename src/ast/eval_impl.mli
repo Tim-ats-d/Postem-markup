@@ -2,13 +2,16 @@ module type WRITER = sig
   type t
   (** The written type. *)
 
-  val eval : Preprocess.metadata -> Ast_types.expr list -> t list
+  val eval : Preprocess.metadata -> Ast_types.atom Ast_types.document -> t list
 end
 
 module type CUSTOM_WRITER = sig
   type t
 
-  val eval : ?alias:Context.t -> Ast_types.expr list -> t list
+  val eval : ?alias:Context.t -> Ast_types.expr Ast_types.document -> t list
 end
 
-module Make (Writer : WRITER) : CUSTOM_WRITER with type t := Writer.t
+module Make : functor (Writer : WRITER) -> sig
+  val eval :
+    ?alias:Context.t -> Ast_types.expr Ast_types.document -> Writer.t list
+end
