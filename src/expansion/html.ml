@@ -30,13 +30,6 @@ module Tags : Ast.Expansion.Tags = struct
   let quotation lines =
     let content = Text.Lines.join_lines lines in
     format ~tag:"blockquote" content
-
-  let listing lines =
-    let content =
-      List.map (fun line : string -> format ~tag:"li" line) lines
-      |> Text.Lines.join_lines
-    in
-    format ~tag:"ul" content
 end
 
 module Meta : Ast.Expansion.Meta = struct

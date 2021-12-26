@@ -16,9 +16,6 @@ module Tags : Ast.Expansion.Tags = struct
 
   let quotation lines =
     Printf.sprintf "---\n%s\n---" @@ Text.Lines.concat_lines lines
-
-  let listing lines =
-    List.map (Printf.sprintf "* %s") lines |> Text.Lines.concat_lines
 end
 
 let enumerate lines =

@@ -36,7 +36,7 @@ and ppblock env = function
       (env', Quotation q')
 
 and ppexpr env = function
-  | `AliasDef (name, value) ->
+  | `AliasDef { name; value } ->
       let ctx = Context.add env.ctx name value in
       ({ env with ctx }, `Text "")
   | `Text t -> (env, `Text (Context.substitute env.ctx t))

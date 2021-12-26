@@ -41,14 +41,6 @@ module Tags : Ast.Expansion.Tags = struct
   let paragraph = Fun.id
 
   let quotation lines = Text.prefix " █ " (Text.Lines.join lines)
-
-  let listing = function
-    | [] -> String.empty
-    | [ x ] -> Text.prefix "  - " x
-    | x :: xs ->
-        let first = Text.prefix "  - " x
-        and rest = Text.Lines.concat_fst "\n  - " xs in
-        first ^ rest
 end
 
 let enumerate lines =

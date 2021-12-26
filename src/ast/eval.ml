@@ -21,7 +21,7 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
     and eval_alist alist = Text.Lines.join @@ List.map eval_atom alist
 
     and eval_atom = function
-      | `MetamarkArgs (pos, name, content) -> eval_meta_args pos name content
+      | `MetamarkArgs (pos, { name; value }) -> eval_meta_args pos name value
       | `MetamarkSingle (pos, name) -> eval_meta_single pos name
       | `Text t -> t
       | `Unformat u -> u

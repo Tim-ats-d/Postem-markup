@@ -43,10 +43,10 @@ quotation: QUOTATION; p=paragraph { Quotation p }
 paragraph: elist=expr+ { elist }
 
 expr:
-  | n=TEXT; ASSIGNMENT; v=STRING { `AliasDef (n, v) }
-  | m=METAARGS                   { let name, text = m in
-                                   `MetamarkArgs (make_loc $startpos $endpos, name, text) }
-  | m=METASINGLE                 { `MetamarkSingle (make_loc $startpos $endpos, m) }
-  | t=TEXT                       { `Text t }
-  | u=UNFORMAT                   { `Unformat u }
-  | w=WHITESPACE                 { `Whitespace w }
+  | name=TEXT; ASSIGNMENT; value=STRING { `AliasDef {name; value} }
+  | m=METAARGS { let name, value = m in
+                `MetamarkArgs (make_loc $startpos $endpos, { name; value }) }
+  | m=METASINGLE { `MetamarkSingle (make_loc $startpos $endpos, m) }
+  | t=TEXT { `Text t }
+  | u=UNFORMAT { `Unformat u }
+  | w=WHITESPACE { `Whitespace w }

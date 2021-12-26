@@ -8,8 +8,6 @@ module type Tags = sig
   val paragraph : string -> string
 
   val quotation : string list -> string
-
-  val listing : string list -> string
 end
 
 module type Meta = sig
