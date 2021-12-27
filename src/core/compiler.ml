@@ -28,13 +28,13 @@ let compile () =
   let args =
     Args.parse ~on_empty:(fun args ->
         Repl.launch (fun input ->
-            from_str input (Expsn_handler.load args.expansion)))
+            from_str input (Expsn_handler.load args#expansion)))
   in
-  let module Expansion = (val Expsn_handler.load args.expansion) in
-  match from_file args.input_file (module Expansion) with
+  let module Expansion = (val Expsn_handler.load args#expansion) in
+  match from_file args#input_file (module Expansion) with
   | Ok r ->
-      if args.output_on_stdout then print_endline r
-      else File.write args.output_file r
+      if args#output_on_stdout then print_endline r
+      else File.write args#output_file r
   | Error msg ->
       prerr_endline msg;
       exit 1
