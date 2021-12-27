@@ -1,3 +1,5 @@
+(** Some extension of OCaml stdlib. *)
+
 (** Extension of the [Char] module of the OCaml stdlib. *)
 module Char : sig
   include module type of Char
@@ -23,7 +25,7 @@ module String : sig
   (** [split_lines str] is [String.split_on_char '\n' str]. *)
 end
 
-(** A module containing utilities for file. *)
+(** Containing utilities for file. *)
 module File : sig
   type t = string
   (** A type alias for file.  *)

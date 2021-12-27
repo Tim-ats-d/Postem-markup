@@ -1,4 +1,4 @@
-class virtual numbering =
+class virtual numerotation =
   object
     method virtual next : unit
 
@@ -7,7 +7,7 @@ class virtual numbering =
 
 class virtual alphabet letters =
   object
-    inherit numbering
+    inherit numerotation
 
     val mutable n = 0
 
@@ -19,7 +19,7 @@ class virtual alphabet letters =
 
   class virtual roman (`I i) (`V v) (`X x) (`L l) (`C c) (`D d) (`M m) =
   object (self)
-    inherit numbering
+    inherit numerotation
 
     val mutable n = 0
 

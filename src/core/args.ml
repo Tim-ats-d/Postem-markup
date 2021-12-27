@@ -46,7 +46,7 @@ class arg_parser ~usage_msg =
       let slong = ("--" ^ long, spec, descr) in
       speclist <- slong :: sshort :: speclist
 
-    method parse ~on_empty  =
+    method parse ~on_empty =
       Arg.parse speclist args#set_input_file usage_msg;
       if String.is_empty args#input_file then on_empty args;
       (args :> t)

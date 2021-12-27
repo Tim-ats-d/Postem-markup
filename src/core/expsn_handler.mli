@@ -1,3 +1,5 @@
+(** {1 API} *)
+
 val load : string -> (module Ast.Expansion.S)
 (** [load expansion_name] returns expansions module associated with
 the name [expansion_name] of the [Expansion.Known.expansions].

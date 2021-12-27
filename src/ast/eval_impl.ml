@@ -3,7 +3,7 @@ open Ast_types
 module type WRITER = sig
   type t
 
-  val eval : Preprocess.metadata -> atom document -> t list
+  val eval : Preprocess.metadata -> value document -> t list
 end
 
 module type CUSTOM_WRITER = sig

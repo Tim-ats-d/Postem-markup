@@ -37,6 +37,5 @@ class args :
   end
 
 val parse : on_empty:(args -> unit) -> t
-(** [parse ~on_empty:f] returns CLI arguments passed as type [t]. [f] received
-passed arguments and is executed if no positional arguments are passed.
-*)
+(** [parse ~on_empty:f] returns CLI arguments passed as type [t].
+  [f] is executed if no positional arguments are passed. *)

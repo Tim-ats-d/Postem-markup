@@ -11,7 +11,7 @@ let rec ppdoc ctx doc =
   let env, doc' = fold_map ppelement init_env doc in
   (env.metadata, doc')
 
-and ppelement env : expr element -> env * atom element = function
+and ppelement env = function
   | Block b ->
       let env', b' = ppblock env b in
       (env', Block b')
@@ -40,4 +40,4 @@ and ppexpr env = function
       let ctx = Context.add env.ctx name value in
       ({ env with ctx }, `Text "")
   | `Text t -> (env, `Text (Context.substitute env.ctx t))
-  | #atom as a -> (env, a)
+  | #value as a -> (env, a)

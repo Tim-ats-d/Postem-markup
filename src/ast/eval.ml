@@ -11,8 +11,7 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
   module StringWriter = Eval_impl.Make (struct
     type t = string
 
-    let rec eval meta (doc : atom document) : t list =
-      List.map (eval_elem meta) doc
+    let rec eval meta (doc : value document) = List.map (eval_elem meta) doc
 
     and eval_elem meta = function
       | Block b -> eval_block meta b

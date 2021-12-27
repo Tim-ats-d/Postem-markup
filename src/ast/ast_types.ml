@@ -2,14 +2,14 @@ type loc = { startpos : Lexing.position; endpos : Lexing.position }
 
 type ident = { name : string; value : string }
 
-type atom =
+type value =
   [ `MetamarkArgs of loc * ident
   | `MetamarkSingle of loc * string
   | `Text of string
   | `Whitespace of string
   | `Unformat of string ]
 
-type expr = [ `AliasDef of ident | atom ]
+type expr = [ `AliasDef of ident | value ]
 
 type 'a document = 'a element list
 

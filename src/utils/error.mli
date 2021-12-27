@@ -1,6 +1,10 @@
-(** A module containing utilities for error message formatting. *)
+(** Containing utilities for error message formatting. *)
+
+(** {1 Type} *)
 
 type t = string
+
+(** {2 API} *)
 
 val of_string : msg:string -> t
 (** [of_string ~msg] prettifies and returns it as string. *)

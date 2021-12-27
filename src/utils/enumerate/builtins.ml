@@ -1,6 +1,6 @@
 class null =
   object
-    inherit Base.numbering
+    inherit Base.numerotation
 
     method next = ()
 
@@ -9,7 +9,7 @@ class null =
 
 class numeric_arab =
   object
-    inherit Base.numbering
+    inherit Base.numerotation
 
     val mutable current = 0
 

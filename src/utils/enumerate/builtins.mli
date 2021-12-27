@@ -1,8 +1,12 @@
+(** {1 API} *)
+
+(** The null numbering. *)
 class null :
   object
     method get : string
 
     method next : unit
+    (** Returns always an empty string. *)
   end
 
 class numeric_arab :

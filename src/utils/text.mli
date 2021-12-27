@@ -1,4 +1,10 @@
+(** High-level text and string list manipulation. *)
+
+(** {1 Type} *)
+
 type t = string
+
+(** {2 API} *)
 
 val prefix : t -> t -> t
 (** [prefix pre str] is [pre ^ str]. *)
