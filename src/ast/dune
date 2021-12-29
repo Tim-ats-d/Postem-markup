@@ -1,4 +1,5 @@
 (library
  (name ast)
  (public_name postem.ast)
+ (modules_without_implementation ast_types expansion)
  (libraries utils))
