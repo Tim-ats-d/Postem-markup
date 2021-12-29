@@ -6,8 +6,8 @@ type t = string
 
 (** {2 API} *)
 
-val of_string : ?hint:string -> msg:string -> t
-(** [of_string ~msg] prettifies and returns it as string. *)
+val of_string : ?hint:string -> string -> t
+(** [of_string msg] prettifies and returns it as string. *)
 
 val of_position :
   ?cursor_length:int -> ?hint:string -> Lexing.position -> msg:string -> t

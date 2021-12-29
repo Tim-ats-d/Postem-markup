@@ -29,7 +29,7 @@ let compile () =
     match Ehandler.load_res Expansion.Known.expansions name with
     | Ok expsn -> expsn
     | Error (msg, hint) ->
-        prerr_endline @@ Error.of_string ~msg ~hint;
+        prerr_endline @@ Error.of_string msg ~hint;
         exit 1
   in
   let args =

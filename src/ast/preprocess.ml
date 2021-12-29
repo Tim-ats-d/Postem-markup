@@ -40,4 +40,5 @@ and ppexpr env = function
       let ctx = Context.add env.ctx name value in
       ({ env with ctx }, `Text "")
   | `Text t -> (env, `Text (Context.substitute env.ctx t))
+  | `Unformat u -> (env, `Text u)
   | #value as a -> (env, a)

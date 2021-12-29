@@ -1,13 +1,12 @@
-open Lexing
 open Printf
 
 type t = string
 
-let blue = Printf.sprintf "\027[0;34m%s\027[0m"
+let blue = sprintf "\027[0;34m%s\027[0m"
 
-let red = Printf.sprintf "\027[0;31m%s\027[0m"
+let red = sprintf "\027[0;31m%s\027[0m"
 
-let orange = Printf.sprintf "\027[0;33m%s\027[0m"
+let orange = sprintf "\027[0;33m%s\027[0m"
 
 let get_line filename line_nb =
   let ic = open_in filename in
@@ -16,36 +15,40 @@ let get_line filename line_nb =
   done;
   input_line ic
 
-let of_string ?hint ~msg =
+let rec of_string ?hint msg =
   let err = red @@ Printf.sprintf "Error: %s." msg in
   match hint with
   | None -> err
-  | Some h ->
-      Printf.sprintf "%s\n%s" err @@ orange (Printf.sprintf "Hint: %s" h)
+  | Some h -> sprintf "%s\n%s" err @@ hint_of_string h
 
-let of_position ?(cursor_length = 1) ?hint
-    { pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
-  let char_pos = pos_cnum - pos_bol in
-  if pos_fname = "REPL" then
-    Printf.sprintf "Error: %s.\n%s %i:%i" msg pos_fname pos_lnum char_pos
+and hint_of_string hint = orange @@ sprintf "Hint: %s" hint
+
+let rec of_lexbuf { Lexing.lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
+
+and of_position ?(cursor_length = 1) ?hint
+    { Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
+  let pos_char = pos_cnum - pos_bol in
+  if pos_fname = "REPL" then pp_repl msg pos_fname pos_lnum pos_char
   else
-    let padding = String.make (String.length @@ string_of_int pos_lnum) ' ' in
-    let cline = get_line pos_fname pos_lnum
-    and cursor = red @@ String.make cursor_length '^' in
-    let overview =
-      sprintf " %s%s\n%s %s %s\n%s %s %s%s\n%s %s" padding (blue "╷")
-        (blue @@ string_of_int pos_lnum)
-        (blue "│") cline padding (blue "│")
-        (String.make (if char_pos = 0 then 0 else char_pos - 1) ' ')
-        cursor padding (blue "╵")
-    and carret = sprintf "%s %s %i:%i" padding pos_fname pos_lnum char_pos
-    and hint =
-      match hint with
-      | None -> ""
-      | Some h -> orange @@ Printf.sprintf "\nHint: %s." h
-    in
-    sprintf "%s\n%s\n%s%s"
-      (red @@ Printf.sprintf "Error: %s." msg)
-      overview carret hint
+    let overview = pp_overview ~cursor_length pos_fname pos_lnum pos_char in
+    let hint = Option.fold ~none:"" ~some:hint_of_string hint in
+    sprintf "%s\n%s\n%s." (of_string msg) overview hint
 
-let of_lexbuf { lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
+and pp_repl msg filename line_num pos_char =
+  let err = of_string msg in
+  sprintf "%s\n%s %i:%i" err filename line_num pos_char
+
+and pp_overview ~cursor_length filename line_num pos_char =
+  let padding = String.make (String.length @@ Int.to_string line_num) ' ' in
+  let cline = get_line filename line_num in
+  let cursor = red @@ String.make cursor_length '^' in
+  let overview =
+    sprintf " %s%s\n%s %s %s\n%s %s %s%s\n%s %s" padding (blue "╷")
+      (blue @@ Int.to_string line_num)
+      (blue "│") cline padding (blue "│")
+      (String.make (if pos_char = 0 then 0 else pos_char - 1) ' ')
+      cursor padding
+    @@ blue "╵"
+  in
+  let carret = sprintf "%s %s %i:%i" padding filename line_num pos_char in
+  sprintf "%s\n%s " overview carret

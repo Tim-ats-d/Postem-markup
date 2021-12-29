@@ -45,8 +45,8 @@ paragraph: elist=expr+ { elist }
 expr:
   | name=TEXT; ASSIGNMENT; value=STRING { `AliasDef {name; value} }
   | m=METAARGS { let name, value = m in
-                `MetamarkArgs (make_loc $startpos $endpos, { name; value }) }
-  | m=METASINGLE { `MetamarkSingle (make_loc $startpos $endpos, m) }
+                `MetaArgsCall (make_loc $startpos $endpos, { name; value }) }
+  | m=METASINGLE { `MetaSingleCall (make_loc $startpos $endpos, m) }
   | t=TEXT { `Text t }
   | u=UNFORMAT { `Unformat u }
   | w=WHITESPACE { `Whitespace w }

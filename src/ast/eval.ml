@@ -15,27 +15,26 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
 
     and eval_elem meta = function
       | Block b -> eval_block meta b
-      | Paragraph p -> Expsn.Tags.paragraph @@ eval_alist p
+      | Paragraph p -> Expsn.Tags.paragraph @@ eval_vlist p
 
-    and eval_alist alist = Text.Lines.join @@ List.map eval_atom alist
+    and eval_vlist alist = Text.Lines.join @@ List.map eval_value alist
 
-    and eval_atom = function
-      | `MetamarkArgs (pos, { name; value }) -> eval_meta_args pos name value
-      | `MetamarkSingle (pos, name) -> eval_meta_single pos name
+    and eval_value = function
+      | `MetaArgsCall (pos, { name; value }) -> eval_meta_args pos name value
+      | `MetaSingleCall (pos, name) -> eval_meta_single pos name
       | `Text t -> t
-      | `Unformat u -> u
       | `Whitespace w -> w
 
     and eval_block _meta = function
-      | Conclusion c -> Expsn.Tags.conclusion @@ eval_alist c
+      | Conclusion c -> Expsn.Tags.conclusion @@ eval_vlist c
       | Definition (name, values) ->
-          let name' = eval_alist name and values' = eval_alist values in
+          let name' = eval_vlist name and values' = eval_vlist values in
           values' |> String.split_lines |> Expsn.Tags.definition name'
       | Heading (lvl, h) ->
           let num = Expsn.numerotation lvl in
           num#next;
-          Expsn.Tags.heading num#get lvl @@ eval_alist h
-      | Quotation q -> Expsn.Tags.quotation @@ List.map eval_atom q
+          Expsn.Tags.heading num#get lvl @@ eval_vlist h
+      | Quotation q -> Expsn.Tags.quotation @@ List.map eval_value q
 
     and eval_meta_args pos name content =
       match List.assoc_opt name Expsn.Meta.args with
