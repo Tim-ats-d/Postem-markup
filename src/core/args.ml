@@ -62,7 +62,7 @@ let parse ~on_empty =
   p#add_spec "l" "list"
     (Unit
        (fun () ->
-         Expsn_handler.print ();
+         print_endline @@ Ehandler.to_string Expansion.Known.expansions;
          exit 0))
     "Display the list of known expansions and exit.";
   p#add_spec "o" "output"

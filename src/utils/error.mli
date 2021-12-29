@@ -6,7 +6,7 @@ type t = string
 
 (** {2 API} *)
 
-val of_string : msg:string -> t
+val of_string : ?hint:string -> msg:string -> t
 (** [of_string ~msg] prettifies and returns it as string. *)
 
 val of_position :

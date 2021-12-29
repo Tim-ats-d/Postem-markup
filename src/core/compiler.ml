@@ -25,12 +25,18 @@ let from_file filename (module Expsn : Ast.Expansion.S) =
   from_lexbuf lexbuf (module Expsn)
 
 let compile () =
+  let load_unit name =
+    match Ehandler.load_res Expansion.Known.expansions name with
+    | Ok expsn -> expsn
+    | Error (msg, hint) ->
+        prerr_endline @@ Error.of_string ~msg ~hint;
+        exit 1
+  in
   let args =
     Args.parse ~on_empty:(fun args ->
-        Repl.launch (fun input ->
-            from_str input (Expsn_handler.load args#expansion)))
+        Repl.launch (fun input -> from_str input @@ load_unit args#expansion))
   in
-  let module Expansion = (val Expsn_handler.load args#expansion) in
+  let module Expansion = (val load_unit args#expansion) in
   match from_file args#input_file (module Expansion) with
   | Ok r ->
       if args#output_on_stdout then print_endline r

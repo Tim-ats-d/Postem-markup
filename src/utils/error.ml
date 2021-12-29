@@ -16,17 +16,22 @@ let get_line filename line_nb =
   done;
   input_line ic
 
-let of_string ~msg = Printf.sprintf "Error: %s." @@ red msg
+let of_string ?hint ~msg =
+  let err = red @@ Printf.sprintf "Error: %s." msg in
+  match hint with
+  | None -> err
+  | Some h ->
+      Printf.sprintf "%s\n%s" err @@ orange (Printf.sprintf "Hint: %s" h)
 
-let of_position ?(cursor_length = 1) ?(hint = "")
+let of_position ?(cursor_length = 1) ?hint
     { pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
   let char_pos = pos_cnum - pos_bol in
   if pos_fname = "REPL" then
     Printf.sprintf "Error: %s.\n%s %i:%i" msg pos_fname pos_lnum char_pos
   else
-    let padding = String.make (string_of_int pos_lnum |> String.length) ' ' in
+    let padding = String.make (String.length @@ string_of_int pos_lnum) ' ' in
     let cline = get_line pos_fname pos_lnum
-    and cursor = String.make cursor_length '^' |> red in
+    and cursor = red @@ String.make cursor_length '^' in
     let overview =
       sprintf " %s%s\n%s %s %s\n%s %s %s%s\n%s %s" padding (blue "╷")
         (blue @@ string_of_int pos_lnum)
@@ -35,7 +40,9 @@ let of_position ?(cursor_length = 1) ?(hint = "")
         cursor padding (blue "╵")
     and carret = sprintf "%s %s %i:%i" padding pos_fname pos_lnum char_pos
     and hint =
-      if hint = "" then "" else orange @@ Printf.sprintf "\nHint: %s." hint
+      match hint with
+      | None -> ""
+      | Some h -> orange @@ Printf.sprintf "\nHint: %s." h
     in
     sprintf "%s\n%s\n%s%s"
       (red @@ Printf.sprintf "Error: %s." msg)
