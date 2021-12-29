@@ -14,7 +14,7 @@ let from_lexbuf lexbuf (module Expsn : Ast.Expansion.S) =
         Error (Error.of_position startpos ~msg ~hint ~cursor_length))
   | Error _ as err -> err
 
-let from_str str (module Expsn : Ast.Expansion.S) =
+let from_string str (module Expsn : Ast.Expansion.S) =
   let lexbuf = Lexing.from_string str in
   Lexing.set_filename lexbuf "REPL";
   from_lexbuf lexbuf (module Expsn)
@@ -34,10 +34,15 @@ let compile () =
   in
   let args =
     Args.parse ~on_empty:(fun args ->
-        Repl.launch (fun input -> from_str input @@ load_unit args#expansion))
+        Repl.launch (fun input -> from_string input @@ load_unit args#expansion))
   in
   let module Expansion = (val load_unit args#expansion) in
-  match from_file args#input_file (module Expansion) with
+  let from_src =
+    if args#direct_input = "" then from_file args#input_file
+    else from_string args#direct_input
+  in
+
+  match from_src (module Expansion) with
   | Ok r ->
       if args#output_on_stdout then print_endline r
       else File.write args#output_file r

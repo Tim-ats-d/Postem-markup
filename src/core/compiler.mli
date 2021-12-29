@@ -5,8 +5,8 @@ val from_lexbuf :
 (** [from_lexbuf lexbuf expsn] returns [Ok output] if compilation goes smoothly, [Error msg] otherwise.
     [expsn] is the module used to generate the rendering. *)
 
-val from_str : string -> (module Ast.Expansion.S) -> (string, string) result
-(** [from_str str expsn] is [from_lexbuf (Lexing.from_string str) expsn]. *)
+val from_string : string -> (module Ast.Expansion.S) -> (string, string) result
+(** [from_string str expsn] is [from_lexbuf (Lexing.from_string str) expsn]. *)
 
 val from_file :
   Utils.File.t -> (module Ast.Expansion.S) -> (string, string) result

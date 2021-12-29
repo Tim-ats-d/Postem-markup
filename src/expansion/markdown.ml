@@ -1,4 +1,4 @@
-open Utils
+open Shared_lib
 include Default
 
 module Tags : Ast.Expansion.Tags = struct

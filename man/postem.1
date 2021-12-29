@@ -4,12 +4,11 @@
 postem \- A fast and easy notes taking oriented markup language
 
 .SH SYNOPSIS
-.B postem [-l] [-o
-.I output
-] [ -e
-.I expansion
-]
-.I file
+.B postem
+[
+.I
+OPTIONS
+]...
 
 .SH DESCRIPTION
 
@@ -32,17 +31,25 @@ output, errors on standard error.
 By default,
 .BR postem (1)
 prints result on stdout and exit.
-
+q
 .SH OPTIONS
 
 The following command-line options are recognized by
 .BR postem (1).
 
 .TP
+.BI \-c \ input
+Postem string to parse directly.
+
+.TP
 .BI \-e \ expansion
 Set the expansion used to render input. It must be registered in
 .B src/expansion/know.ml
 .
+
+.TP
+.BI \-i \ file
+Name of the file to be evaluated.
 
 .TP
 .B \-l

@@ -18,9 +18,6 @@ module String : sig
   val is_empty : string -> bool
   (** [is_empty str] tests if [str] is empty. *)
 
-  val real_split : char -> string -> string list
-  (** [real_split chr str] is [String.split_on_char chr str] but filtering empty string. *)
-
   val split_lines : string -> string list
   (** [split_lines str] is [String.split_on_char '\n' str]. *)
 end

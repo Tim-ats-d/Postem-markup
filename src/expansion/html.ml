@@ -1,4 +1,4 @@
-open Utils
+open Shared_lib
 include Default
 
 let format ?(class_ = "") ?(id = "") ~tag content =
@@ -20,9 +20,13 @@ module Tags : Ast.Expansion.Tags = struct
     format ~tag:"p" ~class_:"definition" content
 
   let heading _ lvl content =
+    (* Split given string and filter empty part. *)
+    let real_split chr str =
+      String.split_on_char chr str |> List.filter (( <> ) "")
+    in
     let lvl_str = Int.to_string @@ Ast.Share.TitleLevel.to_int lvl in
     let tag = "h" ^ lvl_str
-    and id = String.real_split ' ' content |> String.concat "-" in
+    and id = real_split ' ' content |> String.concat "-" in
     format ~tag ~id content
 
   let paragraph text = format ~tag:"p" text

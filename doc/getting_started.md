@@ -6,12 +6,17 @@
 
 To simply print the result on stdout:
 ```bash
-$ postem input
+$ postem -i file
+```
+
+To print the result of a direct input on stdout:
+```bash
+$ postem -c "input"
 ```
 
 To compile a text marked in **Postem** from a file and write result `<output>`:
 ```bash
-$ postem input -o output
+$ postem -i file -o output
 ```
 
 ### Expansions
@@ -23,7 +28,7 @@ For a more detailed description of this feature, see the [dedicated readme](over
 To set the expansion used for rendering:
 
 ```bash
-$ postem -o output -e expansion_name
+$ postem -i file -o output -e expansion_name
 ```
 by default, the `default` extension is used.
 

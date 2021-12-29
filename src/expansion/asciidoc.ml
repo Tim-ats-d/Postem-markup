@@ -1,4 +1,4 @@
-open Utils
+open Shared_lib
 include Default
 
 let numbering _ = new Enumerate.Builtins.null
@@ -20,8 +20,7 @@ end
 
 let enumerate lines =
   List.map
-    (fun line ->
-      if String.is_empty line then String.empty else Printf.sprintf ". %s" line)
+    (fun line -> if line = "" then "" else Printf.sprintf ". %s" line)
     lines
   |> Text.Lines.concat_lines
 

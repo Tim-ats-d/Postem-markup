@@ -1,9 +1,9 @@
-open Utils
+open Shared_lib
 
 let initial_alias = Ast.Share.AliasMap.empty
 
 let postprocess lines =
-  List.filter (( <> ) String.empty) lines |> Text.Lines.concat "\n\n"
+  List.filter (( <> ) "") lines |> Text.Lines.concat "\n\n"
 
 let numerotation =
   let open Enumerate.Builtins in
@@ -32,9 +32,7 @@ module Tags : Ast.Expansion.Tags = struct
       | T5 -> '^'
       | T6 -> '"'
     in
-    let head =
-      if String.is_empty num then text else Printf.sprintf "%s - %s" num text
-    in
+    let head = if num = "" then text else Printf.sprintf "%s - %s" num text in
     let underlining = String.make (String.length head) uchar in
     Text.between head "\n" underlining
 
@@ -46,13 +44,22 @@ end
 let enumerate lines =
   List.mapi
     (fun i line ->
-      if String.is_empty line then String.empty
-      else Printf.sprintf "%i. %s" (succ i) line)
+      if line = "" then "" else Printf.sprintf "%i. %s" (succ i) line)
     lines
   |> Text.Lines.join_lines
 
 let read filename =
-  if Sys.file_exists filename then File.read_all filename
+  let read_all fname =
+    let ic = open_in fname in
+    let rec read_lines acc =
+      try input_line ic :: acc |> read_lines
+      with _ ->
+        close_in_noerr ic;
+        List.rev acc |> String.concat "\n"
+    in
+    read_lines []
+  in
+  if Sys.file_exists filename then read_all filename
   else raise (Sys_error "in read meta mark: no such file or directory")
 
 module Meta : Ast.Expansion.Meta = struct

@@ -1,7 +1,8 @@
 (** {1 Type} *)
 
 type t =
-  < input_file : string
+  < direct_input : string
+  ; input_file : string
   ; output_file : string
   ; expansion : string
   ; output_on_stdout : bool >
@@ -11,6 +12,8 @@ type t =
 
 class args :
   object
+    val direct_input : string
+
     val input_file : string
 
     val output_file : string
@@ -19,6 +22,8 @@ class args :
 
     val output_on_stdout : bool
 
+    method direct_input : string
+
     method input_file : string
 
     method output_file : string
@@ -26,6 +31,8 @@ class args :
     method expansion : string
 
     method output_on_stdout : bool
+
+    method set_direct_input : string -> unit
 
     method set_input_file : string -> unit
 
