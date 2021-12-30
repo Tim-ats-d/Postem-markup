@@ -1,39 +1,39 @@
 type t =
   < direct_input : string
-  ; input_file : string
-  ; output_file : string
-  ; expansion : string
+  ; inputf : string
+  ; outputf : string
+  ; expsn : string
   ; output_on_stdout : bool >
 
 class args =
   object
     val mutable direct_input = ""
 
-    val mutable input_file = ""
+    val mutable inputf = ""
 
-    val mutable output_file = ""
+    val mutable outputf = ""
 
-    val mutable expansion = "default"
+    val mutable expsn = "default"
 
     val mutable output_on_stdout = true
 
     method direct_input = direct_input
 
-    method input_file = input_file
+    method inputf = inputf
 
-    method output_file = output_file
+    method outputf = outputf
 
-    method expansion = expansion
+    method expsn = expsn
 
     method output_on_stdout = output_on_stdout
 
     method set_direct_input i = direct_input <- i
 
-    method set_input_file f = input_file <- f
+    method set_inputf f = inputf <- f
 
-    method set_output_file f = output_file <- f
+    method set_outputf f = outputf <- f
 
-    method set_expansion e = expansion <- e
+    method set_expsn e = expsn <- e
 
     method set_output_on_stdout b = output_on_stdout <- b
   end
@@ -64,9 +64,9 @@ let parse () =
   (let open Arg in
   p#add_spec "c" (String p#args#set_direct_input)
     "Postem string to parse directly";
-  p#add_spec "e" ~long:"expansion" (String p#args#set_expansion)
+  p#add_spec "e" ~long:"expansion" (String p#args#set_expsn)
     "Set the expansion used to render input";
-  p#add_spec "i" (String p#args#set_input_file))
+  p#add_spec "i" (String p#args#set_inputf))
     "Name of the file to be evaluated.";
   p#add_spec "l" ~long:"list"
     (Unit
@@ -78,7 +78,7 @@ let parse () =
     (String
        (fun f ->
          p#args#set_output_on_stdout false;
-         p#args#set_output_file f))
+         p#args#set_outputf f))
     "Set output file name";
   p#add_spec "v" ~long:"version"
     (Unit

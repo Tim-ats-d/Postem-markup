@@ -2,9 +2,9 @@
 
 type t =
   < direct_input : string
-  ; input_file : string
-  ; output_file : string
-  ; expansion : string
+  ; inputf : string
+  ; outputf : string
+  ; expsn : string
   ; output_on_stdout : bool >
 (** Type representing CLI argument passed by user. *)
 
@@ -14,31 +14,31 @@ class args :
   object
     val direct_input : string
 
-    val input_file : string
+    val inputf : string
 
-    val output_file : string
+    val outputf : string
 
-    val expansion : string
+    val expsn : string
 
     val output_on_stdout : bool
 
     method direct_input : string
 
-    method input_file : string
+    method inputf : string
 
-    method output_file : string
+    method outputf : string
 
-    method expansion : string
+    method expsn : string
 
     method output_on_stdout : bool
 
     method set_direct_input : string -> unit
 
-    method set_input_file : string -> unit
+    method set_inputf : string -> unit
 
-    method set_output_file : string -> unit
+    method set_outputf : string -> unit
 
-    method set_expansion : string -> unit
+    method set_expsn : string -> unit
 
     method set_output_on_stdout : bool -> unit
   end
