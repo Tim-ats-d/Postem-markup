@@ -17,9 +17,9 @@ let get_line filename line_nb =
 
 let rec of_string ?hint msg =
   let err = red @@ Printf.sprintf "Error: %s." msg in
-  match hint with
-  | None -> err
-  | Some h -> sprintf "%s\n%s" err @@ hint_of_string h
+  Option.fold ~none:err
+    ~some:(fun h -> sprintf "%s\n%s" err @@ hint_of_string h)
+    hint
 
 and hint_of_string hint = orange @@ sprintf "Hint: %s" hint
 
@@ -28,15 +28,24 @@ let rec of_lexbuf { Lexing.lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
 and of_position ?(cursor_length = 1) ?hint
     { Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =
   let pos_char = pos_cnum - pos_bol in
-  if pos_fname = "REPL" then pp_repl msg pos_fname pos_lnum pos_char
-  else
-    let overview = pp_overview ~cursor_length pos_fname pos_lnum pos_char in
-    let hint = Option.fold ~none:"" ~some:hint_of_string hint in
-    sprintf "%s\n%s\n%s." (of_string msg) overview hint
+  match pos_fname with
+  | "REPL" -> pp_repl msg hint pos_fname pos_lnum pos_char
+  | "" -> pp_anon_file msg hint pos_lnum pos_char
+  | _ ->
+      let overview = pp_overview ~cursor_length pos_fname pos_lnum pos_char in
+      let hint = Option.fold ~none:"" ~some:hint_of_string hint in
+      sprintf "%s\n%s\n%s" (of_string msg) overview hint
 
-and pp_repl msg filename line_num pos_char =
+and pp_repl msg hint filename line_num pos_char =
   let err = of_string msg in
-  sprintf "%s\n%s %i:%i" err filename line_num pos_char
+  let hint = Option.fold ~none:"" ~some:hint_of_string hint in
+  sprintf "%s\nFile \"%s\", line %i, character %i.\n%s" err filename line_num
+    pos_char hint
+
+and pp_anon_file msg hint line_num pos_char =
+  let err = of_string msg in
+  let hint = Option.fold ~none:"" ~some:hint_of_string hint in
+  sprintf "%s\n  Line %i, character %i.\n%s" err line_num pos_char hint
 
 and pp_overview ~cursor_length filename line_num pos_char =
   let padding = String.make (String.length @@ Int.to_string line_num) ' ' in

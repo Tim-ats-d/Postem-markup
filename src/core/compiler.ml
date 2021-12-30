@@ -34,11 +34,13 @@ let compile () =
     include Ast.Eval.MakeWithExpsn (Expsn)
   end) in
   if args#direct_input = "" && args#input_file = "" then
-    Repl.launch Compiler.from_string
+    Repl.launch @@ Compiler.from_string ~filename:"REPL"
   else
     let from_src =
-      if args#direct_input = "" then Compiler.from_file args#input_file
-      else Compiler.from_string args#direct_input
+      if args#direct_input = "" then
+        Compiler.from_channel ~filename:args#input_file
+        @@ open_in args#input_file
+      else Compiler.from_string ~filename:args#input_file args#direct_input
     in
     match from_src with
     | Ok r ->
