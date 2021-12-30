@@ -61,11 +61,13 @@ class arg_parser ~usage_msg =
 
 let parse () =
   let p = new arg_parser ~usage_msg:"postem [OPTIONS]..." in
-  let open Arg in
+  (let open Arg in
   p#add_spec "c" (String p#args#set_direct_input)
     "Postem string to parse directly";
   p#add_spec "e" ~long:"expansion" (String p#args#set_expansion)
     "Set the expansion used to render input";
+  p#add_spec "i" (String p#args#set_input_file))
+    "Name of the file to be evaluated.";
   p#add_spec "l" ~long:"list"
     (Unit
        (fun () ->
