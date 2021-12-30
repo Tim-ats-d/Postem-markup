@@ -1,28 +1,22 @@
 open Utils
 
-let from_lexbuf lexbuf (module Expsn : Ast.Expansion.S) =
-  match Parsing.parse_document lexbuf with
-  | Ok ast -> (
-      let module Eval = Ast.Eval.MakeWithExpsn (Expsn) in
-      try Ok (Eval.eval ast)
-      with Ast.Eval.Missing_metamark ({ startpos; endpos }, name) ->
-        let msg = Printf.sprintf "missing metamark '%s'" name
-        and hint =
-          "try to define your metamark in the used expansion and reinstall \
-           Postem"
-        and cursor_length = endpos.pos_cnum - endpos.pos_bol in
-        Error (Error.of_position startpos ~msg ~hint ~cursor_length))
-  | Error _ as err -> err
-
-let from_string str (module Expsn : Ast.Expansion.S) =
-  let lexbuf = Lexing.from_string str in
-  Lexing.set_filename lexbuf "REPL";
-  from_lexbuf lexbuf (module Expsn)
-
-let from_file filename (module Expsn : Ast.Expansion.S) =
-  let lexbuf = Lexing.from_channel (open_in filename) in
-  Lexing.set_filename lexbuf filename;
-  from_lexbuf lexbuf (module Expsn)
+module Repl = struct
+  let launch eval =
+    let input = ref [] in
+    try
+      while true do
+        input := read_line () :: !input
+      done
+    with End_of_file -> (
+      print_newline ();
+      match List.rev !input |> String.concat "\n" |> eval with
+      | Ok output ->
+          print_endline output;
+          exit 0
+      | Error msg ->
+          prerr_endline msg;
+          exit 1)
+end
 
 let compile () =
   let load_unit name =
@@ -32,20 +26,24 @@ let compile () =
         prerr_endline @@ Error.of_string msg ~hint;
         exit 1
   in
-  let args =
-    Args.parse ~on_empty:(fun args ->
-        Repl.launch (fun input -> from_string input @@ load_unit args#expansion))
-  in
-  let module Expansion = (val load_unit args#expansion) in
-  let from_src =
-    if args#direct_input = "" then from_file args#input_file
-    else from_string args#direct_input
-  in
+  let args = Args.parse () in
+  let module Expsn = (val load_unit args#expansion) in
+  let module Compiler = Compil_impl.Make (struct
+    type t = string
 
-  match from_src (module Expansion) with
-  | Ok r ->
-      if args#output_on_stdout then print_endline r
-      else File.write args#output_file r
-  | Error msg ->
-      prerr_endline msg;
-      exit 1
+    include Ast.Eval.MakeWithExpsn (Expsn)
+  end) in
+  if args#direct_input = "" && args#input_file = "" then
+    Repl.launch Compiler.from_string
+  else
+    let from_src =
+      if args#direct_input = "" then Compiler.from_file args#input_file
+      else Compiler.from_string args#direct_input
+    in
+    match from_src with
+    | Ok r ->
+        if args#output_on_stdout then print_endline r
+        else File.write args#output_file r
+    | Error msg ->
+        prerr_endline msg;
+        exit 1

@@ -3,7 +3,7 @@
  (libraries postem))
 
 ; (executable
-;  (name text)
+;  (name custom_compil)
 ;  (libraries postem))
 
 (install

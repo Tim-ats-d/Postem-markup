@@ -4,7 +4,7 @@
   exception Syntax_error of Lexing.lexbuf
 }
 
-let alpha = ['a'-'z' 'A'-'Z']
+let alphanum = ['a'-'z' 'A'-'Z' '0'-'9']
 let ws = ['\r' '\t' ' ']
 
 let newline = '\n' | "\r\n"
@@ -13,7 +13,7 @@ let sep = (newline) (newline)+
 let ascii_char = ['!'-'?' 'A'-'~']
 let latin1 = ['\161'-'\255']
 
-let text = (alpha | latin1) (ascii_char | latin1)*
+let text = (alphanum | latin1) (ascii_char | latin1)*
 
 rule read = parse
   | eof                    { EOF }

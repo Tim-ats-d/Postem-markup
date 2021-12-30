@@ -17,8 +17,8 @@ module MakeWithExpsn (Expsn : Expansion.S) = struct
       | Block b -> eval_block meta b
       | Paragraph p -> Expsn.Tags.paragraph @@ eval_vlist p
 
-    and eval_vlist alist =
-      Shared_lib.Text.Lines.join @@ List.map eval_value alist
+    and eval_vlist vlist =
+      Shared_lib.Text.Lines.join @@ List.map eval_value vlist
 
     and eval_value = function
       | `MetaArgsCall (pos, { name; value }) -> eval_meta_args pos name value

@@ -1,4 +1,7 @@
 open Utils
+module Lexer = Lexer
+
+let document = Parser.document
 
 let parse_document lexbuf =
   try Ok (Parser.document Lexer.read lexbuf) with

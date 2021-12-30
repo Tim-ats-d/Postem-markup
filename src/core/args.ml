@@ -54,16 +54,13 @@ class arg_parser ~usage_msg =
           let slong = ("--" ^ l, spec, descr) in
           speclist <- slong :: sshort :: speclist
 
-    method parse ~on_empty =
+    method parse =
       Arg.parse speclist (fun _ -> ()) usage_msg;
-      if args#direct_input = "" && args#input_file = "" then on_empty args;
       (args :> t)
   end
 
-let parse ~on_empty =
-  let p =
-    new arg_parser ~usage_msg:"postem [OPTIONS]..."
-  in
+let parse () =
+  let p = new arg_parser ~usage_msg:"postem [OPTIONS]..." in
   let open Arg in
   p#add_spec "c" (String p#args#set_direct_input)
     "Postem string to parse directly";
@@ -87,4 +84,4 @@ let parse ~on_empty =
          print_endline "%%VERSION%%";
          exit 0))
     "Display the version number and exit";
-  p#parse ~on_empty
+  p#parse
