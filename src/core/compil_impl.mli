@@ -1,4 +1,10 @@
 (** Input signature of the functor [Compil_impl.Make]. *)
+module type PARSER = sig
+  val parse :
+    Lexing.lexbuf -> (Ast.Ast_types.expr Ast.Ast_types.document, string) result
+end
+
+(** Input signature of the functor [Compil_impl.Make]. *)
 module type EVAL = sig
   type t
 
@@ -23,4 +29,4 @@ module type S = sig
     content of file [chan]. *)
 end
 
-module Make : functor (Eval : EVAL) -> S with type t := Eval.t
+module Make : functor (Parser : PARSER) (Eval : EVAL) -> S with type t := Eval.t

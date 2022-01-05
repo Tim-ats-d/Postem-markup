@@ -1,5 +1,10 @@
 open Utils
 
+module type PARSER = sig
+  val parse :
+    Lexing.lexbuf -> (Ast.Ast_types.expr Ast.Ast_types.document, string) result
+end
+
 module type EVAL = sig
   type t
 
@@ -16,10 +21,10 @@ module type S = sig
   val from_channel : ?filename:string -> in_channel -> (t, string) result
 end
 
-module Make (Eval : EVAL) : S with type t := Eval.t = struct
+module Make (Parser : PARSER) (Eval : EVAL) : S with type t := Eval.t = struct
   let from_lexbuf ?(filename = "") lexbuf =
     Lexing.set_filename lexbuf filename;
-    match Parsing.parse_document lexbuf with
+    match Parser.parse lexbuf with
     | Ok ast -> (
         try Ok (Eval.eval ast)
         with Ast.Eval.Missing_metamark ({ startpos; endpos }, name) ->

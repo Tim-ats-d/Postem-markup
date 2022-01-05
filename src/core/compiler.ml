@@ -27,14 +27,28 @@ let load_unit name =
   | Ok expsn -> expsn
   | Error (msg, hint) -> prerr_with_exit @@ Error.of_string msg ~hint
 
+let parser lexbuf =
+  let open Parsing in
+  try Ok (Parser.document Lexer.read lexbuf) with
+  | Lexer.Syntax_error { lex_curr_p; _ } ->
+      Result.error
+      @@ Error.of_position lex_curr_p
+           ~msg:"character not allowed in source text"
+           ~hint:"non-ascii characters must be placed in a unformat block."
+  | Parser.Error -> Result.error @@ Error.of_lexbuf lexbuf ~msg:"syntax error"
+
 let compile () =
   let args = Args.parse () in
+  let module Parser = struct
+    let parse = parser
+  end in
   let module Expsn = (val load_unit args#expsn) in
-  let module Compiler = Compil_impl.Make (struct
+  let module Eval = struct
     type t = string
 
     include Ast.Eval.MakeWithExpsn (Expsn)
-  end) in
+  end in
+  let module Compiler = Compil_impl.Make (Parser) (Eval) in
   if args#direct_input = "" && args#inputf = "" then
     Repl.launch @@ Compiler.from_string ~filename:"REPL"
   else
