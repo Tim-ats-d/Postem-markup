@@ -26,11 +26,26 @@ module IntEval = Ast.Eval_impl.Make (struct
     | Quotation q -> eval_vlist q
 end)
 
-module MyCompiler = Core.Compil_impl.Make (struct
-  type t = int list
+module Parser = struct
+  let parse lexbuf =
+    let open Parsing in
+    try Ok (Parser.document Lexer.read lexbuf) with
+    | Lexer.Syntax_error { lex_curr_p; _ } ->
+        Result.error
+        @@ Utils.Error.of_position lex_curr_p
+             ~msg:"character not allowed in source text"
+             ~hint:"non-ascii characters must be placed in a unformat block."
+    | Parser.Error -> Result.error @@ Utils.Error.of_lexbuf lexbuf ~msg:"syntax error"
+end
 
-  let eval = IntEval.eval ~alias:Ast.Share.AliasMap.empty
-end)
+module MyCompiler =
+  Core.Compil_impl.Make
+    (Parser)
+    (struct
+      type t = int list
+
+      let eval = IntEval.eval ~alias:Ast.Share.AliasMap.empty
+    end)
 
 let count_int str =
   match MyCompiler.from_string str with

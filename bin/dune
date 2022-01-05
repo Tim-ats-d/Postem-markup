@@ -1,10 +1,6 @@
-(executable
- (name postem)
+(executables
+ (names postem custom_compil)
  (libraries postem))
-
-; (executable
-;  (name custom_compil)
-;  (libraries postem))
 
 (install
  (section bin)

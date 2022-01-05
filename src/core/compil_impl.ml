@@ -1,5 +1,3 @@
-open Utils
-
 module type PARSER = sig
   val parse :
     Lexing.lexbuf -> (Ast.Ast_types.expr Ast.Ast_types.document, string) result
@@ -25,15 +23,7 @@ module Make (Parser : PARSER) (Eval : EVAL) : S with type t := Eval.t = struct
   let from_lexbuf ?(filename = "") lexbuf =
     Lexing.set_filename lexbuf filename;
     match Parser.parse lexbuf with
-    | Ok ast -> (
-        try Ok (Eval.eval ast)
-        with Ast.Eval.Missing_metamark ({ startpos; endpos }, name) ->
-          let msg = Printf.sprintf "missing metamark \"%s\"" name
-          and hint =
-            "try to define your metamark in the used expansion and reinstall \
-             Postem."
-          and cursor_length = endpos.pos_cnum - endpos.pos_bol in
-          Error (Error.of_position startpos ~msg ~hint ~cursor_length))
+    | Ok ast -> Result.ok @@ Eval.eval ast
     | Error _ as err -> err
 
   let from_string ?(filename = "") str =

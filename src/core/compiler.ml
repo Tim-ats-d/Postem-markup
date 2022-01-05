@@ -46,7 +46,16 @@ let compile () =
   let module Eval = struct
     type t = string
 
-    include Ast.Eval.MakeWithExpsn (Expsn)
+    let eval ast =
+      let module AEval = Ast.Eval.MakeWithExpsn (Expsn) in
+      try AEval.eval ast
+      with Ast.Eval.Missing_metamark ({ startpos; endpos }, name) ->
+        let msg = Printf.sprintf "missing metamark \"%s\"" name
+        and hint =
+          "try to define your metamark in the used expansion and reinstall \
+           Postem."
+        and cursor_length = endpos.pos_cnum - endpos.pos_bol in
+        prerr_with_exit @@ Error.of_position startpos ~msg ~hint ~cursor_length
   end in
   let module Compiler = Compil_impl.Make (Parser) (Eval) in
   if args#direct_input = "" && args#inputf = "" then
