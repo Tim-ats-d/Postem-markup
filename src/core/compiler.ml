@@ -47,9 +47,9 @@ let compile () =
     type t = string
 
     let eval ast =
-      let module AEval = Ast.Eval.MakeWithExpsn (Expsn) in
+      let module AEval = Ast.Eval_expsn.MakeWithExpsn (Expsn) in
       try AEval.eval ast
-      with Ast.Eval.Missing_metamark ({ startpos; endpos }, name) ->
+      with Ast.Eval_expsn.Missing_metamark ({ startpos; endpos }, name) ->
         let msg = Printf.sprintf "missing metamark \"%s\"" name
         and hint =
           "try to define your metamark in the used expansion and reinstall \
