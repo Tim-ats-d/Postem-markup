@@ -3,7 +3,7 @@ open Ast.Ast_types
 module IntEval = Ast.Eval_impl.Make (struct
   type t = int
 
-  let rec eval _meta (doc : value document) = List.map eval_elem doc
+  let rec eval _meta doc = List.map eval_elem doc
 
   and eval_elem = function
     | Block b -> eval_block b
@@ -26,21 +26,10 @@ module IntEval = Ast.Eval_impl.Make (struct
     | Quotation q -> eval_vlist q
 end)
 
-module Parser = struct
-  let parse lexbuf =
-    let open Parsing in
-    try Ok (Parser.document Lexer.read lexbuf) with
-    | Lexer.Syntax_error { lex_curr_p; _ } ->
-        Result.error
-        @@ Utils.Error.of_position lex_curr_p
-             ~msg:"character not allowed in source text"
-             ~hint:"non-ascii characters must be placed in a unformat block."
-    | Parser.Error -> Result.error @@ Utils.Error.of_lexbuf lexbuf ~msg:"syntax error"
-end
 
 module MyCompiler =
   Core.Compil_impl.Make
-    (Parser)
+    (Core.Compiler.Parser)
     (struct
       type t = int list
 
