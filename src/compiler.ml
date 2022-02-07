@@ -1,4 +1,5 @@
-open Utils
+open Common
+open Core
 
 module Repl = struct
   let launch eval =
@@ -30,11 +31,15 @@ let load_unit name =
 module Parser = struct
   let parse lexbuf =
     let open Parsing in
-    try Ok (Parser.document Lexer.read lexbuf) with
-    | Lexer.Syntax_error { lex_curr_p; _ } ->
+    let lexer = Sedlexing.with_tokenizer Lexer.read lexbuf in
+    let parser =
+      MenhirLib.Convert.Simplified.traditional2revised Parser.document
+    in
+    try Result.ok @@ parser lexer with
+    | Lexer.Syntax_error lexbuf ->
+        let _, pos = Sedlexing.lexing_positions lexbuf in
         Result.error
-        @@ Error.of_position lex_curr_p
-             ~msg:"character not allowed in source text"
+        @@ Error.of_position pos ~msg:"character not allowed in source text"
              ~hint:"non-ascii characters must be placed in a unformat block."
     | Parser.Error -> Result.error @@ Error.of_lexbuf lexbuf ~msg:"syntax error"
 end

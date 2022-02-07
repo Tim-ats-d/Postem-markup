@@ -1,8 +1,8 @@
 module type ALIAS_MAP = sig
-  include module type of Map.Make (Utils.String)
+  include module type of Map.Make (Common.String)
 end
 
-module AliasMap = Map.Make (Utils.String)
+module AliasMap = Map.Make (Common.String)
 
 module MetaMode = struct
   type t =

@@ -3,9 +3,7 @@ open Printf
 type t = string
 
 let blue = sprintf "\027[0;34m%s\027[0m"
-
 let red = sprintf "\027[0;31m%s\027[0m"
-
 let orange = sprintf "\027[0;33m%s\027[0m"
 
 let get_line filename line_nb =
@@ -23,7 +21,9 @@ let rec of_string ?hint msg =
 
 and hint_of_string hint = orange @@ sprintf "Hint: %s" hint
 
-let rec of_lexbuf { Lexing.lex_curr_p; _ } ~msg = of_position lex_curr_p ~msg
+let rec of_lexbuf lexbuf ~msg =
+  let _, pos = Sedlexing.lexing_positions lexbuf in
+  of_position pos ~msg
 
 and of_position ?(cursor_length = 1) ?hint
     { Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol; _ } ~msg =

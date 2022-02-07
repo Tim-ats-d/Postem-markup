@@ -1,4 +1,3 @@
 (library
  (name shared_lib)
- (public_name postem.shared_lib)
  (libraries enumerate))

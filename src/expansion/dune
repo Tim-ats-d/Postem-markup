@@ -1,4 +1,3 @@
 (library
  (name expansion)
- (public_name postem.expansion)
- (libraries ast utils))
+ (libraries ast common))

@@ -26,6 +26,5 @@ let enumerate lines =
 
 module Meta : Ast.Expansion.Meta = struct
   let args = []
-
   let single = []
 end

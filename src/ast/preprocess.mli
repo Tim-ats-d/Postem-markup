@@ -5,9 +5,6 @@ type metadata = { headers : (Share.TitleLevel.t * Ast_types.expr list) list }
 
 (** {2 API} *)
 
-val ppdoc :
-  Context.t ->
-  Ast_types.expr Ast_types.document ->
-  metadata * Ast_types.value Ast_types.document
+val pp_doc : Context.t -> Ast_types.doc -> metadata * Ast_types.doc
 (** [ppdoc ctx edoc] returns a couple composed of metadata collected on [edoc]
-  and a [value document] where expression have been eliminated. *)
+  and a [expr document] where parsed expression have been eliminated. *)

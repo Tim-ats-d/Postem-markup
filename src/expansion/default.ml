@@ -1,9 +1,7 @@
 open Shared_lib
 
 let initial_alias = Ast.Share.AliasMap.empty
-
-let postprocess lines =
-  List.filter (( <> ) "") lines |> Text.Lines.concat "\n\n"
+let postprocess lines = Text.Lines.concat "" lines
 
 let numerotation =
   let open Enumerate.Builtins in
@@ -18,7 +16,6 @@ let numerotation =
 
 module Tags : Ast.Expansion.Tags = struct
   let conclusion text = Text.prefix {|\-> |} text
-
   let definition name values = name ^ Text.Lines.concat_fst "\n  | " values
 
   let heading num lvl text =
@@ -37,7 +34,6 @@ module Tags : Ast.Expansion.Tags = struct
     Text.between head "\n" underlining
 
   let paragraph = Fun.id
-
   let quotation lines = Text.prefix " █ " (Text.Lines.join lines)
 end
 

@@ -13,5 +13,5 @@ val of_position :
   ?cursor_length:int -> ?hint:string -> Lexing.position -> msg:string -> t
 (** [of_position pos ~msg] prettifies [pos] and returns it as string.*)
 
-val of_lexbuf : Lexing.lexbuf -> msg:string -> t
+val of_lexbuf : Sedlexing.lexbuf -> msg:string -> t
 (** [of_lexbuf lexbuf ~msg] prettifies [lexbuf] and returns it as string. *)

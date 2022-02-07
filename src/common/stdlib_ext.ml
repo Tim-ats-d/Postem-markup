@@ -8,9 +8,7 @@ module String = struct
   include String
 
   let empty = ""
-
   let is_empty = ( = ) ""
-
   let split_lines = String.split_on_char '\n'
 end
 

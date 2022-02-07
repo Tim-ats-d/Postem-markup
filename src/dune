@@ -1,4 +1,3 @@
 (library
  (name postem)
- (public_name postem)
  (libraries ast core))

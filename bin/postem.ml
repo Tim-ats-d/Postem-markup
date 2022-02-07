@@ -1,1 +1,1 @@
-let () = Core.Compiler.compile ()
+let () = Postem__Compiler.compile ()

@@ -1,6 +1,6 @@
 (** {1 Type} *)
 
-type t = string Map.Make(Utils.String).t
+type t = string Map.Make(Common.String).t
 (** The type representing a key value association. *)
 
 (** {2 API} *)

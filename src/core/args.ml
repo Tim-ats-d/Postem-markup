@@ -8,42 +8,26 @@ type t =
 class args =
   object
     val mutable direct_input = ""
-
     val mutable inputf = ""
-
     val mutable outputf = ""
-
     val mutable expsn = "default"
-
     val mutable output_on_stdout = true
-
     method direct_input = direct_input
-
     method inputf = inputf
-
     method outputf = outputf
-
     method expsn = expsn
-
     method output_on_stdout = output_on_stdout
-
     method set_direct_input i = direct_input <- i
-
     method set_inputf f = inputf <- f
-
     method set_outputf f = outputf <- f
-
     method set_expsn e = expsn <- e
-
     method set_output_on_stdout b = output_on_stdout <- b
   end
 
 class arg_parser ~usage_msg =
   object
     val args = new args
-
     method args = args
-
     val mutable speclist = []
 
     method add_spec ?long short spec descr =

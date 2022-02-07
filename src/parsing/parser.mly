@@ -1,52 +1,43 @@
 %{
   open Ast.Ast_types
-
-  let make_loc startpos endpos = { startpos; endpos }
 %}
 
+%token <string> NEWLINE
+%token <string> STRING
 %token <string> TEXT
-%token <string> WHITESPACE
+%token <string> WHITE
 
-%token SEPARATOR
+%token <char> UOP_WORD
+%token <char> UOP_LINE
+
+%token EQ
+
 %token EOF
 
-%token ASSIGNMENT
-%token <string> STRING
-
-%token <string * string> METAARGS
-%token <string> METASINGLE
-%token <string> UNFORMAT
-
-%token CONCLUSION DEFINITION QUOTATION
-%token <int> HEADING
-
+%type <Ast.Ast_types.doc> document
 %start document
-
-%type <expr document> document
 
 %%
 
-document: blist=separated_list(SEPARATOR, block_list); EOF { blist }
+let document :=
+  | lines=stmt*; EOF; { lines }
 
-block_list:
-  | bl=conclusion | bl=definition | bl=heading | bl=quotation { Block bl }
-  | p=paragraph { Paragraph p }
+let stmt :=
+  | expr
+  | n=NEWLINE; { White n }
+  | uop=UOP_LINE; line=expr+; NEWLINE; { UnaryOpLine { uop; line } }
 
-conclusion: CONCLUSION; p=paragraph { Conclusion p }
+let expr :=
+  | terminal
+  | alias
+  | unary_op
 
-definition: n=paragraph; DEFINITION; v=paragraph { Definition (n, v) }
+let alias ==
+  | name=TEXT; EQ; value=STRING; { AliasDef { name; value } }
 
-heading: h=HEADING; p=paragraph { Heading (Ast.Share.TitleLevel.of_int h, p) }
+let unary_op ==
+  | op=UOP_WORD; word=TEXT; { UnaryOpWord { op; word } }
 
-quotation: QUOTATION; p=paragraph { Quotation p }
-
-paragraph: elist=expr+ { elist }
-
-expr:
-  | name=TEXT; ASSIGNMENT; value=STRING { `AliasDef {name; value} }
-  | m=METAARGS { let name, value = m in
-                `MetaArgsCall (make_loc $startpos $endpos, { name; value }) }
-  | m=METASINGLE { `MetaSingleCall (make_loc $startpos $endpos, m) }
-  | t=TEXT { `Text t }
-  | u=UNFORMAT { `Unformat u }
-  | w=WHITESPACE { `Whitespace w }
+let terminal ==
+  | t=TEXT;  { Text t }
+  | w=WHITE; { White w }

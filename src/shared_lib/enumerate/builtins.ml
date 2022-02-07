@@ -1,20 +1,15 @@
 class null =
   object
     inherit Base.numerotation
-
     method next = ()
-
     method get = ""
   end
 
 class numeric_arab =
   object
     inherit Base.numerotation
-
     val mutable current = 0
-
     method next = current <- current + 1
-
     method get = Int.to_string current
   end
 

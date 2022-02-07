@@ -8,7 +8,7 @@ module Repl : sig
     The REPL lets type until <CTRL + D> is pressed, compile this input, displays the output and exit. *)
 end
 
-module Parser : Compil_impl.PARSER
+module Parser : Core.Compil_impl.PARSER
 (** The default implementation of the parser. *)
 
 val compile : unit -> unit

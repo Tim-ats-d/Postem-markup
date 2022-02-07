@@ -5,7 +5,7 @@ exception Missing_metamark of Ast_types.loc * string
 
 (** Output signature of the functor [Eval_expsn.MakeWithExpsn]. *)
 module type S = sig
-  val eval : Ast_types.expr Ast_types.document -> string
+  val eval : Ast_types.doc -> string
   (** [eval doc] returns the string corresponding to the evaluation of [doc].
 
   @raise Missing_metamark *)

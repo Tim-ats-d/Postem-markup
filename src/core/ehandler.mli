@@ -7,14 +7,11 @@ the [src/expansion/known.ml]. *)
 
 module KnownExpansions : sig
   type t = (name * doc * (module Ast.Expansion.S)) list
-
   and name = string
-
   and doc = string
 end
 
 exception UnknownExpsn of string * string
-
 exception ExpsnAmbiguity of string * string
 
 val load_exn :

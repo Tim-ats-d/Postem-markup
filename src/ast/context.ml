@@ -1,11 +1,9 @@
-module StringMap = Map.Make (Utils.String)
+module StringMap = Map.Make (Common.String)
 
 type t = string StringMap.t
 
 let empty = StringMap.empty
-
 let add t name value = StringMap.add name value t
-
 let substitute t str = StringMap.find_opt str t |> Option.value ~default:str
 
 let merge =

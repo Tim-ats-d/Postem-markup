@@ -19,7 +19,6 @@ class virtual alphabet :
   string array
   -> object
        method get : string
-
        method next : unit
      end
 
@@ -36,6 +35,5 @@ class virtual roman :
   -> [< `M of string ]
   -> object
        method get : string
-
        method next : unit
      end

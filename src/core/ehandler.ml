@@ -1,17 +1,13 @@
 module KnownExpansions = struct
   type t = (name * doc * (module Ast.Expansion.S)) list
-
   and name = string
-
   and doc = string
 end
 
 exception UnknownExpsn of string * string
-
 exception ExpsnAmbiguity of string * string
 
 let unknown_expsn ~msg ~hint = raise @@ UnknownExpsn (msg, hint)
-
 let expsn_ambiguity ~msg ~hint = raise @@ ExpsnAmbiguity (msg, hint)
 
 let load_exn t name =
