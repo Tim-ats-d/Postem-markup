@@ -1,6 +1,10 @@
 open Common
 open Core
 
+let prerr_with_exit err =
+  prerr_endline err;
+  exit 1
+
 module Repl = struct
   let launch eval =
     let input = ref [] in
@@ -14,19 +18,13 @@ module Repl = struct
       | Ok output ->
           print_endline output;
           exit 0
-      | Error msg ->
-          prerr_endline msg;
-          exit 1)
+      | Error msg -> prerr_with_exit msg)
 end
-
-let prerr_with_exit err =
-  prerr_endline err;
-  exit 1
 
 let load_unit name =
   match Ehandler.load_res Expansion.Known.expansions name with
   | Ok expsn -> expsn
-  | Error (msg, hint) -> prerr_with_exit @@ Error.of_string msg ~hint
+  | Error (msg, hint) -> prerr_with_exit @@ Err.of_string msg ~hint
 
 module Parser = struct
   let parse lexbuf =
@@ -39,9 +37,9 @@ module Parser = struct
     | Lexer.Syntax_error lexbuf ->
         let _, pos = Sedlexing.lexing_positions lexbuf in
         Result.error
-        @@ Error.of_position pos ~msg:"character not allowed in source text"
+        @@ Err.of_position pos ~msg:"character not allowed in source text"
              ~hint:"non-ascii characters must be placed in a unformat block."
-    | Parser.Error -> Result.error @@ Error.of_lexbuf lexbuf ~msg:"syntax error"
+    | Parser.Error -> Result.error @@ Err.of_lexbuf lexbuf ~msg:"syntax error"
 end
 
 let compile () =
@@ -59,7 +57,7 @@ let compile () =
           "try to define your metamark in the used expansion and reinstall \
            Postem."
         and cursor_length = endpos.pos_cnum - endpos.pos_bol in
-        prerr_with_exit @@ Error.of_position startpos ~msg ~hint ~cursor_length
+        prerr_with_exit @@ Err.of_position startpos ~msg ~hint ~cursor_length
   end in
   let module Compiler = Compil_impl.Make (Parser) (Eval) in
   if args#direct_input = "" && args#inputf = "" then
@@ -71,7 +69,7 @@ let compile () =
           Compiler.from_channel ~filename:args#inputf @@ open_in args#inputf
         else
           Printf.sprintf "\"%s\": no such file" args#inputf
-          |> Error.of_string |> prerr_with_exit
+          |> Err.of_string |> prerr_with_exit
       else Compiler.from_string ~filename:args#inputf args#inputf
     in
     match from_src with
