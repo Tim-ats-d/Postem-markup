@@ -1,10 +1,6 @@
-(** {1 Type} *)
+(** {1 API} *)
 
-type metadata = { headers : (Share.TitleLevel.t * Ast_types.expr list) list }
-(** Type containing information collected during preprocessing of the document. *)
-
-(** {2 API} *)
-
-val pp_doc : Context.t -> Ast_types.doc -> metadata * Ast_types.doc
-(** [ppdoc ctx edoc] returns a couple composed of metadata collected on [edoc]
-  and a [expr document] where parsed expression have been eliminated. *)
+val pp_doc : Context.t -> Ast_types.doc -> Context.t * Ast_types.doc
+(** [ppdoc ctx edoc] returns a tuple composed of a context object containing
+  alias def collected on [edoc] and a [expr document] where parsed expression
+  have been eliminated. *)

@@ -7,7 +7,7 @@ end
 module type EVAL = sig
   type t
 
-  val eval : Ast.Ast_types.doc -> t
+  val eval : Ast.Ast_types.doc -> (t, string) result
 end
 
 (** Output signature of the functor [Compil_impl.Make]. *)

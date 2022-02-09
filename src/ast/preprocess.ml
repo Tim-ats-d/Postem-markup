@@ -1,19 +1,19 @@
-open Ast_types
+type state = NewElem of Ast_types.expr | NewCtx of Context.t
 
-type env = { ctx : Context.t; metadata : metadata }
-and metadata = { headers : (Share.TitleLevel.t * expr list) list }
+let rec pp_doc init_ctx doc =
+  let rec loop ctx acc = function
+    | [] -> (ctx, List.rev acc)
+    | hd :: tl -> (
+        match pp_expr ctx hd with
+        | NewCtx ctx' -> loop ctx' acc tl
+        | NewElem expr' -> loop ctx (expr' :: acc) tl)
+  in
+  loop init_ctx [] doc
 
-let fold_map = List.fold_left_map
-
-let rec pp_doc ctx doc =
-  let init_env = { ctx; metadata = { headers = [] } } in
-  let env, doc' = fold_map pp_expr init_env doc in
-  (env.metadata, doc')
-
-and pp_expr env = function
-  | AliasDef { name; value } ->
-      let ctx = Context.add env.ctx name value in
-      ({ env with ctx }, Text "")
-  | Text t -> (env, Text (Context.substitute env.ctx t))
-  | Unformat u -> (env, Text u)
-  | expr -> (env, expr)
+and pp_expr ctx = function
+  | Ast_types.AliasDef { name; value } ->
+      let ctx' = Context.add ctx name value in
+      NewCtx ctx'
+  | Text t -> NewElem (Text (Context.substitute ctx t))
+  | Unformat u -> NewElem (Text u)
+  | expr -> NewElem expr

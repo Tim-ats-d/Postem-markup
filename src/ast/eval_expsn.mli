@@ -1,14 +1,10 @@
 (** {1 API} *)
 
-exception Missing_metamark of Ast_types.loc * string
-(** Exception raised by [eval] function when a meta tag is mentionned in postem code and it doesn't exist. *)
-
 (** Output signature of the functor [Eval_expsn.MakeWithExpsn]. *)
 module type S = sig
-  val eval : Ast_types.doc -> string
-  (** [eval doc] returns the string corresponding to the evaluation of [doc].
-
-  @raise Missing_metamark *)
+  val eval : Ast_types.doc -> (string, string) result
+  (** [eval doc] returns [Ok r] if evaluation goes well and [Error msg]
+    otherwise. *)
 end
 
 (** Functor building a string evaluator from an expansion. *)

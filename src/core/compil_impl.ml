@@ -5,7 +5,7 @@ end
 module type EVAL = sig
   type t
 
-  val eval : Ast.Ast_types.doc -> t
+  val eval : Ast.Ast_types.doc -> (t, string) result
 end
 
 module type S = sig
@@ -20,7 +20,7 @@ module Make (Parser : PARSER) (Eval : EVAL) : S with type t := Eval.t = struct
   let from_lexbuf ?(filename = "") lexbuf =
     Sedlexing.set_filename lexbuf filename;
     match Parser.parse lexbuf with
-    | Ok ast -> Result.ok @@ Eval.eval ast
+    | Ok ast -> Eval.eval ast
     | Error _ as err -> err
 
   let from_string ?(filename = "") str =

@@ -3,13 +3,13 @@ open Ast_types
 module type WRITER = sig
   type t
 
-  val eval : Preprocess.metadata -> doc -> t list
+  val eval : Context.t -> doc -> (t, string) result
 end
 
 module type CUSTOM_WRITER = sig
   type t
 
-  val eval : ?alias:Context.t -> doc -> t list
+  val eval : ?alias:Context.t -> doc -> (t, string) result
 end
 
 module Make (Writer : WRITER) : CUSTOM_WRITER with type t := Writer.t = struct

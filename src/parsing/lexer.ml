@@ -24,7 +24,7 @@ let read lexbuf =
       TEXT String.(sub lexm 1 @@ (length lexm - 1))
   | assign -> EQ
   | string -> STRING (strip ~left:1 ~right:1 @@ lexeme lexbuf)
-  | op, space -> UOP_LINE (lexeme lexbuf).[0]
+  | op, space -> UOP_LINE (lexeme lexbuf)
   | op_char -> UOP_WORD (lexeme lexbuf).[0]
   | Plus text -> TEXT (lexeme lexbuf)
   | Plus space -> WHITE (lexeme lexbuf)

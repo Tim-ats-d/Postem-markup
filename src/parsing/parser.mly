@@ -8,7 +8,7 @@
 %token <string> WHITE
 
 %token <char> UOP_WORD
-%token <char> UOP_LINE
+%token <string> UOP_LINE
 
 %token EQ
 
@@ -25,7 +25,7 @@ let document :=
 let stmt :=
   | expr
   | n=NEWLINE; { White n }
-  | uop=UOP_LINE; line=expr+; NEWLINE; { UnaryOpLine { uop; line } }
+  | op=UOP_LINE; line=expr+; NEWLINE; { OpLine { op; line } }
 
 let expr :=
   | terminal
@@ -36,7 +36,7 @@ let alias ==
   | name=TEXT; EQ; value=STRING; { AliasDef { name; value } }
 
 let unary_op ==
-  | op=UOP_WORD; word=TEXT; { UnaryOpWord { op; word } }
+  | op=UOP_WORD; word=TEXT; { OpWord { op; word } }
 
 let terminal ==
   | t=TEXT;  { Text t }

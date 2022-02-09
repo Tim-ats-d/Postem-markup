@@ -1,25 +1,40 @@
 open Ast_types
 
-exception Missing_metamark of Ast_types.loc * string
-
 module type S = sig
-  val eval : Ast_types.doc -> string
+  val eval : Ast_types.doc -> (string, string) result
 end
 
-module MakeWithExpsn (Expsn : Expansion.S) = struct
-  module StringWriter = Eval_impl.Make (struct
-    type t = string
+module EvalCtx = struct
+  type t = { alias : Context.t }
 
-    let rec eval meta doc = List.map (eval_expr meta) doc
+  let create ~alias = { alias }
+end
 
-    and eval_expr _meta = function
-      | AliasDef _ | Unformat _ -> assert false
-      | Text t -> t
-      | UnaryOpWord _ -> "uow"
-      | UnaryOpLine _ -> "uol\n"
-      | White w -> w
+module MakeWithExpsn (Expsn : Expansion.S) : S = struct
+  module BufferWriter = Eval_impl.Make (struct
+    type t = Buffer.t
+
+    let rec eval alias doc =
+      let buf = Result.ok @@ Buffer.create 101 in
+      (* TODO: performance issue *)
+      let ctx = EvalCtx.create ~alias in
+      List.fold_left
+        (fun acc expr ->
+          Result.bind acc (fun buf ->
+              Result.bind (eval_expr ctx expr) (fun text ->
+                  Buffer.add_string buf text;
+                  Ok buf)))
+        buf doc
+
+    and eval_expr _ctx = function
+      | OpWord _ -> Ok "ow"
+      | OpLine _ -> Ok "ol\n"
+      | Text x | White x -> Ok x
+      | AliasDef _ | Unformat _ ->
+          Error "parsed expr encountered during evaluation"
   end)
 
   let eval doc =
-    Expsn.postprocess @@ StringWriter.eval doc ~alias:Expsn.initial_alias
+    let result = BufferWriter.eval doc ~alias:Expsn.alias in
+    Result.bind result (fun buf -> Result.ok @@ Buffer.contents buf)
 end
