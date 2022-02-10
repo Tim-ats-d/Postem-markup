@@ -27,11 +27,10 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
         buf doc
 
     and eval_expr _ctx = function
-      | OpWord _ -> Ok "ow"
-      | OpLine _ -> Ok "ol\n"
-      | Text x | White x -> Ok x
+      | Text str | White str -> Ok str
       | AliasDef _ | Unformat _ ->
           Error "parsed expr encountered during evaluation"
+      | _ -> Ok "assert false"
   end)
 
   let eval doc =

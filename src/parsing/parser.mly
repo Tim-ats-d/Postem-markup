@@ -2,16 +2,12 @@
   open Ast.Ast_types
 %}
 
+%token <string> OP
 %token <string> NEWLINE
-%token <string> STRING
 %token <string> TEXT
 %token <string> WHITE
 
-%token <char> UOP_WORD
-%token <string> UOP_LINE
-
-%token EQ
-
+%token LBRACKET RBRACKET
 %token EOF
 
 %type <Ast.Ast_types.doc> document
@@ -20,24 +16,29 @@
 %%
 
 let document :=
-  | lines=stmt*; EOF; { lines }
+  | lines=line*; EOF; { lines }
 
-let stmt :=
+let line :=
   | expr
+  | uop_line
   | n=NEWLINE; { White n }
-  | op=UOP_LINE; line=expr+; NEWLINE; { OpLine { op; line } }
 
 let expr :=
+  | group
   | terminal
-  | alias
   | unary_op
-
-let alias ==
-  | name=TEXT; EQ; value=STRING; { AliasDef { name; value } }
-
-let unary_op ==
-  | op=UOP_WORD; word=TEXT; { OpWord { op; word } }
 
 let terminal ==
   | t=TEXT;  { Text t }
   | w=WHITE; { White w }
+
+let group ==
+  | LBRACKET; g=expr*; RBRACKET; { Group g }
+
+let unary_op ==
+  | op=OP; t=TEXT;      { UnaryOp { op; group = Group [ Text t ] } }
+  | op=OP; group=group; { UnaryOp { op; group } }
+
+let uop_line ==
+  | op=OP; WHITE; group=expr+; NEWLINE; { UnaryOp { op; group = Group group } } (* TODO Add newline *)
+  // | WHITE; op=OP; WHITE; group=expr+; NEWLINE; { UnaryOp { op; group = Group group } } (* TODO Add newline *)

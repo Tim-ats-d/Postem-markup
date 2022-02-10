@@ -5,7 +5,9 @@ let letter = [%sedlex.regexp? lu | ll | lt | lm | lo]
 let math = [%sedlex.regexp? sm | sc | sk | so]
 let number = [%sedlex.regexp? nd | nl | no]
 let punct = [%sedlex.regexp? po]
-let text = [%sedlex.regexp? letter | math | number | punct]
+
+(* let text = [%sedlex.regexp? letter | math | | math | number | punct] *)
+let text = [%sedlex.regexp? letter | number | punct]
 let op_char = [%sedlex.regexp? Chars "!#$%&'*+-<=>'@^_|~"]
 let op = [%sedlex.regexp? Plus op_char]
 let space = [%sedlex.regexp? zs]
@@ -22,10 +24,9 @@ let read lexbuf =
   | '\\', any ->
       let lexm = lexeme lexbuf in
       TEXT String.(sub lexm 1 @@ (length lexm - 1))
-  | assign -> EQ
-  | string -> STRING (strip ~left:1 ~right:1 @@ lexeme lexbuf)
-  | op, space -> UOP_LINE (lexeme lexbuf)
-  | op_char -> UOP_WORD (lexeme lexbuf).[0]
+  | '[' -> LBRACKET
+  | ']' -> RBRACKET
+  | op -> OP (lexeme lexbuf)
   | Plus text -> TEXT (lexeme lexbuf)
   | Plus space -> WHITE (lexeme lexbuf)
   | newline ->
@@ -33,3 +34,18 @@ let read lexbuf =
       NEWLINE (lexeme lexbuf)
   | eof -> EOF
   | _ -> raise @@ Syntax_error lexbuf
+
+let read_debug lexbuf =
+  let token = read lexbuf in
+  print_endline
+  @@ Parser.(
+       function
+       | NEWLINE n -> Printf.sprintf "NEWLINE:%s" n
+       | TEXT t -> Printf.sprintf "TEXT:%s" t
+       | WHITE w -> Printf.sprintf "WHITE:%s" w
+       | OP o -> Printf.sprintf "OP:%s" o
+       | LBRACKET -> "LBRACKET"
+       | RBRACKET -> "RBRACKET"
+       | EOF -> "EOF")
+       token;
+  token

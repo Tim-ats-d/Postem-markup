@@ -29,7 +29,7 @@ let load_unit name =
 module Parser = struct
   let parse lexbuf =
     let open Parsing in
-    let lexer = Sedlexing.with_tokenizer Lexer.read lexbuf in
+    let lexer = Sedlexing.with_tokenizer Lexer.read_debug lexbuf in
     let parser =
       MenhirLib.Convert.Simplified.traditional2revised Parser.document
     in
