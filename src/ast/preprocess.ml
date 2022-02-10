@@ -1,4 +1,4 @@
-type state = NewElem of Ast_types.expr | NewCtx of Context.t
+type state = NewElem of Ast_types.expr | NewCtx of Ctx.StringCtx.t
 
 let rec pp_doc init_ctx doc =
   let rec loop ctx acc = function
@@ -12,8 +12,10 @@ let rec pp_doc init_ctx doc =
 
 and pp_expr ctx = function
   | Ast_types.AliasDef { name; value } ->
-      let ctx' = Context.add ctx name value in
+      let ctx' = Ctx.StringCtx.add ctx name value in
       NewCtx ctx'
-  | Text t -> NewElem (Text (Context.substitute ctx t))
+  | Text t ->
+      let text = Option.value ~default:t @@ Ctx.StringCtx.find ctx t in
+      NewElem (Text text)
   | Unformat u -> NewElem (Text u)
   | expr -> NewElem expr

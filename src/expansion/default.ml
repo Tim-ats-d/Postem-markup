@@ -1,1 +1,1 @@
-let alias = Ast.Share.AliasMap.empty
+let alias = Ast.Ctx.StringCtx.empty

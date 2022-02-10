@@ -1,5 +1,6 @@
 module Ast = Ast
+module Compiler = Compiler
 module Core = Core
 module Expansion = Expansion
 module Parsing = Parsing
-module Compiler = Compiler
+module Shared_lib = Shared_lib

@@ -5,7 +5,7 @@ module type S = sig
 end
 
 module EvalCtx = struct
-  type t = { alias : Context.t }
+  type t = { alias : Ctx.StringCtx.t }
 
   let create ~alias = { alias }
 end

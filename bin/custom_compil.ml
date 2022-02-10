@@ -1,4 +1,4 @@
-open Ast.Ast_types
+(* open Ast.Ast_types
 
 module IntEval = Ast.Eval_impl.Make (struct
   type t = int
@@ -35,4 +35,4 @@ let pgrm = {|
 
 let () =
   print_int @@ count_int pgrm;
-  print_newline ()
+  print_newline () *)
