@@ -12,11 +12,6 @@ type t =
 
 class args :
   object
-    val direct_input : string
-    val inputf : string
-    val outputf : string
-    val expsn : string
-    val output_on_stdout : bool
     method direct_input : string
     method inputf : string
     method outputf : string

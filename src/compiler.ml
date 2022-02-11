@@ -24,7 +24,7 @@ end
 let load_unit name =
   match Ehandler.load_res Expansion.Known.expansions name with
   | Ok expsn -> expsn
-  | Error (msg, hint) -> prerr_with_exit @@ Err.of_string msg ~hint
+  | Error (msg, hint) -> prerr_with_exit @@ Err.pp_string msg ~hint
 
 module Parser = struct
   let parse lexbuf =
@@ -37,9 +37,9 @@ module Parser = struct
     | Lexer.Syntax_error lexbuf ->
         let _, pos = Sedlexing.lexing_positions lexbuf in
         Result.error
-        @@ Err.of_position pos ~msg:"character not allowed in source text"
-             ~hint:"non-ascii characters must be placed in a unformat block."
-    | Parser.Error -> Result.error @@ Err.of_lexbuf lexbuf ~msg:"syntax error"
+        @@ Err.pp_position pos ~msg:"character not allowed in source text"
+             ~hint:"try to escape this character."
+    | Parser.Error -> Result.error @@ Err.pp_lexbuf lexbuf ~msg:"syntax error"
 end
 
 let compile () =
@@ -59,8 +59,8 @@ let compile () =
         if Sys.file_exists args#inputf then
           Compiler.from_channel ~filename:args#inputf @@ open_in args#inputf
         else
-          Printf.sprintf "\"%s\": no such file" args#inputf
-          |> Err.of_string |> prerr_with_exit
+          prerr_with_exit
+          @@ Printf.sprintf "Error: \"%s\": no such file" args#inputf
       else Compiler.from_string ~filename:args#inputf args#inputf
     in
     match from_src with
