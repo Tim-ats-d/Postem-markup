@@ -1,5 +1,5 @@
 (library
- (name parsing)
+ (name syntax)
  (libraries ast common menhirLib sedlex)
  (preprocess
   (pps ppx_deriving.show sedlex.ppx))
