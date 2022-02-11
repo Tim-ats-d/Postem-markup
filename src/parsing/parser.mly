@@ -6,6 +6,7 @@
 %token <string> NEWLINE
 %token <string> TEXT
 %token <string> WHITE
+%token <string> UNFORMAT
 
 %token LBRACKET RBRACKET
 %token EOF
@@ -29,8 +30,9 @@ let expr :=
   | unary_op
 
 let terminal ==
-  | t=TEXT;  { Text t }
-  | w=WHITE; { White w }
+  | t=TEXT;     { Text t }
+  | w=WHITE;    { White w }
+  | u=UNFORMAT; { Unformat u }
 
 let group ==
   | LBRACKET; g=expr*; RBRACKET; { Group g }

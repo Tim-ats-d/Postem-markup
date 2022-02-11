@@ -30,7 +30,7 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
       | Text str | White str -> Ok str
       | AliasDef _ | Unformat _ ->
           Error "parsed expr encountered during evaluation"
-      | _ -> Ok "assert false"
+      | _ -> Ok "todo"
   end)
 
   let eval doc =
