@@ -1,5 +1,6 @@
 (library
- (name syntax)
+ (name parsing)
+ (modules_without_implementation parsed_ast)
  (libraries ast common menhirLib sedlex)
  (preprocess
   (pps ppx_deriving.show sedlex.ppx))

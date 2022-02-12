@@ -18,7 +18,7 @@ module Repl = struct
       | Ok output ->
           print_endline output;
           exit 0
-      | Error msg -> prerr_with_exit msg)
+      | Error err -> prerr_with_exit @@ Err.to_string err)
 end
 
 let load_unit name =
@@ -26,30 +26,15 @@ let load_unit name =
   | Ok expsn -> expsn
   | Error (msg, hint) -> prerr_with_exit @@ Err.pp_string msg ~hint
 
-module Parser = struct
-  let parse lexbuf =
-    let open Syntax in
-    let lexer = Sedlexing.with_tokenizer Lexer.read lexbuf in
-    let parser =
-      MenhirLib.Convert.Simplified.traditional2revised Parser.document
-    in
-    try Result.ok @@ parser lexer with
-    | Lexer.Syntax_error lexbuf ->
-        let _, pos = Sedlexing.lexing_positions lexbuf in
-        Result.error
-        @@ Err.pp_position pos ~msg:"character not allowed in source text"
-             ~hint:"try to escape this character."
-    | Parser.Error -> Result.error @@ Err.pp_lexbuf lexbuf ~msg:"syntax error"
-end
-
 let compile () =
   let args = Args.parse () in
   let module Expsn = (val load_unit args#expsn) in
   let module Eval = struct
     type t = string
 
-    include Ast.Eval_expsn.MakeWithExpsn (Expsn)
+    include Ast.Eval.MakeWithExpsn (Expsn)
   end in
+  let module Parser = Parsing.Make (Expsn) in
   let module Compiler = Compil_impl.Make (Parser) (Eval) in
   if args#direct_input = "" && args#inputf = "" then
     Repl.launch @@ Compiler.from_string ~filename:"REPL"
@@ -67,4 +52,4 @@ let compile () =
     | Ok r ->
         if args#output_on_stdout then print_endline r
         else In_channel.write args#outputf r
-    | Error msg -> prerr_with_exit msg
+    | Error err -> prerr_with_exit @@ Err.to_string err

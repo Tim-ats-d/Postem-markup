@@ -8,7 +8,8 @@ module type S = sig
 
   val empty : t
   val add : key -> value -> t -> t
-  val find : t -> key -> value option
+  val find : t -> key -> value
+  val find_opt : t -> key -> value option
   val merge : t -> t -> t
 end
 
@@ -20,5 +21,5 @@ end
 module Make : functor (Ord : Map.OrderedType) (Value : VALUE) ->
   S with type key := Ord.t and type value := Value.t
 
-module StringCtx : S with type key := string and type value := string
+module AliasCtx : S with type key := string and type value := string
 module UopCtx : S with type key := string and type value := string -> string

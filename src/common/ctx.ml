@@ -5,7 +5,8 @@ module type S = sig
 
   val empty : t
   val add : key -> value -> t -> t
-  val find : t -> key -> value option
+  val find : t -> key -> value
+  val find_opt : t -> key -> value option
   val merge : t -> t -> t
 end
 
@@ -21,13 +22,14 @@ module Make (Ord : Map.OrderedType) (Value : VALUE) :
 
   let empty = Map.empty
   let add = Map.add
-  let find t x = Map.find_opt x t
+  let find t x = Map.find x t
+  let find_opt t x = Map.find_opt x t
 
   let merge a b =
     Map.merge (fun _ s s' -> match s with None -> s' | Some _ -> s) a b
 end
 
-module StringCtx = Make (String) (String)
+module AliasCtx = Make (String) (String)
 
 module UopCtx =
   Make

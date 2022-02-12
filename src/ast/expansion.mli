@@ -1,4 +1,4 @@
 module type S = sig
-  val alias : Ctx.StringCtx.t
-  val uop : Ctx.UopCtx.t
+  val alias : Common.Ctx.AliasCtx.t
+  val uop : Common.Ctx.UopCtx.t
 end
