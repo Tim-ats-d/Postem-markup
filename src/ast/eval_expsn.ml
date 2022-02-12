@@ -46,7 +46,7 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
 
     and eval_uop ctx op group =
       match Ctx.UopCtx.find ctx.EvalCtx.uop op with
-      | None -> Error "undefined op"
+      | None -> Error "undefined op" (* TODO: better error message. *)
       | Some f ->
           let+ egrp = eval_expr ctx group in
           ok @@ f egrp

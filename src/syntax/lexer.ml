@@ -4,8 +4,6 @@ let letter = [%sedlex.regexp? lu | ll | lt | lm | lo]
 let math = [%sedlex.regexp? sm | sc | sk | so]
 let number = [%sedlex.regexp? nd | nl | no]
 let punct = [%sedlex.regexp? po]
-
-(* let text = [%sedlex.regexp? letter | math | | math | number | punct] *)
 let text = [%sedlex.regexp? letter | number | punct]
 let op_char = [%sedlex.regexp? Chars "!#$%&'*+-<=>'@^_|~"]
 let op = [%sedlex.regexp? Plus op_char]

@@ -1,6 +1,6 @@
 # Postem
 
-A fast and easy **notes taking** oriented **markup** language
+A fast and WIP easy **notes taking** oriented **markup** language
 
 ## Abstracts
 
@@ -8,21 +8,18 @@ A fast and easy **notes taking** oriented **markup** language
 
 ## Key Features
 
-* **Lightweight:** a light syntax and a small number of marks.
+* **Lightweight:** a light syntax.
 * **Flexible:** it compiles to other famous markup languages such as **AsciiDoc** and **Markdown**.
-* **Extensible:** it is very easy to create an expansion to customize the rendering or even extend available tags set using **OCaml**.
+* **Extensible:** it is very easy to create an expansion to customize the rendering or extend available tags set using **OCaml**.
 
 #### Not yet implemented
 
 * Compilation to [**Pandoc**](https://github.com/jgm/pandoc) format
-* Unicode support outside of unformat expression (currently support only the [Latin 1](https://en.wikipedia.org/wiki/ISO/IEC_8859-1)).
 
 ## Examples
 
 This text marked in Postem:
 ```text
-P == "Postem"
-
 & The P book
 
 && Introduction
@@ -44,7 +41,7 @@ Example %% {{Unformated # text & with many special char.}}
 
 -- This mark is pretty useful.
 ```
-will be rendered in this (with default plain text mode enabled):
+will be rendered in this (with default expansion enabled):
 <details>
     <summary><b>Output</b></summary>
 

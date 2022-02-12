@@ -17,6 +17,5 @@ let pp_position ?hint ~msg { Lexing.pos_fname; pos_lnum; pos_bol; pos_cnum }
   Printf.sprintf "%s\n%s" carret descr
 
 let pp_lexbuf lexbuf ~msg =
-  let spos, epos = Sedlexing.lexing_positions lexbuf in
-  print_int epos.Lexing.pos_lnum;
+  let spos, _ = Sedlexing.lexing_positions lexbuf in
   pp_position spos ~msg

@@ -11,4 +11,8 @@ let uop =
   empty
   |> add "&" @@ underline ~char:'#'
   |> add "&&" @@ underline ~char:'*'
+  |> add "&&&" @@ underline ~char:'='
+  |> add "&&&&" @@ underline ~char:'-'
+  |> add "&&&&&" @@ underline ~char:'^'
+  |> add "&&&&&&" @@ underline ~char:'"'
   |> add ">" quote |> add "%%" Fun.id |> add "--" conclusion
