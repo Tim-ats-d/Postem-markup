@@ -15,7 +15,7 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
     type t = Buffer.t
 
     let rec eval alias doc =
-      let buf = return @@ Buffer.create 101 in
+      let buf = ok @@ Buffer.create 101 in
       (* TODO: performance issue *)
       let ctx = EvalCtx.create ~alias in
       List.fold_left
@@ -23,11 +23,11 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
           let+ buf = acc in
           let+ text = eval_expr ctx expr in
           Buffer.add_string buf text;
-          return buf)
+          Ok buf)
         buf doc
 
     and eval_expr _ctx = function
-      | Ast_types.Text str | White str -> Ok str
+      | Ast_types.Text s | White s -> Ok s
       | AliasDef _ | Unformat _ ->
           Error "parsed expr encountered during evaluation"
       | _ -> Ok "todo"
@@ -35,5 +35,5 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
 
   let eval doc =
     let+ buf = BufferWriter.eval doc ~alias:Expsn.alias in
-    return @@ Buffer.contents buf
+    ok @@ Buffer.contents buf
 end

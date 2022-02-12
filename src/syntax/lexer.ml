@@ -11,22 +11,19 @@ let op_char = [%sedlex.regexp? Chars "!#$%&'*+-<=>'@^_|~"]
 let op = [%sedlex.regexp? Plus op_char]
 let whitespace = [%sedlex.regexp? zs]
 let newline = [%sedlex.regexp? '\n' | "\r\n"]
-
 let lexeme = Sedlexing.Utf8.lexeme
 
-let strip ~left ?(right = 0) str =
+let cut ?(right = 0) ~left str =
   String.(sub str left (length str - right - left))
 
 let read buf =
   let open Parser in
   match%sedlex buf with
-  | '\\', any ->
-      let lexm = lexeme buf in
-      TEXT String.(sub lexm 1 @@ (length lexm - 1))
+  | '\\', any -> TEXT (cut ~left:1 @@ lexeme buf)
   | '[' -> LBRACKET
   | ']' -> RBRACKET
   | op -> OP (lexeme buf)
-  | "{{", Star any, "}}" -> UNFORMAT (strip ~left:2 ~right:2 @@ lexeme buf)
+  | "{{", Star any, "}}" -> UNFORMAT (cut ~left:2 ~right:2 @@ lexeme buf)
   | Plus text -> TEXT (lexeme buf)
   | Plus whitespace -> WHITE (lexeme buf)
   | newline ->

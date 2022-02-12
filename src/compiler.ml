@@ -66,5 +66,5 @@ let compile () =
     match from_src with
     | Ok r ->
         if args#output_on_stdout then print_endline r
-        else File.write args#outputf r
+        else In_channel.write args#outputf r
     | Error msg -> prerr_with_exit msg
