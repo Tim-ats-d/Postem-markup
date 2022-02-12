@@ -4,7 +4,7 @@ module type S = sig
   type value
 
   val empty : t
-  val add : t -> key -> value -> t
+  val add : key -> value -> t -> t
   val find : t -> key -> value option
   val merge : t -> t -> t
 end
@@ -20,7 +20,7 @@ module Make (Ord : Map.OrderedType) (Value : VALUE) :
   type t = Value.t Map.t
 
   let empty = Map.empty
-  let add t name value = Map.add name value t
+  let add = Map.add
   let find t x = Map.find_opt x t
 
   let merge a b =
@@ -28,3 +28,10 @@ module Make (Ord : Map.OrderedType) (Value : VALUE) :
 end
 
 module StringCtx = Make (String) (String)
+
+module UopCtx =
+  Make
+    (String)
+    (struct
+      type t = string -> string
+    end)

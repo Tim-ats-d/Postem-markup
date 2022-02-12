@@ -1,21 +1,32 @@
-type state = NewElem of Ast_types.expr | NewCtx of Ctx.StringCtx.t
-
 let rec pp_doc init_ctx doc =
   let rec loop ctx acc = function
     | [] -> (ctx, List.rev acc)
-    | hd :: tl -> (
-        match pp_expr ctx hd with
-        | NewCtx ctx' -> loop ctx' acc tl
-        | NewElem expr' -> loop ctx (expr' :: acc) tl)
+    | hd :: tl ->
+        let ctx', expr' = pp_expr ctx hd in
+        loop ctx' (expr' :: acc) tl
   in
   loop init_ctx [] doc
 
-and pp_expr ctx = function
-  | Ast_types.AliasDef { name; value } ->
-      let ctx' = Ctx.StringCtx.add ctx name value in
-      NewCtx ctx'
+and pp_expr ctx =
+  let open Ast_types in
+  function
   | Text t ->
       let text = Option.value ~default:t @@ Ctx.StringCtx.find ctx t in
-      NewElem (Text text)
-  | Unformat u -> NewElem (Text u)
-  | expr -> NewElem expr
+      (ctx, Text text)
+  | Unformat u -> (ctx, Text u)
+  | Group grp ->
+      let ctx', grp' =
+        List.fold_left
+          (fun (ctx, acc) expr ->
+            let ctx', expr' = pp_expr ctx expr in
+            (ctx', expr' :: acc))
+          (ctx, []) grp
+      in
+      (ctx', Group grp')
+  | UnaryOp { op; group } ->
+      let ctx', grp' = pp_expr ctx group in
+      (ctx', UnaryOp { op; group = grp' })
+  | AliasDef { name; value } ->
+      let ctx' = Ctx.StringCtx.add name value ctx in
+      (ctx', White "")
+  | expr -> (ctx, expr)

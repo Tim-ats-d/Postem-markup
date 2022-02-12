@@ -5,14 +5,22 @@ module type WRITER = sig
   type t
   (** The written type. *)
 
-  val eval : Ctx.StringCtx.t -> Ast_types.doc -> (t, string) result
+  val eval :
+    alias:Ctx.StringCtx.t ->
+    uop:Ctx.UopCtx.t ->
+    Ast_types.doc ->
+    (t, string) result
 end
 
 (** Output signature of the functor [Eval_impl.Make]. *)
 module type CUSTOM_WRITER = sig
   type t
 
-  val eval : ?alias:Ctx.StringCtx.t -> Ast_types.doc -> (t, string) result
+  val eval :
+    alias:Ctx.StringCtx.t ->
+    uop:Ctx.UopCtx.t ->
+    Ast_types.doc ->
+    (t, string) result
 end
 
 (** Functor building an implementation of an evaluator writing its type [t]. *)

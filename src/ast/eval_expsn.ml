@@ -3,9 +3,9 @@ module type S = sig
 end
 
 module EvalCtx = struct
-  type t = { alias : Ctx.StringCtx.t }
+  type t = { alias : Ctx.StringCtx.t; uop : Ctx.UopCtx.t }
 
-  let create ~alias = { alias }
+  let create ~alias ~uop = { alias; uop }
 end
 
 module MakeWithExpsn (Expsn : Expansion.S) : S = struct
@@ -14,10 +14,10 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
   module BufferWriter = Eval_impl.Make (struct
     type t = Buffer.t
 
-    let rec eval alias doc =
+    let rec eval ~alias ~uop doc =
       let buf = ok @@ Buffer.create 101 in
       (* TODO: performance issue *)
-      let ctx = EvalCtx.create ~alias in
+      let ctx = EvalCtx.create ~alias ~uop in
       List.fold_left
         (fun acc expr ->
           let+ buf = acc in
@@ -26,14 +26,33 @@ module MakeWithExpsn (Expsn : Expansion.S) : S = struct
           Ok buf)
         buf doc
 
-    and eval_expr _ctx = function
+    and eval_expr ctx = function
       | Ast_types.Text s | White s -> Ok s
+      | Group grp -> eval_group ctx grp
+      | UnaryOp { op; group } -> eval_uop ctx op group
       | AliasDef _ | Unformat _ ->
           Error "parsed expr encountered during evaluation"
-      | _ -> Ok "todo"
+
+    and eval_group ctx grp =
+      let+ grp' =
+        List.fold_left
+          (fun acc expr ->
+            let+ lines = acc in
+            let+ text = eval_expr ctx expr in
+            Ok (text :: lines))
+          (Ok []) grp
+      in
+      ok @@ String.concat "" grp'
+
+    and eval_uop ctx op group =
+      match Ctx.UopCtx.find ctx.EvalCtx.uop op with
+      | None -> Error "undefined op"
+      | Some f ->
+          let+ egrp = eval_expr ctx group in
+          ok @@ f egrp
   end)
 
   let eval doc =
-    let+ buf = BufferWriter.eval doc ~alias:Expsn.alias in
+    let+ buf = BufferWriter.eval doc ~alias:Expsn.alias ~uop:Expsn.uop in
     ok @@ Buffer.contents buf
 end

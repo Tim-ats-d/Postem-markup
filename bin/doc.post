@@ -1,6 +1,4 @@
-P == "Postem"
-
-& The Postem book
+& The P book
 
 && Introduction
 
@@ -11,7 +9,8 @@ Another one.
 
 && Abstracts
 
-> A quotation of the author of the language explaining the reasons that led him to write P
+> A quotation
+> Continuation of the quotation
 
 ..enumerate
 a first reason
@@ -24,4 +23,4 @@ Unformat block %% Allows you to write text that will not be formatted.
 
 Example: {{Unformated # text & with many special chars.}}
 
-\-- This mark is pretty useful.
+-- This mark is pretty useful.
