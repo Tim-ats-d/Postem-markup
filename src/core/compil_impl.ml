@@ -19,9 +19,7 @@ end
 module Make (Parser : PARSER) (Eval : EVAL) : S with type t := Eval.t = struct
   let from_lexbuf ?(filename = "") lexbuf =
     Sedlexing.set_filename lexbuf filename;
-    match Parser.parse lexbuf with
-    | Ok ast -> Eval.eval ast
-    | Error _ as err -> err
+    Result.bind (Parser.parse lexbuf) Eval.eval
 
   let from_string ?(filename = "") str =
     let lexbuf = Sedlexing.Utf8.from_string str in

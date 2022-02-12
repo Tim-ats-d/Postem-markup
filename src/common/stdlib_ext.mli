@@ -1,37 +1,20 @@
-(** Some extension of OCaml stdlib. *)
+(** Some extension to OCaml stdlib. *)
 
-(** Extension of the [Char] module of the OCaml stdlib. *)
-module Char : sig
-  include module type of Char
+(** Extension to the [Result] module of the OCaml stdlib. *)
+module Result : sig
+  include module type of Result
 
-  val to_string : char -> string
-  (** [to_string c] is [c] turned into a string. *)
+  val ( let+ ) : ('a, 'b) t -> ('a -> ('c, 'b) t) -> ('c, 'b) t
+  val return : 'a -> ('a, 'b) t
 end
 
-(** Extension of the [String] module of the OCaml stdlib. *)
-module String : sig
-  include module type of String
-
-  val empty : string
-  (** [empty] is [""]. *)
-
-  val is_empty : string -> bool
-  (** [is_empty str] tests if [str] is empty. *)
-
-  val split_lines : string -> string list
-  (** [split_lines str] is [String.split_on_char '\n' str]. *)
-end
-
-(** Containing utilities for file. *)
+(** Containing utilities for file io. *)
 module File : sig
-  type t = string
-  (** A type alias for file.  *)
-
-  val read_all : t -> string
+  val read_all : string -> string
   (** [read_all filename] returns the content of file [filename] as a string.
-       @raise Sys_error if filename does not exist.
-     *)
+       @raise Sys_error if filename does not exist. *)
 
-  val write : t -> string -> unit
-  (** [write filename str] writes [str] in file [filename]. Create file [filename] if it does not exist. *)
+  val write : string -> string -> unit
+  (** [write filename str] writes [str] in file [filename].
+    Create file [filename] if it does not exist. *)
 end

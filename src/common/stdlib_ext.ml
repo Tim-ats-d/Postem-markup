@@ -1,20 +1,11 @@
-module Char = struct
-  include Char
+module Result = struct
+  include Result
 
-  let to_string = String.make 1
-end
-
-module String = struct
-  include String
-
-  let empty = ""
-  let is_empty = ( = ) ""
-  let split_lines = String.split_on_char '\n'
+  let ( let+ ) = Result.bind
+  let return = Result.ok
 end
 
 module File = struct
-  type t = string
-
   let read_all filename =
     let ic = open_in filename in
     let rec read_lines acc =
