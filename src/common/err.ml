@@ -3,6 +3,7 @@ type t =
   | `SyntaxError of string
   | `UndefinedUop of Lexing.position * Lexing.position ]
 
+(* TODO: better error message and unify with error messages of expansion loader. *)
 let to_string = function
   | `IllegalCharacter chr -> Printf.sprintf "illegal char %s" chr
   | `SyntaxError str -> Printf.sprintf "syntax error %s" str

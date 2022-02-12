@@ -1,5 +1,5 @@
 (library
- (name parsing)
+ (name syntax)
  (modules_without_implementation parsed_ast)
  (libraries ast common menhirLib sedlex)
  (preprocess

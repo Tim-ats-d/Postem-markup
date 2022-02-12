@@ -1,13 +1,13 @@
 open Common
 
 module type S = sig
-  val postprocess : Parsed_ast.t -> (Ast.Types.doc, Err.t) result
+  val pass : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.t) result
 end
 
 module Make (Expsn : Ast.Expansion.S) : S = struct
   open Result
 
-  let rec postprocess parsed_ast =
+  let rec pass parsed_ast =
     List.fold_left
       (fun acc expr ->
         let+ grp = acc in
@@ -18,7 +18,7 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
 
   and pexpr =
     let open Ast.Types in
-    let open Parsed_ast in
+    let open Syntax.Parsed_ast in
     function
     | LText t ->
         let text =

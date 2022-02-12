@@ -1,9 +1,3 @@
-module type EVAL = sig
-  type t
-
-  val eval : Ast.Types.doc -> t
-end
-
 module type S = sig
   type t
 
@@ -14,11 +8,14 @@ module type S = sig
   val from_channel : ?filename:string -> in_channel -> (t, Common.Err.t) result
 end
 
-module Make (Parser : Parsing.S) (Eval : EVAL) : S with type t := Eval.t =
-struct
+module Make (Parser : Syntax.S) (Checker : Checker.S) (Eval : Ast.Eval.S) :
+  S with type t := Eval.t = struct
   let from_lexbuf ?(filename = "") lexbuf =
     Sedlexing.set_filename lexbuf filename;
-    Result.bind (Parser.parse lexbuf) (fun ast -> Ok (Eval.eval ast))
+    let open Common.Result in
+    let+ parsed_ast = Parser.parse lexbuf in
+    let+ ast = Checker.pass parsed_ast in
+    ok @@ Eval.eval ast
 
   let from_string ?(filename = "") str =
     let lexbuf = Sedlexing.Utf8.from_string str in

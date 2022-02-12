@@ -1,20 +1,16 @@
 open Common
 
 module type S = sig
-  val parse : Sedlexing.lexbuf -> (Ast.Types.expr list, Err.t) result
+  val parse : Sedlexing.lexbuf -> (Parsed_ast.t, Common.Err.t) result
 end
 
-module Make (Expsn : Ast.Expansion.S) : S = struct
+module Parser = struct
   let parse lexbuf =
     let lexer = Sedlexing.with_tokenizer Lexer.read lexbuf in
     let parser =
       MenhirLib.Convert.Simplified.traditional2revised Parser.document
     in
-    try
-      let parsed_ast = parser lexer in
-      let module Pprocess = Postprocess.Make (Expsn) in
-      Pprocess.postprocess parsed_ast
-    with
+    try Ok (parser lexer) with
     | Lexer.Syntax_error lexbuf ->
         let _, pos = Sedlexing.lexing_positions lexbuf in
         let msg =
@@ -26,3 +22,5 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
         let msg = Err.pp_lexbuf lexbuf ~msg:"syntax error" in
         Error (`SyntaxError msg)
 end
+
+module Parsed_ast = Parsed_ast

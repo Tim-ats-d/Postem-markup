@@ -34,8 +34,9 @@ let compile () =
 
     include Ast.Eval.MakeWithExpsn (Expsn)
   end in
-  let module Parser = Parsing.Make (Expsn) in
-  let module Compiler = Compil_impl.Make (Parser) (Eval) in
+  let module Compiler =
+    Compil_impl.Make (Syntax.Parser) (Checker.Make (Expsn)) (Eval)
+  in
   if args#direct_input = "" && args#inputf = "" then
     Repl.launch @@ Compiler.from_string ~filename:"REPL"
   else

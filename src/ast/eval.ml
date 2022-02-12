@@ -1,7 +1,9 @@
 open Common
 
 module type S = sig
-  val eval : Types.doc -> string
+  type t
+
+  val eval : Types.doc -> t
 end
 
 module EvalCtx = struct
@@ -10,7 +12,7 @@ module EvalCtx = struct
   let create ~alias ~uop = { alias; uop }
 end
 
-module MakeWithExpsn (Expsn : Expansion.S) : S = struct
+module MakeWithExpsn (Expsn : Expansion.S) : S with type t := string = struct
   let rec eval doc =
     let buf = eval_doc doc ~alias:Expsn.alias ~uop:Expsn.uop in
     Buffer.contents buf
