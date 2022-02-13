@@ -13,9 +13,12 @@ module Make (Parser : Syntax.S) (Checker : Checker.S) (Eval : Ast.Eval.S) :
   let from_lexbuf ?(filename = "") lexbuf =
     Sedlexing.set_filename lexbuf filename;
     let open Common.Result in
-    let+ parsed_ast = Parser.parse lexbuf in
-    let+ ast = Checker.pass parsed_ast in
-    ok @@ Eval.eval ast
+    match Parser.parse lexbuf with
+    | Ok parsed_ast -> (
+        match Checker.pass parsed_ast with
+        | Ok ast -> ok @@ Eval.eval ast
+        | Error err -> Error (err :> Common.Err.t))
+    | Error err -> Error (err :> Common.Err.t)
 
   let from_string ?(filename = "") str =
     let lexbuf = Sedlexing.Utf8.from_string str in

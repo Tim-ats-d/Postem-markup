@@ -55,7 +55,8 @@ let parse () =
   p#add_spec "l" ~long:"list"
     (Unit
        (fun () ->
-         print_endline @@ Ehandler.to_string Expansion.Known.expansions;
+         print_endline
+         @@ Ehandler.KnownExpansions.to_string Expansion.Known.expansions;
          exit 0))
     "Display the list of known expansions and exit.";
   p#add_spec "o" ~long:"output"

@@ -17,9 +17,9 @@ module type S = sig
     content of file [chan]. *)
 end
 
+(** Build a compiler from several units. *)
 module Make : functor
   (Parser : Syntax.S)
   (Checker : Checker.S)
   (Eval : Ast.Eval.S)
   -> S with type t := Eval.t
-(** Build a compiler from several units. *)

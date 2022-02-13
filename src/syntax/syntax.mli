@@ -1,5 +1,5 @@
 module type S = sig
-  val parse : Sedlexing.lexbuf -> (Parsed_ast.t, Common.Err.t) result
+  val parse : Sedlexing.lexbuf -> (Parsed_ast.t, Common.Err.parser_err) result
   (** [parse lexbuf] returns [Ok past] if parsing goes smoothly, [Error err]
     otherwise. *)
 end

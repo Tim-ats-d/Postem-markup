@@ -1,7 +1,7 @@
 open Common
 
 module type S = sig
-  val pass : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.t) result
+  val pass : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.checker_err) result
 end
 
 module Make (Expsn : Ast.Expansion.S) : S = struct

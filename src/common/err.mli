@@ -2,10 +2,13 @@
 
 (** {1 Types} *)
 
-type t =
-  [ `IllegalCharacter of string
-  | `SyntaxError of string
-  | `UndefinedUop of Lexing.position * Lexing.position ]
+type checker_err = [ `UndefinedUop of Lexing.position * Lexing.position ]
+type expsn_err = [ `ExpsnAmbiguity of string | `UnknownExpsn of string ]
+
+type parser_err =
+  [ `IllegalCharacter of Sedlexing.lexbuf | `SyntaxError of Sedlexing.lexbuf ]
+
+type t = [ checker_err | expsn_err | parser_err | `NoSuchFile of string ]
 
 (** {2 API} *)
 
@@ -13,9 +16,3 @@ val to_string : t -> string
 
 val pp_string : ?hint:string -> string -> string
 (** [pp_string msg] prettifies and returns it as string. *)
-
-val pp_position : ?hint:string -> msg:string -> Lexing.position -> string
-(** [pp_position pos ~msg] prettifies [pos] and returns it as string.*)
-
-val pp_lexbuf : Sedlexing.lexbuf -> msg:string -> string
-(** [pp_lexbuf lexbuf ~msg] prettifies [lexbuf] and returns it as string. *)

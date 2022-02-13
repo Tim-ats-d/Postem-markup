@@ -1,7 +1,7 @@
-exception Syntax_error of Sedlexing.lexbuf
+exception IllegalChar of Sedlexing.lexbuf
 
 val read : Sedlexing.lexbuf -> Parser.token
-(** @raise Syntax_error *)
+(** @raise IllegalChar *)
 
 val read_debug : Sedlexing.lexbuf -> Parser.token
-(** @raise Syntax_error *)
+(** @raise IllegalChar *)

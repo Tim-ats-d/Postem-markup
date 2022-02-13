@@ -1,4 +1,4 @@
-exception Syntax_error of Sedlexing.lexbuf
+exception IllegalChar of Sedlexing.lexbuf
 
 let letter = [%sedlex.regexp? lu | ll | lt | lm | lo]
 let math = [%sedlex.regexp? sm | sc | sk | so]
@@ -28,7 +28,7 @@ let read buf =
       Sedlexing.new_line buf;
       NEWLINE (lexeme buf)
   | eof -> EOF
-  | _ -> raise @@ Syntax_error buf
+  | _ -> raise @@ IllegalChar buf
 
 let read_debug lexbuf =
   let token = read lexbuf in

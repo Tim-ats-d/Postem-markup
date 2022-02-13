@@ -22,9 +22,9 @@ module Repl = struct
 end
 
 let load_unit name =
-  match Ehandler.load_res Expansion.Known.expansions name with
+  match Ehandler.load Expansion.Known.expansions name with
   | Ok expsn -> expsn
-  | Error (msg, hint) -> prerr_with_exit @@ Err.pp_string msg ~hint
+  | Error err -> prerr_with_exit @@ Err.to_string (err :> Err.t)
 
 let compile () =
   let args = Args.parse () in
@@ -44,9 +44,7 @@ let compile () =
       if args#direct_input = "" then
         if Sys.file_exists args#inputf then
           Compiler.from_channel ~filename:args#inputf @@ open_in args#inputf
-        else
-          prerr_with_exit
-          @@ Printf.sprintf "Error: \"%s\": no such file" args#inputf
+        else prerr_with_exit @@ Err.to_string (`NoSuchFile args#inputf)
       else Compiler.from_string ~filename:args#inputf args#inputf
     in
     match from_src with
