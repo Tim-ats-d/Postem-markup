@@ -1,26 +1,6 @@
 open Common
 open Core
 
-let prerr_with_exit err =
-  prerr_endline err;
-  exit 1
-
-module Repl = struct
-  let launch eval =
-    let input = ref [] in
-    try
-      while true do
-        input := read_line () :: !input
-      done
-    with End_of_file -> (
-      print_newline ();
-      match List.rev !input |> String.concat "\n" |> eval with
-      | Ok output ->
-          print_endline output;
-          exit 0
-      | Error err -> prerr_with_exit @@ Err.to_string err)
-end
-
 let load_unit name =
   match Ehandler.load Expansion.Known.expansions name with
   | Ok expsn -> expsn
@@ -38,7 +18,8 @@ let compile () =
     Compil_impl.Make (Syntax.Parser) (Checker.Make (Expsn)) (Eval)
   in
   if args#direct_input = "" && args#inputf = "" then
-    Repl.launch @@ Compiler.from_string ~filename:"REPL"
+    let module Repl = Repl.Make (Compiler) in
+    Repl.launch ()
   else
     let from_src =
       if args#direct_input = "" then
