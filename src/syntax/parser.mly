@@ -1,7 +1,7 @@
 %{
   open Parsed_ast
 
-  let mk_loc startpos endpos value = { startpos; endpos; value }
+  let mk_loc loc value = { loc; value }
 %}
 
 %token <string> OP
@@ -41,16 +41,11 @@ let group ==
 
 let unary_op ==
   | op=OP; t=TEXT;
-    { let op_loc = mk_loc $startpos $endpos op in
-      LUnaryOp { op = op_loc; group = LGroup [ LText t ] } }
+    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup [ LText t ] } }
   | op=OP; group=group;
-    { let op_loc = mk_loc $startpos $endpos op in
-      LUnaryOp { op = op_loc; group } }
+    { LUnaryOp { op = mk_loc $loc(op) op; group } }
 
 let uop_line ==
   | op=OP; WHITE; grp=expr+; NEWLINE;
-    { let op_loc = mk_loc $startpos $endpos op in
-      LUnaryOp { op = op_loc; group = LGroup grp } }
+    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup grp } }
   (* TODO Add newline *)
-
-  // | WHITE; op=OP; WHITE; group=expr+; NEWLINE; { UnaryOp { op; group = Group group } } (* TODO Add newline *)

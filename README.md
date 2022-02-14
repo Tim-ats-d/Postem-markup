@@ -1,6 +1,6 @@
 # Postem
 
-A fast and WIP easy **notes taking** oriented **markup** language
+A lightweight WIP **markup** language designed for quick note taking.
 
 ## Abstracts
 

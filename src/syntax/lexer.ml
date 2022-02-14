@@ -1,13 +1,14 @@
 exception IllegalChar of Sedlexing.lexbuf
 
-let letter = [%sedlex.regexp? lu | ll | lt | lm | lo]
-let math = [%sedlex.regexp? sm | sc | sk | so]
-let number = [%sedlex.regexp? nd | nl | no]
-let punct = [%sedlex.regexp? po]
-let text = [%sedlex.regexp? letter | number | punct]
+let escape = [%sedlex.regexp? '\\', any]
 let op_char = [%sedlex.regexp? Chars "!#$%&'*+-<=>'@^_|~"]
 let op = [%sedlex.regexp? Plus op_char]
-let whitespace = [%sedlex.regexp? zs]
+let unformat = [%sedlex.regexp? "{{", Star any, "}}"]
+let white_char = [%sedlex.regexp? zs]
+let white = [%sedlex.regexp? Plus white_char]
+let text = [%sedlex.regexp? Plus (Compl (op_char | '\n' | white_char))]
+(* TODO: Windows newline support (\r\n) *)
+
 let newline = [%sedlex.regexp? '\n' | "\r\n"]
 let lexeme = Sedlexing.Utf8.lexeme
 
@@ -17,16 +18,14 @@ let cut ?(right = 0) ~left str =
 let read buf =
   let open Parser in
   match%sedlex buf with
-  | '\\', any -> TEXT (cut ~left:1 @@ lexeme buf)
+  | escape -> TEXT (cut ~left:1 @@ lexeme buf)
   | '[' -> LBRACKET
   | ']' -> RBRACKET
   | op -> OP (lexeme buf)
-  | "{{", Star any, "}}" -> UNFORMAT (cut ~left:2 ~right:2 @@ lexeme buf)
-  | Plus text -> TEXT (lexeme buf)
-  | Plus whitespace -> WHITE (lexeme buf)
-  | newline ->
-      Sedlexing.new_line buf;
-      NEWLINE (lexeme buf)
+  | unformat -> UNFORMAT (cut ~left:2 ~right:2 @@ lexeme buf)
+  | white -> WHITE (lexeme buf)
+  | text -> TEXT (lexeme buf)
+  | newline -> NEWLINE (lexeme buf)
   | eof -> EOF
   | _ -> raise @@ IllegalChar buf
 

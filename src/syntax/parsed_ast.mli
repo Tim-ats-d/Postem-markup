@@ -1,8 +1,4 @@
-type 'a with_loc = {
-  startpos : Lexing.position;
-  endpos : Lexing.position;
-  value : 'a;
-}
+type 'a with_loc = { loc : Lexing.position * Lexing.position; value : 'a }
 
 type t = expr list
 

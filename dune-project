@@ -25,9 +25,7 @@
 
 (package
  (name postem)
- (synopsis "Fast and easy notes taking oriented markup language")
- (description
-  "Postem is a fast and easy notes taking oriented markup language.\n\nIt aims to offer a quick language to write to structure a text taken in note.")
+ (synopsis "A lightweight markup language designed for quick note taking")
  (depends
   dune
   (ocaml

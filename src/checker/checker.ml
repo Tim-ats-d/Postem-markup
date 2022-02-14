@@ -39,7 +39,7 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
         ok @@ Group (List.rev grp)
     | LUnaryOp { op; group } -> (
         match Ctx.UopCtx.find_opt Expsn.uop op.value with
-        | None -> error @@ `UndefinedUop (op.startpos, op.endpos)
+        | None -> error @@ `UndefinedUop op.loc
         | Some _ ->
             let+ group = pexpr group in
             ok @@ UnaryOp { op = op.value; group })
