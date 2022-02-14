@@ -15,7 +15,7 @@ module Make (Parser : Syntax.S) (Checker : Checker.S) (Eval : Ast.Eval.S) :
     let open Common.Result in
     match Parser.parse lexbuf with
     | Ok parsed_ast -> (
-        match Checker.pass parsed_ast with
+        match Checker.check parsed_ast with
         | Ok ast -> ok @@ Eval.eval ast
         | Error err -> Error (err :> Common.Err.t))
     | Error err -> Error (err :> Common.Err.t)

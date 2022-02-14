@@ -1,7 +1,5 @@
 module KnownExpansions = struct
-  type t = (name * doc * (module Ast.Expansion.S)) list
-  and name = string
-  and doc = string
+  type t = Expansion.Known.t
 
   let to_string t =
     List.map (fun (name, doc, _) -> Printf.sprintf "%s: %s" name doc) t

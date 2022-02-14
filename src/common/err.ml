@@ -4,6 +4,7 @@ type expsn_err = [ `ExpsnAmbiguity of string | `UnknownExpsn of string ]
 type parser_err = [ `IllegalCharacter of loc | `SyntaxError of loc ]
 type t = [ checker_err | expsn_err | parser_err | `NoSuchFile of string ]
 
+(* TODO: overview of concerned line. *)
 let rec pp_loc ?hint ~msg (spos, epos) =
   let schar = Lexing.(spos.pos_cnum - spos.pos_bol) in
   let echar = Lexing.(epos.pos_cnum - epos.pos_bol) in

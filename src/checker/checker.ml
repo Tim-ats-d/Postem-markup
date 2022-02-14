@@ -1,20 +1,20 @@
 open Common
 
 module type S = sig
-  val pass : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.checker_err) result
+  val check : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.checker_err) result
 end
 
 module Make (Expsn : Ast.Expansion.S) : S = struct
   open Result
 
-  let rec pass parsed_ast =
-    List.fold_left
-      (fun acc expr ->
-        let+ grp = acc in
-        let+ expr' = pexpr expr in
-        Ok (expr' :: grp))
-      (Ok [])
-    @@ List.rev parsed_ast
+  let rec check parsed_ast =
+    List.rev parsed_ast
+    |> List.fold_left
+         (fun acc expr ->
+           let+ grp = acc in
+           let+ expr' = pexpr expr in
+           Ok (expr' :: grp))
+         (Ok [])
 
   and pexpr =
     let open Ast.Types in

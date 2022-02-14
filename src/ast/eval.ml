@@ -14,19 +14,8 @@ end
 
 module MakeWithExpsn (Expsn : Expansion.S) : S with type t := string = struct
   let rec eval doc =
-    let buf = eval_doc doc ~alias:Expsn.alias ~uop:Expsn.uop in
-    Buffer.contents buf
-
-  and eval_doc ~alias ~uop doc =
-    let buf = Buffer.create 101 in
-    (* TODO: performance issue *)
-    let ctx = EvalCtx.create ~alias ~uop in
-    List.iter
-      (fun expr ->
-        let text = eval_expr ctx expr in
-        Buffer.add_string buf text)
-      doc;
-    buf
+    let ctx = Expsn.(EvalCtx.create ~alias ~uop) in
+    List.map (eval_expr ctx) doc |> String.concat ""
 
   and eval_expr ctx expr =
     let open Types in
@@ -35,7 +24,7 @@ module MakeWithExpsn (Expsn : Expansion.S) : S with type t := string = struct
     | Group grp -> eval_group ctx grp
     | UnaryOp { op; group } -> eval_uop ctx op group
 
-  and eval_group ctx grp = String.concat "" @@ List.map (eval_expr ctx) grp
+  and eval_group ctx grp = List.map (eval_expr ctx) grp |> String.concat ""
 
   and eval_uop ctx op group =
     let f = Ctx.UopCtx.find ctx.EvalCtx.uop op in
