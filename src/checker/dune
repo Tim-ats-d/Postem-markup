@@ -1,3 +1,4 @@
 (library
  (name checker)
+ (public_name postem.checker)
  (libraries ast common syntax))

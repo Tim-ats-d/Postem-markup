@@ -1,3 +1,4 @@
 (library
  (name common)
+ (public_name postem.common)
  (libraries enumerate))

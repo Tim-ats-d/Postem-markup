@@ -2,7 +2,7 @@ module type S = sig
   val parse : Sedlexing.lexbuf -> (Parsed_ast.t, Common.Err.parser_err) result
 end
 
-module Parser = struct
+module Parser : S = struct
   let parse lexbuf =
     let lexer = Sedlexing.with_tokenizer Lexer.read lexbuf in
     let parser =

@@ -1,2 +1,3 @@
 (library
- (name enumerate))
+ (name enumerate)
+ (public_name postem.common.enumerate))

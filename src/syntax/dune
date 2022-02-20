@@ -1,5 +1,6 @@
 (library
  (name syntax)
+ (public_name postem.syntax)
  (modules_without_implementation parsed_ast)
  (libraries ast common menhirLib sedlex)
  (preprocess
