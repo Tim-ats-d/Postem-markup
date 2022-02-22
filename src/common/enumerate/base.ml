@@ -45,5 +45,5 @@ class virtual alphabet letters =
 
     method next = n <- n + 1
 
-    method get = self#to_roman n |> String.concat ""
+    method get = String.concat "" @@ self#to_roman n
   end

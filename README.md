@@ -20,57 +20,66 @@ A lightweight WIP **markup** language designed for quick note taking.
 
 This text marked in Postem:
 ```text
-& The P book
+& Postem
 
-&& Introduction
+&& Philosophy
 
-A long introduction paragraph
-and its continuation.
+P aims to be a lightweight markup language designed for note taking.
+It is also intended to be easily extensible by allowing extension writing in OCaml.
 
-Another one.
+&& Features
 
-&& Abstracts
+P supports alias definition and custom operator definition.
 
-> A quotation of the author of the language explaining the reasons that led him to write P
+&& Builtins marks
 
-&& Marks description
+There are six builtins title tags:
+{{& for a level one title, && for a level two title, and this up to 6.}}
 
-Unformat block %% Allows you to write text that will not be formatted.
+By the way, the line above is unformated because it is put between two curly brackets.
+This avoids the need to individually escape each operator.
 
-Example %% {{Unformated # text & with many special char.}}
+> There are also quotes
 
--- This mark is pretty useful.
+> On one or on
+> several lines
+
+-- The \-\- mark allows you to formulate a conclusion.
 ```
 will be rendered in this (with default expansion enabled):
 <details>
     <summary><b>Output</b></summary>
 
 ```text
-The Postem book
-***************
+I - Postem
+##########
 
-Introduction
-============
+A) Philosophy
+*************
 
-A long introduction paragraph and its continuation.
+Postem aims to be a lightweight markup language designed for note taking.
+It is also intended to be easily extensible by allowing extension writing in OCaml.
 
-Another one.
+B) Features
+***********
 
-Abstracts
-=========
+Postem supports alias definition and custom operator definition.
 
- █ A quotation of the author of the language explaining the reasons that led him to write Postem
+C) Builtins marks
+*****************
 
-Marks description
-=================
+There are six builtins title tags:
+& for a level one title, && for a level two title, and this up to 6.
 
-Unformat block
-  | Allows you to write text that will not be formatted.
+By the way, the line above is unformated because it is put between two curly brackets.
+This avoids the need to individually escape each operator.
 
-Example
-  | Unformated # text & with many special char.
+ █ There are also quotes
 
-\-> This mark is pretty useful.
+ █ On one or on
+ █ several lines
+
+-> The -- mark allows you to formulate a conclusion.
 ```
 
 </details>

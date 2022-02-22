@@ -1,28 +1,25 @@
-& The P book
+& Postem
 
-&& Introduction
+&& Philosophy
 
-A long introduction paragraph
-and its continuation.
+P aims to be a lightweight markup language designed for note taking.
+It is also intended to be easily extensible by allowing extension writing in OCaml.
 
-Another one.
+&& Features
 
-&& Abstracts
+P supports alias definition and custom operator definition.
 
-> A quotation
-> Continuation of the quotation
+&& Builtins marks
 
-[a simple test]
+There are six builtins title tags:
+{{& for a level one title, && for a level two title, and this up to 6.}}
 
-..enumerate
-a first reason
-a second reason
-..
+By the way, the line above is unformated because it is put between two curly brackets.
+This avoids the need to individually escape each operator.
 
-&& Marks description
+> There are also quotes
 
-Unformat block %% Allows you to write text that will not be formatted.
+> On one or on
+> several lines
 
-Example: {{Unformated # text & with many special chars.}}
-
--- This mark is pretty useful.
+-- The \-\- mark allows you to formulate a conclusion.
