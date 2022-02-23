@@ -4,23 +4,23 @@ module type S = sig
   val check : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.checker_err) result
 end
 
-type state =
-  | Expr of Ast.Types.expr
-  | Expand of Ast.Types.expr * Ast.Types.expr
-
 module Make (Expsn : Ast.Expansion.S) : S = struct
   open Result
 
+  type state =
+    | Expr of Ast.Types.expr
+    | Expand of Ast.Types.expr * Ast.Types.expr
+
   let rec check parsed_ast =
-    List.rev parsed_ast
-    |> List.fold_left
-         (fun acc expr ->
-           let+ grp = acc in
-           let+ expr' = pexpr expr in
-           match expr' with
-           | Expr e -> Ok (e :: grp)
-           | Expand (e, e') -> Ok (e :: e' :: grp))
-         (Ok [])
+    List.fold_left
+      (fun acc expr ->
+        let+ grp = acc in
+        let+ expr' = pexpr expr in
+        match expr' with
+        | Expr e -> Ok (e :: grp)
+        | Expand (e, e') -> Ok (e :: e' :: grp))
+      (Ok [])
+    @@ List.rev parsed_ast
 
   and pexpr =
     let open Ast.Types in
@@ -33,7 +33,7 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
         in
         ok @@ Expr (Text text)
     | LWhite w -> ok @@ Expr (White w)
-    | LUnformat u -> ok @@ Expr (Text u)
+    | LUnformat u -> ok @@ Expr (Unformat u)
     | LGroup g ->
         let+ grp =
           List.fold_left

@@ -20,7 +20,7 @@ module MakeWithExpsn (Expsn : Expansion.S) : S with type t := string = struct
   and eval_expr ctx expr =
     let open Types in
     match expr with
-    | Text s | White s -> s
+    | Text s | White s | Unformat s -> s
     | Group grp -> eval_group ctx grp
     | UnaryOp { op; group } -> eval_uop ctx op group
 
