@@ -3,13 +3,13 @@ let alias = Common.Ctx.AliasCtx.(empty |> add "P" "Postem")
 let fmt_title ~nbring ~fmt ~chr text =
   nbring#next;
   let ftext = fmt nbring#get text in
-  Printf.sprintf "%s\n%s\n" ftext @@ String.(make (length ftext)) chr
+  Printf.sprintf "%s\n%s" ftext @@ String.(make (length ftext)) chr
 
 let underline ~char text =
-  Printf.sprintf "%s\n%s\n" text @@ String.(make (length text)) char
+  Printf.sprintf "%s\n%s" text @@ String.(make (length text)) char
 
-let quote = Printf.sprintf " █ %s\n"
-let conclusion = Printf.sprintf "-> %s\n"
+let quote = Printf.sprintf " █ %s"
+let conclusion = Printf.sprintf "-> %s"
 
 let uop =
   let module Enum = Enumerate.Builtins in

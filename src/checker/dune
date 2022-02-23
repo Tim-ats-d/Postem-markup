@@ -1,4 +1,6 @@
 (library
  (name checker)
  (public_name postem.checker)
+ (preprocess
+  (pps ppx_deriving.show))
  (libraries ast common syntax))

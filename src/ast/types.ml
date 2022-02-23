@@ -1,4 +1,4 @@
-type doc = expr list
+type doc = expr list [@@deriving show]
 
 and expr =
   | Text of string

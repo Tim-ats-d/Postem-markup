@@ -24,7 +24,7 @@ let document :=
 let line :=
   | expr
   | uop_line
-  | n=NEWLINE; { LWhite n }
+  | n=NEWLINE; { LNewline n }
 
 let expr :=
   | group
@@ -41,11 +41,10 @@ let group ==
 
 let unary_op ==
   | op=OP; t=TEXT;
-    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup [ LText t ] } }
+    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup [ LText t ]; newline = "" } }
   | op=OP; group=group;
-    { LUnaryOp { op = mk_loc $loc(op) op; group } }
+    { LUnaryOp { op = mk_loc $loc(op) op; group; newline = "" } }
 
 let uop_line ==
-  | op=OP; WHITE; grp=expr+; NEWLINE;
-    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup grp } }
-  (* TODO Add newline *)
+  | op=OP; WHITE; grp=expr+; newline=NEWLINE;
+    { LUnaryOp { op = mk_loc $loc(op) op; group = LGroup grp; newline } }

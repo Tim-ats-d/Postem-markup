@@ -4,6 +4,10 @@ module type S = sig
   val check : Syntax.Parsed_ast.t -> (Ast.Types.doc, Err.checker_err) result
 end
 
+type state =
+  | Expr of Ast.Types.expr
+  | Expand of Ast.Types.expr * Ast.Types.expr
+
 module Make (Expsn : Ast.Expansion.S) : S = struct
   open Result
 
@@ -13,34 +17,51 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
          (fun acc expr ->
            let+ grp = acc in
            let+ expr' = pexpr expr in
-           Ok (expr' :: grp))
+           match expr' with
+           | Expr e -> Ok (e :: grp)
+           | Expand (e, e') -> Ok (e :: e' :: grp))
          (Ok [])
 
   and pexpr =
     let open Ast.Types in
     let open Syntax.Parsed_ast in
     function
+    | LNewline n -> ok @@ Expr (White n)
     | LText t ->
         let text =
           Option.value ~default:t @@ Ctx.AliasCtx.find_opt Expsn.alias t
         in
-        ok @@ Text text
-    | LWhite w -> ok @@ White w
-    | LUnformat u -> ok @@ Text u
+        ok @@ Expr (Text text)
+    | LWhite w -> ok @@ Expr (White w)
+    | LUnformat u -> ok @@ Expr (Text u)
     | LGroup g ->
         let+ grp =
           List.fold_left
             (fun acc expr ->
               let+ grp' = acc in
               let+ expr' = pexpr expr in
-              Ok (expr' :: grp'))
+              match expr' with
+              | Expr e -> Ok (e :: grp')
+              | Expand (e, e') -> Ok (e :: e' :: grp'))
             (Ok []) g
         in
-        ok @@ Group (List.rev grp)
-    | LUnaryOp { op; group } -> (
+        ok @@ Expr (Group (List.rev grp))
+    | LUnaryOp { op; group; newline } -> (
         match Ctx.UopCtx.find_opt Expsn.uop op.value with
         | None -> error @@ `UndefinedUop op.loc
-        | Some _ ->
+        | Some _ -> (
             let+ group = pexpr group in
-            ok @@ UnaryOp { op = op.value; group })
+            match group with
+            | Expr e when newline = "" ->
+                ok @@ Expr (UnaryOp { op = op.value; group = e })
+            | Expr e ->
+                ok
+                @@ Expand (UnaryOp { op = op.value; group = e }, White newline)
+            | Expand (e, e') when newline = "" ->
+                ok @@ Expr (UnaryOp { op = op.value; group = Group [ e; e' ] })
+            | Expand (e, e') ->
+                ok
+                @@ Expand
+                     ( UnaryOp { op = op.value; group = Group [ e; e' ] },
+                       White newline )))
 end

@@ -18,6 +18,8 @@ module Make (Compiler : Core.Compil_impl.S with type t := string) = struct
         List.rev !input |> String.concat "\n"
         |> Compiler.from_string ~filename:"REPL"
       with
-      | Ok output -> print output; launch ()
+      | Ok output ->
+          print output;
+          launch ()
       | Error err -> Common.(prerr_with_exit @@ Err.to_string err))
 end

@@ -1,5 +1,7 @@
 (library
  (name ast)
  (public_name postem.ast)
- (modules_without_implementation expansion types)
+ (modules_without_implementation expansion)
+ (preprocess
+  (pps ppx_deriving.show sedlex.ppx))
  (libraries common))
