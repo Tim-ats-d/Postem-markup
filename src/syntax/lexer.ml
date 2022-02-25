@@ -6,7 +6,9 @@ let op = [%sedlex.regexp? Plus op_char]
 let unformat = [%sedlex.regexp? "{{", Star any, "}}"]
 let white_char = [%sedlex.regexp? zs]
 let white = [%sedlex.regexp? Plus white_char]
-let text = [%sedlex.regexp? Plus (Compl (op_char | '\n' | white_char))]
+
+let text =
+  [%sedlex.regexp? Plus (Compl (op_char | '\n' | white_char | '[' | ']'))]
 (* TODO: Windows newline support (\r\n) *)
 
 let newline = [%sedlex.regexp? '\n' | "\r\n"]

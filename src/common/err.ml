@@ -14,6 +14,7 @@ let get_line ic n =
     input_line ic
   with End_of_file -> assert false
 
+(* TODO: Fix Sys_error exception in REPL error. *)
 let rec pp_loc ?hint ~msg (spos, epos) =
   let schar = Lexing.(spos.pos_cnum - spos.pos_bol) in
   let echar = Lexing.(epos.pos_cnum - epos.pos_bol) in

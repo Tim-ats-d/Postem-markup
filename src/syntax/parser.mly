@@ -37,7 +37,11 @@ let terminal ==
   | u=UNFORMAT; { LUnformat u }
 
 let group ==
-  | LBRACKET; grp=expr*; RBRACKET; { LGroup grp }
+  | LBRACKET; grp=group_aux*; RBRACKET; { LGroup grp }
+
+let group_aux ==
+  | expr
+  | n=NEWLINE; { LNewline n }
 
 let unary_op ==
   | op=OP; t=TEXT;
