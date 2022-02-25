@@ -9,5 +9,6 @@ and expr =
   | LUnformat of string
   | LGroup of expr list
   | LUnaryOp of { op : string with_loc; group : expr; newline : string }
+  | LBinOp of { op : string with_loc; left : expr; right : expr }
 
 val show : t -> string

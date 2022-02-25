@@ -11,6 +11,12 @@ let underline ~char text =
 let quote = Printf.sprintf " █ %s"
 let conclusion = Printf.sprintf "-> %s"
 
+let bop =
+  let open Common.Ctx.BinOpCtx in
+  empty
+  |> add ">>" @@ fun qtation author ->
+     Printf.sprintf "%s\n  %s" (quote qtation) author
+
 let uop =
   let module Enum = Enumerate.Builtins in
   let open Common.Ctx.UopCtx in

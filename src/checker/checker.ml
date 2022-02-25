@@ -64,4 +64,5 @@ module Make (Expsn : Ast.Expansion.S) : S = struct
                 @@ Expand
                      ( UnaryOp { op = op.value; group = Group [ e; e' ] },
                        White newline )))
+    | LBinOp _ -> assert false(* TODO *)
 end

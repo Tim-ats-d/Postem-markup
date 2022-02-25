@@ -31,6 +31,13 @@ end
 
 module AliasCtx = Make (String) (String)
 
+module BinOpCtx =
+  Make
+    (String)
+    (struct
+      type t = string -> string -> string
+    end)
+
 module UopCtx =
   Make
     (String)

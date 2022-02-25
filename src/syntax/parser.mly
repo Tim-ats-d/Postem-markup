@@ -29,7 +29,7 @@ let line :=
 let expr :=
   | group
   | terminal
-  | unary_op
+  | op_app
 
 let terminal ==
   | t=TEXT;     { LText t }
@@ -42,6 +42,9 @@ let group ==
 let group_aux ==
   | expr
   | n=NEWLINE; { LNewline n }
+
+let op_app ==
+  | unary_op
 
 let unary_op ==
   | op=OP; t=TEXT;

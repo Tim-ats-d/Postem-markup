@@ -22,4 +22,5 @@ module Make : functor (Ord : Map.OrderedType) (Value : VALUE) ->
   S with type key := Ord.t and type value := Value.t
 
 module AliasCtx : S with type key := string and type value := string
+module BinOpCtx : S with type key := string and type value := string -> string -> string
 module UopCtx : S with type key := string and type value := string -> string
